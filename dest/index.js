@@ -25,8 +25,8 @@ app.use(jsonBodyMW);
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
 const nameLengthValidation = (0, express_validator_1.body)('name').trim().isLength({
-    min: 1,
-    max: 3
+    min: 6,
+    max: 15
 }).withMessage("Name length should be from 1 to 15 symbols");
 let stringTypeValidation = (param) => {
     return (0, express_validator_1.body)(param).isString().withMessage(`${param} should be string type`);
@@ -34,7 +34,8 @@ let stringTypeValidation = (param) => {
 const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
-        res.send({ errors: result.array() });
+        //@ts-ignore
+        res.send({ errors: result.array().map(val => ({ "message": val.msg, "type": val["path"] })) });
     }
     else {
         next();
@@ -96,7 +97,7 @@ app.delete('/blogs/:id', (req, res) => {
     db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id);
     res.sendStatus(exports.STATUSES_HTTP.NO_CONTENT_204);
 });
-app.post('/blogs', nameLengthValidation, stringTypeValidation("name"), inputValidationMw, (req, res) => {
+app.post('/blogs', stringTypeValidation("name"), nameLengthValidation, inputValidationMw, (req, res) => {
     const createdPost = {
         "id": +(new Date()),
         "name": req.body.name,

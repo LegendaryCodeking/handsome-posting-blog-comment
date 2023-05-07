@@ -23,8 +23,8 @@ app.use(jsonBodyMW)
 // }
 
 const nameLengthValidation = body('name').trim().isLength({
-    min: 1,
-    max: 3
+    min: 6,
+    max: 15
 }).withMessage("Name length should be from 1 to 15 symbols")
 
 let stringTypeValidation = (param: string) => {
@@ -34,7 +34,8 @@ let stringTypeValidation = (param: string) => {
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
-        res.send({errors: result.array()});
+        //@ts-ignore
+        res.send({errors: result.array().map(val => ({"message": val.msg, "type": val["path"]}))});
     } else {
         next();
     }
@@ -111,8 +112,8 @@ app.delete('/blogs/:id', (req, res) => {
 
 
 app.post('/blogs',
-    nameLengthValidation,
     stringTypeValidation("name"),
+    nameLengthValidation,
     inputValidationMw,
     (req, res) => {
 
