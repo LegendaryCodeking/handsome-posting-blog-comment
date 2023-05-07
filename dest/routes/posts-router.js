@@ -72,20 +72,15 @@ exports.postsRouter.post('/', (req, res) => {
     res.status(index_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 });
-// postsRouter.put('/:id',
-//     (req, res) => {
-//
-//         const foundPost = db_posts.posts.find(c => +c.id === +req.params.id);
-//
-//         if (!foundPost) {
-//             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-//             return;
-//         }
-//
-//         foundPost.name = req.body.title;
-//         foundPost.description = req.body.author;
-//         foundPost.websiteUrl = req.body.availableResolutions;
-//
-//         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-//     }
-// )
+exports.postsRouter.put('/:id', (req, res) => {
+    const foundPost = exports.db_posts.posts.find(c => +c.id === +req.params.id);
+    if (!foundPost) {
+        res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
+        return;
+    }
+    foundPost.title = req.body.title;
+    foundPost.shortDescription = req.body.shortDescription;
+    foundPost.content = req.body.content;
+    foundPost.blogId = req.body.blogId;
+    res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
+});
