@@ -74,7 +74,7 @@ exports.postsRouter.delete('/:id', (req, res) => {
     exports.db_posts.posts = exports.db_posts.posts.filter(c => +c.id !== +req.params.id);
     res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
 });
-exports.postsRouter.post('/', (req, res) => {
+exports.postsRouter.post('/', titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
     const createdPost = {
         "id": (+(new Date())).toString(),
         "title": req.body.title,
@@ -87,7 +87,7 @@ exports.postsRouter.post('/', (req, res) => {
     res.status(index_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 });
-exports.postsRouter.put('/:id', (req, res) => {
+exports.postsRouter.put('/:id', titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
     const foundPost = exports.db_posts.posts.find(c => +c.id === +req.params.id);
     if (!foundPost) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);

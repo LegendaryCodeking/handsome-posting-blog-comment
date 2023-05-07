@@ -86,6 +86,11 @@ postsRouter.delete('/:id', (req, res) => {
 })
 
 postsRouter.post('/',
+    titleValidation,
+    shortDescription,
+    content,
+    blogId,
+    inputValidationMw,
     (req, res) => {
 
         const createdPost = {
@@ -104,6 +109,11 @@ postsRouter.post('/',
     })
 
 postsRouter.put('/:id',
+    titleValidation,
+    shortDescription,
+    content,
+    blogId,
+    inputValidationMw,
     (req, res) => {
 
         const foundPost = db_posts.posts.find(c => +c.id === +req.params.id);
