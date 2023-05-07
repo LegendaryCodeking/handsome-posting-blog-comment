@@ -25,19 +25,19 @@ app.use(jsonBodyMW)
 let db_blogs = {
     blogs: [
         {
-            "id": "1",
+            "id": 1,
             "name": "Marieh Kondo",
             "description": "Bingo article about Marieh Kondo and his famous book",
             "websiteUrl": "https://telegra.ph/Marieh-Kondo-02-14"
         },
         {
-            "id": "2",
+            "id": 2,
             "name": "Meandr",
             "description": "Bingo article about Meandr",
             "websiteUrl": "https://telegra.ph/Meandr-02-14"
         },
         {
-            "id": "3",
+            "id": 3,
             "name": "Dzhiro dItaliya",
             "description": "Bingo article about famous italian bicycle race Dzhiro dItaliya",
             "websiteUrl": "https://telegra.ph/Dzhiro-dItaliya-02-13"
@@ -66,6 +66,18 @@ app.get('/blogs', (req, res) => {
     res.status(STATUSES_HTTP.OK_200)
         .json(foundBlogs)
 })
+
+app.get('/blogs/:id', (req, res) => {
+    const foundVideo = db_blogs.blogs.find(c => c.id === +req.params.id)
+
+    if (!foundVideo) {
+        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+        return;
+    }
+
+    res.json(foundVideo)
+})
+
 
 // app.post('/blogs', (req, res) => {
 //
@@ -120,16 +132,7 @@ app.get('/blogs', (req, res) => {
 //         .json(createdVideo)
 // })
 //
-// app.get('/blogs/:id', (req, res) => {
-//     const foundVideo = db_blogs.blogs.find(c => c.id === +req.params.id)
-//
-//     if (!foundVideo) {
-//         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-//         return;
-//     }
-//
-//     res.json(foundVideo)
-// })
+
 //
 // app.put('/blogs/:id', (req, res) => {
 //
