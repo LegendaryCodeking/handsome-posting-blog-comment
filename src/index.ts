@@ -23,14 +23,9 @@ app.use(jsonBodyMW)
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
 
-const lengthValidation = (field: string, len: number) => { return body(field).trim().isLength({
-    min: 1,
-    max: len
-}).withMessage(`${field} length should be from 1 to 15 symbols`) }
-const stringTypeValidation = (param: string) => {
-    return body(param).isString().withMessage(`${param} should be string type`)
-}
-const urlValidation = body("websiteUrl").isURL({ protocols: ['https'] }).withMessage("websiteUrl should be correct")
+const nameValidation =  body("name").trim().isLength({min: 1, max: 15}).isString().withMessage(`Name length should be from 1 to 15 symbols`)
+const descriptionValidation = body("description").isString().isLength({min: 1, max: 500}).withMessage(`Description should be string type`)
+const urlValidation = body("websiteUrl").isURL({ protocols: ['https'] }).isString().isLength({min: 1, max: 100}).withMessage("websiteUrl should be correct")
 
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
@@ -113,12 +108,8 @@ app.delete('/blogs/:id', (req, res) => {
 
 
 app.post('/blogs',
-    stringTypeValidation("name"),
-    stringTypeValidation("description"),
-    stringTypeValidation("websiteUrl"),
-    lengthValidation("name",15),
-    lengthValidation("description",500),
-    lengthValidation("websiteUrl",100),
+    nameValidation,
+    descriptionValidation,
     urlValidation,
     inputValidationMw,
     (req, res) => {

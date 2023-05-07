@@ -24,16 +24,9 @@ app.use(jsonBodyMW);
 // const isNotDate = (date: string) => {
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
-const lengthValidation = (field, len) => {
-    return (0, express_validator_1.body)(field).trim().isLength({
-        min: 1,
-        max: len
-    }).withMessage(`${field} length should be from 1 to 15 symbols`);
-};
-const stringTypeValidation = (param) => {
-    return (0, express_validator_1.body)(param).isString().withMessage(`${param} should be string type`);
-};
-const urlValidation = (0, express_validator_1.body)("websiteUrl").isURL({ protocols: ['https'] }).withMessage("websiteUrl should be correct");
+const nameValidation = (0, express_validator_1.body)("name").trim().isLength({ min: 1, max: 15 }).isString().withMessage(`Name length should be from 1 to 15 symbols`);
+const descriptionValidation = (0, express_validator_1.body)("description").isString().isLength({ min: 1, max: 500 }).withMessage(`Description should be string type`);
+const urlValidation = (0, express_validator_1.body)("websiteUrl").isURL({ protocols: ['https'] }).isString().isLength({ min: 1, max: 100 }).withMessage("websiteUrl should be correct");
 const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
@@ -100,7 +93,7 @@ app.delete('/blogs/:id', (req, res) => {
     db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id);
     res.sendStatus(exports.STATUSES_HTTP.NO_CONTENT_204);
 });
-app.post('/blogs', stringTypeValidation("name"), stringTypeValidation("description"), stringTypeValidation("websiteUrl"), lengthValidation("name", 15), lengthValidation("description", 500), lengthValidation("websiteUrl", 100), urlValidation, inputValidationMw, (req, res) => {
+app.post('/blogs', nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
     const createdPost = {
         "id": +(new Date()),
         "name": req.body.name,
