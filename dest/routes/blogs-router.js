@@ -2,8 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRouter = exports.db_blogs = void 0;
 const express_1 = require("express");
-const index_1 = require("../index");
 const express_validator_1 = require("express-validator");
+const index_1 = require("../index");
+const authorizationCheck = (req, res, next) => {
+    if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
+        res.sendStatus(401)
+            .send({ message: "Wrong login or password" });
+    }
+    else {
+        next();
+    }
+};
 const nameValidation = (0, express_validator_1.body)("name").trim().isLength({
     min: 1,
     max: 15
@@ -67,7 +76,7 @@ exports.blogsRouter.get('/blogs/:id', (req, res) => {
     }
     res.json(foundBlog);
 });
-exports.blogsRouter.delete('/blogs/:id', (req, res) => {
+exports.blogsRouter.delete('/blogs/:id', authorizationCheck, (req, res) => {
     const foundBlog = exports.db_blogs.blogs.find(c => c.id === +req.params.id);
     if (!foundBlog) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
@@ -76,7 +85,7 @@ exports.blogsRouter.delete('/blogs/:id', (req, res) => {
     exports.db_blogs.blogs = exports.db_blogs.blogs.filter(c => c.id !== +req.params.id);
     res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
 });
-exports.blogsRouter.post('/blogs', nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
+exports.blogsRouter.post('/blogs', authorizationCheck, nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
     const createdPost = {
         "id": +(new Date()),
         "name": req.body.name,
@@ -87,7 +96,7 @@ exports.blogsRouter.post('/blogs', nameValidation, descriptionValidation, urlVal
     res.status(index_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 });
-exports.blogsRouter.put('/blogs/:id', nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
+exports.blogsRouter.put('/blogs/:id', authorizationCheck, nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
     const foundBlog = exports.db_blogs.blogs.find(c => c.id === +req.params.id);
     if (!foundBlog) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);

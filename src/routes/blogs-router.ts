@@ -1,7 +1,15 @@
 import {NextFunction, Request, Response, Router} from 'express'
-import {STATUSES_HTTP} from "../index";
 import {body, validationResult} from "express-validator";
+import {STATUSES_HTTP} from "../index";
 
+const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
+        res.sendStatus(401)
+            .send({message: "Wrong login or password"})
+    } else {
+        next();
+    }
+}
 const nameValidation = body("name").trim().isLength({
     min: 1,
     max: 15
@@ -74,7 +82,7 @@ blogsRouter.get('/blogs/:id', (req, res) => {
     res.json(foundBlog)
 })
 
-blogsRouter.delete('/blogs/:id', (req, res) => {
+blogsRouter.delete('/blogs/:id', authorizationCheck,  (req, res) => {
     const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
 
     if (!foundBlog) {
@@ -89,6 +97,7 @@ blogsRouter.delete('/blogs/:id', (req, res) => {
 
 
 blogsRouter.post('/blogs',
+    authorizationCheck,
     nameValidation,
     descriptionValidation,
     urlValidation,
@@ -110,6 +119,7 @@ blogsRouter.post('/blogs',
 
 
 blogsRouter.put('/blogs/:id',
+    authorizationCheck,
     nameValidation,
     descriptionValidation,
     urlValidation,
