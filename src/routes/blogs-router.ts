@@ -59,7 +59,7 @@ export let db_blogs = {
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/blogs', (req, res) => {
+blogsRouter.get('/', (req, res) => {
     let foundBlogs = db_blogs.blogs
 
     if (!foundBlogs.length) {
@@ -71,7 +71,7 @@ blogsRouter.get('/blogs', (req, res) => {
         .json(foundBlogs)
 })
 
-blogsRouter.get('/blogs/:id', (req, res) => {
+blogsRouter.get('/:id', (req, res) => {
     const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
 
     if (!foundBlog) {
@@ -82,7 +82,7 @@ blogsRouter.get('/blogs/:id', (req, res) => {
     res.json(foundBlog)
 })
 
-blogsRouter.delete('/blogs/:id', authorizationCheck,  (req, res) => {
+blogsRouter.delete('/:id', authorizationCheck,  (req, res) => {
     const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
 
     if (!foundBlog) {
@@ -96,7 +96,7 @@ blogsRouter.delete('/blogs/:id', authorizationCheck,  (req, res) => {
 })
 
 
-blogsRouter.post('/blogs',
+blogsRouter.post('/',
     authorizationCheck,
     nameValidation,
     descriptionValidation,
@@ -118,7 +118,7 @@ blogsRouter.post('/blogs',
     })
 
 
-blogsRouter.put('/blogs/:id',
+blogsRouter.put('/:id',
     authorizationCheck,
     nameValidation,
     descriptionValidation,
