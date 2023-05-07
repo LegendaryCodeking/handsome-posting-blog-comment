@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.STATUSES_HTTP = void 0;
 const express_1 = __importDefault(require("express"));
+const express_validator_1 = require("express-validator");
 const app = (0, express_1.default)();
 const port = 7050;
 const jsonBodyMW = express_1.default.json();
@@ -23,6 +24,22 @@ app.use(jsonBodyMW);
 // const isNotDate = (date: string) => {
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
+const nameLengthValidation = (0, express_validator_1.body)('name').trim().isLength({
+    min: 1,
+    max: 3
+}).withMessage("Name length should be from 1 to 15 symbols");
+let stringTypeValidation = (param) => {
+    return (0, express_validator_1.body)(param).isString().withMessage(`${param} should be string type`);
+};
+const inputValidationMw = (req, res, next) => {
+    const result = (0, express_validator_1.validationResult)(req);
+    if (!result.isEmpty()) {
+        res.send({ errors: result.array() });
+    }
+    else {
+        next();
+    }
+};
 let db_blogs = {
     blogs: [
         {
@@ -79,40 +96,12 @@ app.delete('/blogs/:id', (req, res) => {
     db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id);
     res.sendStatus(exports.STATUSES_HTTP.NO_CONTENT_204);
 });
-app.post('/blogs', (req, res) => {
-    // if (isItNotString(req.body.title) || isItNotString(req.body.author) || (req.body.title ? req.body.title.length > 40 : 0) || (req.body.author ? req.body.author.length > 20 : 0)  || notCorrectResolutions(req.body.availableResolutions)) {
-    //     let errorsMessages = [];
-    //     if (isItNotString(req.body.title) || req.body.title.length > 40) {
-    //         let titleErrorMessage = {
-    //             "message": "Title is incorrect",
-    //             "field": "title"
-    //         }
-    //         errorsMessages.push(titleErrorMessage)
-    //     }
-    //     if (isItNotString(req.body.author) || req.body.author.length > 20) {
-    //         let titleErrorMessage = {
-    //             "message": "Author is incorrect",
-    //             "field": "author"
-    //         }
-    //         errorsMessages.push(titleErrorMessage)
-    //     }
-    //     if (notCorrectResolutions(req.body.availableResolutions)) {
-    //         let titleErrorMessage = {
-    //             "message": "availableResolutions contains unavailable value",
-    //             "field": "availableResolutions"
-    //         }
-    //         errorsMessages.push(titleErrorMessage)
-    //     }
-    //
-    //     res.status(STATUSES_HTTP.BAD_REQUEST_400)
-    //         .json({errorsMessages: errorsMessages})
-    //     return;
-    // }
+app.post('/blogs', nameLengthValidation, stringTypeValidation("name"), inputValidationMw, (req, res) => {
     const createdPost = {
         "id": +(new Date()),
-        "name": "New Great Bingo Post",
-        "description": "Bingo article about smth",
-        "websiteUrl": "https://InMm1ZzVFQhEh7rTOBqVb9ENiRVtghncA8.N7B9l6TELnYCw-egjwE_17zUXZz-M2GmpZe5-JNBYT00dIqlOS4Wf_St9"
+        "name": req.body.name,
+        "description": req.body.description,
+        "websiteUrl": req.body.websiteUrl
     };
     db_blogs.blogs.push(createdPost);
     res.status(exports.STATUSES_HTTP.CREATED_201)

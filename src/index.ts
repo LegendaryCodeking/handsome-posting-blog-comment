@@ -1,4 +1,5 @@
-import express from 'express'
+import express, {NextFunction, Request, Response} from 'express'
+import {body, query, validationResult} from 'express-validator';
 
 const app = express()
 const port = 7050
@@ -21,6 +22,23 @@ app.use(jsonBodyMW)
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
 
+const nameLengthValidation = body('name').trim().isLength({
+    min: 1,
+    max: 3
+}).withMessage("Name length should be from 1 to 15 symbols")
+
+let stringTypeValidation = (param: string) => {
+    return body(param).isString().withMessage(`${param} should be string type`)
+}
+
+const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        res.send({errors: result.array()});
+    } else {
+        next();
+    }
+}
 
 let db_blogs = {
     blogs: [
@@ -92,49 +110,24 @@ app.delete('/blogs/:id', (req, res) => {
 })
 
 
-app.post('/blogs', (req, res) => {
+app.post('/blogs',
+    nameLengthValidation,
+    stringTypeValidation("name"),
+    inputValidationMw,
+    (req, res) => {
 
-    // if (isItNotString(req.body.title) || isItNotString(req.body.author) || (req.body.title ? req.body.title.length > 40 : 0) || (req.body.author ? req.body.author.length > 20 : 0)  || notCorrectResolutions(req.body.availableResolutions)) {
-    //     let errorsMessages = [];
-    //     if (isItNotString(req.body.title) || req.body.title.length > 40) {
-    //         let titleErrorMessage = {
-    //             "message": "Title is incorrect",
-    //             "field": "title"
-    //         }
-    //         errorsMessages.push(titleErrorMessage)
-    //     }
-    //     if (isItNotString(req.body.author) || req.body.author.length > 20) {
-    //         let titleErrorMessage = {
-    //             "message": "Author is incorrect",
-    //             "field": "author"
-    //         }
-    //         errorsMessages.push(titleErrorMessage)
-    //     }
-    //     if (notCorrectResolutions(req.body.availableResolutions)) {
-    //         let titleErrorMessage = {
-    //             "message": "availableResolutions contains unavailable value",
-    //             "field": "availableResolutions"
-    //         }
-    //         errorsMessages.push(titleErrorMessage)
-    //     }
-    //
-    //     res.status(STATUSES_HTTP.BAD_REQUEST_400)
-    //         .json({errorsMessages: errorsMessages})
-    //     return;
-    // }
+        const createdPost = {
+            "id": +(new Date()),
+            "name": req.body.name,
+            "description": req.body.description,
+            "websiteUrl": req.body.websiteUrl
+        }
 
-    const createdPost = {
-        "id": +(new Date()),
-        "name": "New Great Bingo Post",
-        "description": "Bingo article about smth",
-        "websiteUrl": "https://InMm1ZzVFQhEh7rTOBqVb9ENiRVtghncA8.N7B9l6TELnYCw-egjwE_17zUXZz-M2GmpZe5-JNBYT00dIqlOS4Wf_St9"
-    }
+        db_blogs.blogs.push(createdPost)
 
-    db_blogs.blogs.push(createdPost)
-
-    res.status(STATUSES_HTTP.CREATED_201)
-        .json(createdPost)
-})
+        res.status(STATUSES_HTTP.CREATED_201)
+            .json(createdPost)
+    })
 
 
 //
