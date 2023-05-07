@@ -35,19 +35,19 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
 export let db_blogs = {
     blogs: [
         {
-            "id": 1,
+            "id": "1",
             "name": "Marieh Kondo",
             "description": "Bingo article about Marieh Kondo and his famous book",
             "websiteUrl": "https://telegra.ph/Marieh-Kondo-02-14"
         },
         {
-            "id": 2,
+            "id": "2",
             "name": "Meandr",
             "description": "Bingo article about Meandr",
             "websiteUrl": "https://telegra.ph/Meandr-02-14"
         },
         {
-            "id": 3,
+            "id": "3",
             "name": "Dzhiro dItaliya",
             "description": "Bingo article about famous italian bicycle race Dzhiro dItaliya",
             "websiteUrl": "https://telegra.ph/Dzhiro-dItaliya-02-13"
@@ -71,7 +71,7 @@ blogsRouter.get('/', (req, res) => {
 })
 
 blogsRouter.get('/:id', (req, res) => {
-    const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
+    const foundBlog = db_blogs.blogs.find(c => +c.id === +req.params.id)
 
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -82,14 +82,14 @@ blogsRouter.get('/:id', (req, res) => {
 })
 
 blogsRouter.delete('/:id', authorizationCheck,  (req, res) => {
-    const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
+    const foundBlog = db_blogs.blogs.find(c => +c.id === +req.params.id)
 
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
     }
 
-    db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id)
+    db_blogs.blogs = db_blogs.blogs.filter(c => +c.id !== +req.params.id)
 
     res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
 })
@@ -104,7 +104,7 @@ blogsRouter.post('/',
     (req, res) => {
 
         const createdPost = {
-            "id": +(new Date()),
+            "id": (+(new Date())).toString(),
             "name": req.body.name,
             "description": req.body.description,
             "websiteUrl": req.body.websiteUrl
@@ -125,7 +125,7 @@ blogsRouter.put('/:id',
     inputValidationMw,
     (req, res) => {
 
-        const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id);
+        const foundBlog = db_blogs.blogs.find(c => +c.id === +req.params.id);
 
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
