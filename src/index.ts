@@ -1,5 +1,6 @@
 import express from 'express'
 import {blogsRouter, db_blogs} from "./routes/blogs-router";
+import {postsRouter} from "./routes/posts-router";
 
 export const STATUSES_HTTP = {
     OK_200: 200,
@@ -17,6 +18,7 @@ const jsonBodyMW = express.json()
 app.use(jsonBodyMW)
 
 app.use('/blogs', blogsRouter)
+app.use('/posts', postsRouter)
 
 app.delete('/testing/all-data', (req, res) => {
     db_blogs.blogs = [];
