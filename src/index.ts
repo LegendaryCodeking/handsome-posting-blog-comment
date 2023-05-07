@@ -68,14 +68,27 @@ app.get('/blogs', (req, res) => {
 })
 
 app.get('/blogs/:id', (req, res) => {
-    const foundVideo = db_blogs.blogs.find(c => c.id === +req.params.id)
+    const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
 
-    if (!foundVideo) {
+    if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
     }
 
-    res.json(foundVideo)
+    res.json(foundBlog)
+})
+
+app.delete('/blogs/:id', (req, res) => {
+    const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id)
+
+    if (!foundBlog) {
+        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+        return;
+    }
+
+    db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id)
+
+    res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
 })
 
 
@@ -207,18 +220,7 @@ app.get('/blogs/:id', (req, res) => {
 //     }
 // )
 //
-// app.delete('/blogs/:id', (req, res) => {
-//     const foundVideo = db_blogs.blogs.find(c => c.id === +req.params.id)
-//
-//     if (!foundVideo) {
-//         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-//         return;
-//     }
-//
-//     db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id)
-//
-//     res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-// })
+
 
 app.delete('/testing/all-data', (req, res) => {
     db_blogs.blogs = [];
