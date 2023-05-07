@@ -132,9 +132,9 @@ blogsRouter.put('/:id',
             return;
         }
 
-        foundBlog.name = req.body.title;
-        foundBlog.description = req.body.author;
-        foundBlog.websiteUrl = req.body.availableResolutions;
+        foundBlog.name = req.body.name;
+        foundBlog.description = req.body.description;
+        foundBlog.websiteUrl = req.body.websiteUrl;
 
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }

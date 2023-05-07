@@ -101,8 +101,8 @@ exports.blogsRouter.put('/:id', authorizationCheck, nameValidation, descriptionV
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
     }
-    foundBlog.name = req.body.title;
-    foundBlog.description = req.body.author;
-    foundBlog.websiteUrl = req.body.availableResolutions;
+    foundBlog.name = req.body.name;
+    foundBlog.description = req.body.description;
+    foundBlog.websiteUrl = req.body.websiteUrl;
     res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
 });
