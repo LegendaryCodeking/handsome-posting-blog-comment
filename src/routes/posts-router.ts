@@ -70,21 +70,23 @@ postsRouter.delete('/:id', (req, res) => {
     res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
 })
 
-// postsRouter.post('/',
-//     (req, res) => {
-//
-//         const createdBlog = {
-//             "id": +(new Date()),
-//             "name": req.body.name,
-//             "description": req.body.description,
-//             "websiteUrl": req.body.websiteUrl
-//         }
-//
-//         db_posts.posts.push(createdBlog)
-//
-//         res.status(STATUSES_HTTP.CREATED_201)
-//             .json(createdBlog)
-//     })
+postsRouter.post('/',
+    (req, res) => {
+
+        const createdPost = {
+            "id": (+(new Date())).toString(),
+            "title": req.body.title,
+            "shortDescription": req.body.shortDescription,
+            "content": req.body.content,
+            "blogId": req.body.blogId,
+            "blogName": req.body.blogName
+        }
+
+        db_posts.posts.push(createdPost)
+
+        res.status(STATUSES_HTTP.CREATED_201)
+            .json(createdPost)
+    })
 
 // postsRouter.put('/:id',
 //     (req, res) => {
