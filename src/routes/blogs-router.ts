@@ -5,7 +5,6 @@ import {STATUSES_HTTP} from "../index";
 const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
         res.sendStatus(401)
-            .send({message: "Wrong login or password"})
     } else {
         next();
     }

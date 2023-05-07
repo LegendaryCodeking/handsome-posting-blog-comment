@@ -6,8 +6,7 @@ const express_validator_1 = require("express-validator");
 const index_1 = require("../index");
 const authorizationCheck = (req, res, next) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
-        res.sendStatus(401)
-            .send({ message: "Wrong login or password" });
+        res.sendStatus(401);
     }
     else {
         next();
