@@ -79,7 +79,7 @@ postsRouter.post('/',
             "shortDescription": req.body.shortDescription,
             "content": req.body.content,
             "blogId": req.body.blogId,
-            "blogName": req.body.blogName
+            "blogName": "BlogName"
         }
 
         db_posts.posts.push(createdPost)

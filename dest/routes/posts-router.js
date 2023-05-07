@@ -66,7 +66,7 @@ exports.postsRouter.post('/', (req, res) => {
         "shortDescription": req.body.shortDescription,
         "content": req.body.content,
         "blogId": req.body.blogId,
-        "blogName": req.body.blogName
+        "blogName": "BlogName"
     };
     exports.db_posts.posts.push(createdPost);
     res.status(index_1.STATUSES_HTTP.CREATED_201)
