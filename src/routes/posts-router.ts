@@ -32,6 +32,13 @@ export let db_posts = {
     ]
 }
 
+const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
+        res.sendStatus(401)
+    } else {
+        next();
+    }
+}
 const titleValidation = body("title").isString().trim().isLength({min: 1, max: 15}).withMessage("Title should be string with length from 1 to 15 symbols")
 const shortDescription = body("title").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription should be string with length from 1 to 15 symbols")
 const content = body("title").isString().trim().isLength({min: 1, max: 1000}).withMessage("Title should be string with length from 1 to 15 symbols")
@@ -72,7 +79,7 @@ postsRouter.get('/:id', (req, res) => {
     res.json(foundPost)
 })
 
-postsRouter.delete('/:id', (req, res) => {
+postsRouter.delete('/:id', authorizationCheck, (req, res) => {
     const foundPost = db_posts.posts.find(c => +c.id === +req.params.id)
 
     if (!foundPost) {
@@ -86,6 +93,7 @@ postsRouter.delete('/:id', (req, res) => {
 })
 
 postsRouter.post('/',
+    authorizationCheck,
     titleValidation,
     shortDescription,
     content,
@@ -109,6 +117,7 @@ postsRouter.post('/',
     })
 
 postsRouter.put('/:id',
+    authorizationCheck,
     titleValidation,
     shortDescription,
     content,

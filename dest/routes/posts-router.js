@@ -32,6 +32,14 @@ exports.db_posts = {
         }
     ]
 };
+const authorizationCheck = (req, res, next) => {
+    if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
+        res.sendStatus(401);
+    }
+    else {
+        next();
+    }
+};
 const titleValidation = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 15 }).withMessage("Title should be string with length from 1 to 15 symbols");
 const shortDescription = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 100 }).withMessage("shortDescription should be string with length from 1 to 15 symbols");
 const content = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 1000 }).withMessage("Title should be string with length from 1 to 15 symbols");
@@ -65,7 +73,7 @@ exports.postsRouter.get('/:id', (req, res) => {
     }
     res.json(foundPost);
 });
-exports.postsRouter.delete('/:id', (req, res) => {
+exports.postsRouter.delete('/:id', authorizationCheck, (req, res) => {
     const foundPost = exports.db_posts.posts.find(c => +c.id === +req.params.id);
     if (!foundPost) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
@@ -74,7 +82,7 @@ exports.postsRouter.delete('/:id', (req, res) => {
     exports.db_posts.posts = exports.db_posts.posts.filter(c => +c.id !== +req.params.id);
     res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
 });
-exports.postsRouter.post('/', titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
+exports.postsRouter.post('/', authorizationCheck, titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
     const createdPost = {
         "id": (+(new Date())).toString(),
         "title": req.body.title,
@@ -87,7 +95,7 @@ exports.postsRouter.post('/', titleValidation, shortDescription, content, blogId
     res.status(index_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 });
-exports.postsRouter.put('/:id', titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
+exports.postsRouter.put('/:id', authorizationCheck, titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
     const foundPost = exports.db_posts.posts.find(c => +c.id === +req.params.id);
     if (!foundPost) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
