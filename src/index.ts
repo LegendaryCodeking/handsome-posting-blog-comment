@@ -7,23 +7,6 @@ const port = 7050
 const jsonBodyMW = express.json()
 app.use(jsonBodyMW)
 
-// const isItNotString = (value: any) => {
-//     return typeof value !== 'string'
-// }
-//
-// const notCorrectResolutions = (arr: Array<string>) => {
-//     let correctResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160']
-//     return arr.reduce(function (answer, item) {
-//         return correctResolutions.indexOf(item) === -1 ? answer + 1 : answer
-//     }, 0)
-//
-// }
-// const isNotDate = (date: string) => {
-//     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
-// }
-
-
-
 export const STATUSES_HTTP = {
     OK_200: 200,
     CREATED_201: 201,
