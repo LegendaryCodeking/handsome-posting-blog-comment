@@ -28,7 +28,7 @@ const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
         //@ts-ignore
-        res.send({ errors: result.array().map(val => ({ "message": val.msg, "type": val["path"] })) });
+        res.send({ errors: result.array().map(val => ({ "message": val.msg, "field": val["path"] })) });
     }
     else {
         next();

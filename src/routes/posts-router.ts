@@ -47,7 +47,7 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
         //@ts-ignore
-        res.send({errors: result.array().map(val => ({"message": val.msg, "type": val["path"]}))});
+        res.send({errors: result.array().map(val => ({"message": val.msg, "field": val["path"]}))});
     } else {
         next();
     }
