@@ -79,59 +79,45 @@ app.delete('/blogs/:id', (req, res) => {
     db_blogs.blogs = db_blogs.blogs.filter(c => c.id !== +req.params.id);
     res.sendStatus(exports.STATUSES_HTTP.NO_CONTENT_204);
 });
-// app.post('/blogs', (req, res) => {
-//
-//     let createdAt = new Date().toISOString();
-//     let publicationDate = new Date(createdAt)
-//     publicationDate.setDate(publicationDate.getDate() + 1);
-//
-//
-//     if (isItNotString(req.body.title) || isItNotString(req.body.author) || (req.body.title ? req.body.title.length > 40 : 0) || (req.body.author ? req.body.author.length > 20 : 0)  || notCorrectResolutions(req.body.availableResolutions)) {
-//         let errorsMessages = [];
-//         if (isItNotString(req.body.title) || req.body.title.length > 40) {
-//             let titleErrorMessage = {
-//                 "message": "Title is incorrect",
-//                 "field": "title"
-//             }
-//             errorsMessages.push(titleErrorMessage)
-//         }
-//         if (isItNotString(req.body.author) || req.body.author.length > 20) {
-//             let titleErrorMessage = {
-//                 "message": "Author is incorrect",
-//                 "field": "author"
-//             }
-//             errorsMessages.push(titleErrorMessage)
-//         }
-//         if (notCorrectResolutions(req.body.availableResolutions)) {
-//             let titleErrorMessage = {
-//                 "message": "availableResolutions contains unavailable value",
-//                 "field": "availableResolutions"
-//             }
-//             errorsMessages.push(titleErrorMessage)
-//         }
-//
-//         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-//             .json({errorsMessages: errorsMessages})
-//         return;
-//     }
-//
-//     const createdVideo = {
-//         "id": +(new Date),
-//         "title": req.body.title,
-//         "author": req.body.author,
-//         "canBeDownloaded": false,
-//         "minAgeRestriction": null,
-//         "createdAt": createdAt,
-//         "publicationDate": publicationDate.toISOString(),
-//         "availableResolutions": req.body.availableResolutions
-//     }
-//
-//     db_blogs.blogs.push(createdVideo)
-//
-//     res.status(STATUSES_HTTP.CREATED_201)
-//         .json(createdVideo)
-// })
-//
+app.post('/blogs', (req, res) => {
+    // if (isItNotString(req.body.title) || isItNotString(req.body.author) || (req.body.title ? req.body.title.length > 40 : 0) || (req.body.author ? req.body.author.length > 20 : 0)  || notCorrectResolutions(req.body.availableResolutions)) {
+    //     let errorsMessages = [];
+    //     if (isItNotString(req.body.title) || req.body.title.length > 40) {
+    //         let titleErrorMessage = {
+    //             "message": "Title is incorrect",
+    //             "field": "title"
+    //         }
+    //         errorsMessages.push(titleErrorMessage)
+    //     }
+    //     if (isItNotString(req.body.author) || req.body.author.length > 20) {
+    //         let titleErrorMessage = {
+    //             "message": "Author is incorrect",
+    //             "field": "author"
+    //         }
+    //         errorsMessages.push(titleErrorMessage)
+    //     }
+    //     if (notCorrectResolutions(req.body.availableResolutions)) {
+    //         let titleErrorMessage = {
+    //             "message": "availableResolutions contains unavailable value",
+    //             "field": "availableResolutions"
+    //         }
+    //         errorsMessages.push(titleErrorMessage)
+    //     }
+    //
+    //     res.status(STATUSES_HTTP.BAD_REQUEST_400)
+    //         .json({errorsMessages: errorsMessages})
+    //     return;
+    // }
+    const createdPost = {
+        "id": +(new Date()),
+        "name": "New Great Bingo Post",
+        "description": "Bingo article about smth",
+        "websiteUrl": "https://InMm1ZzVFQhEh7rTOBqVb9ENiRVtghncA8.N7B9l6TELnYCw-egjwE_17zUXZz-M2GmpZe5-JNBYT00dIqlOS4Wf_St9"
+    };
+    db_blogs.blogs.push(createdPost);
+    res.status(exports.STATUSES_HTTP.CREATED_201)
+        .json(createdPost);
+});
 //
 // app.put('/blogs/:id', (req, res) => {
 //
