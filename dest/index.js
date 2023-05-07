@@ -24,9 +24,18 @@ app.use(jsonBodyMW);
 // const isNotDate = (date: string) => {
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
-const nameValidation = (0, express_validator_1.body)("name").trim().isLength({ min: 1, max: 15 }).isString().withMessage(`Name length should be from 1 to 15 symbols`);
-const descriptionValidation = (0, express_validator_1.body)("description").isString().isLength({ min: 1, max: 500 }).withMessage(`Description should be string type`);
-const urlValidation = (0, express_validator_1.body)("websiteUrl").isURL({ protocols: ['https'] }).isString().isLength({ min: 1, max: 100 }).withMessage("websiteUrl should be correct");
+const nameValidation = (0, express_validator_1.body)("name").trim().isLength({
+    min: 1,
+    max: 15
+}).isString().withMessage(`Name length should be from 1 to 15 symbols`);
+const descriptionValidation = (0, express_validator_1.body)("description").isString().isLength({
+    min: 1,
+    max: 500
+}).withMessage(`Description should be string type`);
+const urlValidation = (0, express_validator_1.body)("websiteUrl").isURL({ protocols: ['https'] }).isString().isLength({
+    min: 1,
+    max: 100
+}).withMessage("websiteUrl should be correct");
 const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
@@ -104,80 +113,17 @@ app.post('/blogs', nameValidation, descriptionValidation, urlValidation, inputVa
     res.status(exports.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 });
-//
-// app.put('/blogs/:id', (req, res) => {
-//
-//         if (isItNotString(req.body.title) || isItNotString(req.body.author) || req.body.title.length > 40 || req.body.author.length > 20
-//             || notCorrectResolutions(req.body.availableResolutions) || typeof (req.body.canBeDownloaded) !== "boolean"
-//             || !Number.isInteger(req.body.minAgeRestriction)|| !(req.body.minAgeRestriction > 0) || !(req.body.minAgeRestriction < 19)
-//             || (isItNotString(req.body.publicationDate) || isNotDate(req.body.publicationDate))) {
-//             let errorsMessages = [];
-//             if (isItNotString(req.body.title) || req.body.title.length > 40) {
-//                 let titleErrorMessage = {
-//                     "message": "Title is incorrect",
-//                     "field": "title"
-//                 }
-//                 errorsMessages.push(titleErrorMessage)
-//             }
-//             if (isItNotString(req.body.author) || req.body.author.length > 20) {
-//                 let titleErrorMessage = {
-//                     "message": "Author is incorrect",
-//                     "field": "author"
-//                 }
-//                 errorsMessages.push(titleErrorMessage)
-//             }
-//             if (notCorrectResolutions(req.body.availableResolutions)) {
-//                 let titleErrorMessage = {
-//                     "message": "availableResolutions contains unavailable value",
-//                     "field": "availableResolutions"
-//                 }
-//                 errorsMessages.push(titleErrorMessage)
-//             }
-//             if (typeof (req.body.canBeDownloaded) !== "boolean") {
-//                 let titleErrorMessage = {
-//                     "message": "canBeDownloaded is not boolean",
-//                     "field": "canBeDownloaded"
-//                 }
-//                 errorsMessages.push(titleErrorMessage)
-//             }
-//             if (!Number.isInteger(req.body.minAgeRestriction) || !(req.body.minAgeRestriction > 0) || !(req.body.minAgeRestriction < 19)) {
-//                 let titleErrorMessage = {
-//                     "message": "minAgeRestriction is not correct",
-//                     "field": "minAgeRestriction"
-//                 }
-//                 errorsMessages.push(titleErrorMessage)
-//             }
-//             if ((isItNotString(req.body.publicationDate) || isNotDate(req.body.publicationDate))) {
-//                 let titleErrorMessage = {
-//                     "message": "publicationDate is not correct",
-//                     "field": "publicationDate"
-//                 }
-//                 errorsMessages.push(titleErrorMessage)
-//             }
-//
-//             res.status(STATUSES_HTTP.BAD_REQUEST_400)
-//                 .json({errorsMessages: errorsMessages})
-//             return;
-//
-//         }
-//         const foundVideo = db_blogs.blogs.find(c => c.id === +req.params.id);
-//
-//         if (!foundVideo) {
-//             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-//             return;
-//         }
-//
-//         foundVideo.title = req.body.title;
-//         foundVideo.author = req.body.author;
-//         foundVideo.availableResolutions = req.body.availableResolutions;
-//         foundVideo.canBeDownloaded = req.body.canBeDownloaded;
-//         foundVideo.minAgeRestriction = req.body.minAgeRestriction;
-//         foundVideo.publicationDate = req.body.publicationDate;
-//
-//         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-//     }
-// )
-//
+app.put('/blogs/:id', nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
+    const foundBlog = db_blogs.blogs.find(c => c.id === +req.params.id);
+    if (!foundBlog) {
+        res.sendStatus(exports.STATUSES_HTTP.NOT_FOUND_404);
+        return;
+    }
+    foundBlog.name = req.body.title;
+    foundBlog.description = req.body.author;
+    foundBlog.websiteUrl = req.body.availableResolutions;
+    res.sendStatus(exports.STATUSES_HTTP.NO_CONTENT_204);
+});
 app.delete('/testing/all-data', (req, res) => {
     db_blogs.blogs = [];
     res.sendStatus(exports.STATUSES_HTTP.NO_CONTENT_204);
