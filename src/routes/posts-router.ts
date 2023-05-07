@@ -56,7 +56,7 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', (req, res) => {
+postsRouter.get('/', (req: Request, res: Response) => {
     let foundPosts = db_posts.posts
 
     if (!foundPosts.length) {
@@ -68,7 +68,7 @@ postsRouter.get('/', (req, res) => {
         .json(foundPosts)
 })
 
-postsRouter.get('/:id', (req, res) => {
+postsRouter.get('/:id', (req: Request, res: Response) => {
     const foundPost = db_posts.posts.find(c => +c.id === +req.params.id)
 
     if (!foundPost) {
@@ -79,7 +79,7 @@ postsRouter.get('/:id', (req, res) => {
     res.json(foundPost)
 })
 
-postsRouter.delete('/:id', authorizationCheck, (req, res) => {
+postsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
     const foundPost = db_posts.posts.find(c => +c.id === +req.params.id)
 
     if (!foundPost) {
@@ -99,7 +99,7 @@ postsRouter.post('/',
     content,
     blogId,
     inputValidationMw,
-    (req, res) => {
+    (req: Request, res: Response) => {
 
         const createdPost = {
             "id": (+(new Date())).toString(),
@@ -123,7 +123,7 @@ postsRouter.put('/:id',
     content,
     blogId,
     inputValidationMw,
-    (req, res) => {
+    (req: Request, res: Response) => {
 
         const foundPost = db_posts.posts.find(c => +c.id === +req.params.id);
 
