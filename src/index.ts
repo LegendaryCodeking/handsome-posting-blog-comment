@@ -1,5 +1,6 @@
 import express, {NextFunction, Request, Response} from 'express'
 import {body, query, validationResult} from 'express-validator';
+import * as https from "https";
 
 const app = express()
 const port = 7050
@@ -22,14 +23,14 @@ app.use(jsonBodyMW)
 //     return (String(new Date(date)) === "Invalid Date") || isNaN(+(new Date(date)));
 // }
 
-const nameLengthValidation = body('name').trim().isLength({
-    min: 6,
-    max: 15
-}).withMessage("Name length should be from 1 to 15 symbols")
-
-let stringTypeValidation = (param: string) => {
+const lengthValidation = (field: string, len: number) => { return body(field).trim().isLength({
+    min: 1,
+    max: len
+}).withMessage(`${field} length should be from 1 to 15 symbols`) }
+const stringTypeValidation = (param: string) => {
     return body(param).isString().withMessage(`${param} should be string type`)
 }
+const urlValidation = body("websiteUrl").isURL({ protocols: ['https'] }).withMessage("websiteUrl should be correct")
 
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
@@ -113,7 +114,12 @@ app.delete('/blogs/:id', (req, res) => {
 
 app.post('/blogs',
     stringTypeValidation("name"),
-    nameLengthValidation,
+    stringTypeValidation("description"),
+    stringTypeValidation("websiteUrl"),
+    lengthValidation("name",15),
+    lengthValidation("description",500),
+    lengthValidation("websiteUrl",100),
+    urlValidation,
     inputValidationMw,
     (req, res) => {
 
