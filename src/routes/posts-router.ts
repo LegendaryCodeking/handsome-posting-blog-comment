@@ -32,6 +32,21 @@ export let db_posts = {
     ]
 }
 
+const titleValidation = body("title").isString().trim().isLength({min: 1, max: 15}).withMessage("Title should be string with length from 1 to 15 symbols")
+const shortDescription = body("title").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription should be string with length from 1 to 15 symbols")
+const content = body("title").isString().trim().isLength({min: 1, max: 1000}).withMessage("Title should be string with length from 1 to 15 symbols")
+const blogId = body("title").isString().trim().isLength({min: 1}).withMessage("Title should be string with length from 1 to 15 symbols")
+const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        //@ts-ignore
+        res.send({errors: result.array().map(val => ({"message": val.msg, "type": val["path"]}))});
+    } else {
+        next();
+    }
+}
+
+
 export const postsRouter = Router({})
 
 postsRouter.get('/', (req, res) => {

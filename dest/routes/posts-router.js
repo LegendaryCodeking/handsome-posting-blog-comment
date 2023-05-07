@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRouter = exports.db_posts = void 0;
 const express_1 = require("express");
+const express_validator_1 = require("express-validator");
 const index_1 = require("../index");
 exports.db_posts = {
     posts: [
@@ -30,6 +31,20 @@ exports.db_posts = {
             "blogName": "DogMemes"
         }
     ]
+};
+const titleValidation = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 15 }).withMessage("Title should be string with length from 1 to 15 symbols");
+const shortDescription = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 100 }).withMessage("shortDescription should be string with length from 1 to 15 symbols");
+const content = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 1000 }).withMessage("Title should be string with length from 1 to 15 symbols");
+const blogId = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1 }).withMessage("Title should be string with length from 1 to 15 symbols");
+const inputValidationMw = (req, res, next) => {
+    const result = (0, express_validator_1.validationResult)(req);
+    if (!result.isEmpty()) {
+        //@ts-ignore
+        res.send({ errors: result.array().map(val => ({ "message": val.msg, "type": val["path"] })) });
+    }
+    else {
+        next();
+    }
 };
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => {
