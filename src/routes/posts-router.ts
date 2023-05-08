@@ -48,7 +48,7 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     if (!result.isEmpty()) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
             //@ts-ignore
-            .json({errors: result.array().map(val => ({"message": val.msg, "field": val["path"]}))});
+            .json({errorsMessages: result.array().map(val => ({"message": val.msg, "field": val["path"]}))});
     } else {
         next();
     }
