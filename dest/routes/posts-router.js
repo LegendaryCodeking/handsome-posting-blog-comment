@@ -47,8 +47,9 @@ const blogId = (0, express_validator_1.body)("title").isString().trim().isLength
 const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
-        //@ts-ignore
-        res.send({ errors: result.array().map(val => ({ "message": val.msg, "type": val["path"] })) });
+        res.status(index_1.STATUSES_HTTP.BAD_REQUEST_400)
+            //@ts-ignore
+            .json({ errors: result.array().map(val => ({ "message": val.msg, "field": val["path"] })) });
     }
     else {
         next();

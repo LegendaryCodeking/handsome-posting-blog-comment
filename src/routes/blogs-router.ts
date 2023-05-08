@@ -25,8 +25,9 @@ const urlValidation = body("websiteUrl").isURL({protocols: ['https']}).isString(
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
-        //@ts-ignore
-        res.send({errors: result.array().map(val => ({"message": val.msg, "field": val["path"]}))});
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
+            //@ts-ignore
+            .json({errors: result.array().map(val => ({"message": val.msg, "field": val["path"]}))});
     } else {
         next();
     }
