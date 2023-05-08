@@ -40,7 +40,7 @@ const authorizationCheck = (req: Request, res: Response, next: NextFunction) => 
     }
 }
 const titleValidation = body("title").isString().trim().isLength({min: 1, max: 15}).withMessage("Title should be string with length from 1 to 15 symbols")
-const shortDescription = body("shortDescription").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription should be string with length from 1 to 15 symbols")
+const shortDescription = body("shortDescription").isString().withMessage("test message").trim().isLength({min: 1, max: 100}).withMessage("shortDescription should be string with length from 1 to 15 symbols")
 const content = body("content").isString().trim().isLength({min: 1, max: 1000}).withMessage("Title should be string with length from 1 to 15 symbols")
 const blogId = body("blogId").isString().trim().isLength({min: 1}).withMessage("Title should be string with length from 1 to 15 symbols")
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
