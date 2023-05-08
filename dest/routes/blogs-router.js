@@ -1,11 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsRouter = exports.db_blogs = exports.blogIds = void 0;
+exports.blogsRouter = exports.db_blogs = void 0;
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const index_1 = require("../index");
-let blogIds = () => { return exports.db_blogs.blogs.map(value => value.id); };
-exports.blogIds = blogIds;
 const authorizationCheck = (req, res, next) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
         res.sendStatus(401);
