@@ -40,9 +40,17 @@ const authorizationCheck = (req, res, next) => {
         next();
     }
 };
-const titleValidation = (0, express_validator_1.body)("title").isString().trim().isLength({ min: 1, max: 15 }).withMessage("Title should be string with length from 1 to 15 symbols");
-const shortDescription = (0, express_validator_1.body)("shortDescription").isString().trim().isLength({ min: 1, max: 100 }).withMessage("shortDescription should be string with length from 1 to 15 symbols");
-const content = (0, express_validator_1.body)("content").isString().trim().isLength({ min: 1, max: 1000 }).withMessage("Title should be string with length from 1 to 15 symbols");
+const titleValidation = (0, express_validator_1.body)("title").isString().trim().isLength({
+    min: 1,
+    max: 15
+}).withMessage("Title should be string with length from 1 to 15 symbols");
+const shortDescription = (req, res, next) => {
+    return req.body.shortDescription ? (0, express_validator_1.body)("shortDescription").isString().trim().isLength({ min: 1, max: 100 }).withMessage("shortDescription should be string with length from 1 to 15 symbols") : (0, express_validator_1.body)("shortDescription").isString().withMessage("There is no shortDescription in the request");
+};
+const content = (0, express_validator_1.body)("content").isString().trim().isLength({
+    min: 1,
+    max: 1000
+}).withMessage("Title should be string with length from 1 to 15 symbols");
 const blogId = (0, express_validator_1.body)("blogId").isString().trim().isLength({ min: 1 }).withMessage("Title should be string with length from 1 to 15 symbols");
 const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
