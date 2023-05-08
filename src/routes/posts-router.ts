@@ -39,18 +39,10 @@ const authorizationCheck = (req: Request, res: Response, next: NextFunction) => 
         next();
     }
 }
-const titleValidation = body("title").isString().trim().isLength({
-    min: 1,
-    max: 15
-}).withMessage("Title should be string with length from 1 to 15 symbols")
-const shortDescription = (req: Request, res: Response, next: NextFunction) => {
-    return req.body.shortDescription ? body("shortDescription").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription should be string with length from 1 to 15 symbols"): body("shortDescription").isString().withMessage("There is no shortDescription in the request")
-}
-const content = body("content").isString().trim().isLength({
-    min: 1,
-    max: 1000
-}).withMessage("Title should be string with length from 1 to 15 symbols")
-const blogId = body("blogId").isString().trim().isLength({min: 1}).withMessage("Title should be string with length from 1 to 15 symbols")
+const titleValidation = body("title").isString().withMessage("Title should be string").trim().isLength({min: 1, max: 15}).withMessage("The length should be from 1 to 15 symbols")
+const shortDescription = body("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({min: 14, max: 100}).withMessage("The length should be from 1 to 100 symbols")
+const content = body("content").isString().withMessage("content should be string").trim().isLength({min: 1, max: 1000}).withMessage("The length should be from 1 to 1000 symbols")
+const blogId = body("blogId").isString().withMessage("blogId should be string").trim().isLength({min: 1}).withMessage("The length should be > 0")
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
