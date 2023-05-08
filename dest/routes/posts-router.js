@@ -41,7 +41,7 @@ const authorizationCheck = (req, res, next) => {
     }
 };
 const titleValidation = (0, express_validator_1.body)("title").isString().withMessage("Title should be string").trim().isLength({ min: 1, max: 15 }).withMessage("The length should be from 1 to 15 symbols");
-const shortDescription = (0, express_validator_1.body)("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({ min: 14, max: 100 }).withMessage("The length should be from 1 to 100 symbols");
+const shortDescription = (0, express_validator_1.body)("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({ min: 1, max: 100 }).withMessage("The length should be from 1 to 100 symbols");
 const content = (0, express_validator_1.body)("content").isString().withMessage("content should be string").trim().isLength({ min: 1, max: 1000 }).withMessage("The length should be from 1 to 1000 symbols");
 const blogId = (0, express_validator_1.body)("blogId").isString().withMessage("blogId should be string").trim().isLength({ min: 1 }).withMessage("The length should be > 0");
 const inputValidationMw = (req, res, next) => {
