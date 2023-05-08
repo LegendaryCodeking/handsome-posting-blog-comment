@@ -2,6 +2,8 @@ import {NextFunction, Request, Response, Router} from 'express'
 import {body, validationResult} from "express-validator";
 import {STATUSES_HTTP} from "../index";
 
+export let blogIds = () => { return db_blogs.blogs.map(value => value.id)};
+
 const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
         res.sendStatus(401)

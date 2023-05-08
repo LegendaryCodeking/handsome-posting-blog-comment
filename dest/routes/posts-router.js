@@ -44,7 +44,10 @@ const authorizationCheck = (req, res, next) => {
 const titleValidation = (0, express_validator_1.body)("title").isString().withMessage("Title should be string").trim().isLength({ min: 1, max: 15 }).withMessage("The length should be from 1 to 15 symbols");
 const shortDescription = (0, express_validator_1.body)("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({ min: 1, max: 100 }).withMessage("The length should be from 1 to 100 symbols");
 const content = (0, express_validator_1.body)("content").isString().withMessage("content should be string").trim().isLength({ min: 1, max: 1000 }).withMessage("The length should be from 1 to 1000 symbols");
-const blogId = (0, express_validator_1.body)("blogId").isString().withMessage("blogId should be string").trim().isLength({ min: 1 }).withMessage("The length should be > 0").isIn(blogs_router_1.db_blogs.blogs.map(value => value.id)).withMessage("There is no blog with such ID");
+let blogId = () => {
+    let params = (0, blogs_router_1.blogIds)();
+    return (0, express_validator_1.body)("blogId").isString().withMessage("blogId should be string").trim().isLength({ min: 1 }).withMessage("The length should be > 0").isIn(params).withMessage(`${params} There is no blog with such ID`);
+};
 const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
@@ -84,7 +87,7 @@ exports.postsRouter.delete('/:id', authorizationCheck, (req, res) => {
     exports.db_posts.posts = exports.db_posts.posts.filter(c => +c.id !== +req.params.id);
     res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
 });
-exports.postsRouter.post('/', authorizationCheck, titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
+exports.postsRouter.post('/', authorizationCheck, titleValidation, shortDescription, content, blogId(), inputValidationMw, (req, res) => {
     const createdPost = {
         "id": (+(new Date())).toString(),
         "title": req.body.title,
@@ -97,7 +100,7 @@ exports.postsRouter.post('/', authorizationCheck, titleValidation, shortDescript
     res.status(index_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 });
-exports.postsRouter.put('/:id', authorizationCheck, titleValidation, shortDescription, content, blogId, inputValidationMw, (req, res) => {
+exports.postsRouter.put('/:id', authorizationCheck, titleValidation, shortDescription, content, blogId(), inputValidationMw, (req, res) => {
     const foundPost = exports.db_posts.posts.find(c => +c.id === +req.params.id);
     if (!foundPost) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);

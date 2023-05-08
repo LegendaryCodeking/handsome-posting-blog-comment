@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response, Router} from 'express'
 import {body, validationResult} from "express-validator";
 import {STATUSES_HTTP} from "../index";
-import {db_blogs} from "./blogs-router";
+import {blogIds} from "./blogs-router";
 
 export let db_posts = {
     posts: [
@@ -43,7 +43,12 @@ const authorizationCheck = (req: Request, res: Response, next: NextFunction) => 
 const titleValidation = body("title").isString().withMessage("Title should be string").trim().isLength({min: 1, max: 15}).withMessage("The length should be from 1 to 15 symbols")
 const shortDescription = body("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({min: 1, max: 100}).withMessage("The length should be from 1 to 100 symbols")
 const content = body("content").isString().withMessage("content should be string").trim().isLength({min: 1, max: 1000}).withMessage("The length should be from 1 to 1000 symbols")
-const blogId = body("blogId").isString().withMessage("blogId should be string").trim().isLength({min: 1}).withMessage("The length should be > 0").isIn(db_blogs.blogs.map(value => value.id)).withMessage("There is no blog with such ID")
+let blogId = () => {
+    let params = blogIds();
+    return body("blogId").isString().withMessage("blogId should be string").trim().isLength({min: 1}).withMessage("The length should be > 0").isIn(params).withMessage(`${params} There is no blog with such ID`)}
+
+
+
 const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
@@ -99,7 +104,7 @@ postsRouter.post('/',
     titleValidation,
     shortDescription,
     content,
-    blogId,
+    blogId(),
     inputValidationMw,
     (req: Request, res: Response) => {
 
@@ -123,7 +128,7 @@ postsRouter.put('/:id',
     titleValidation,
     shortDescription,
     content,
-    blogId,
+    blogId(),
     inputValidationMw,
     (req: Request, res: Response) => {
 
