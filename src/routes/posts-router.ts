@@ -19,7 +19,7 @@ postsRouter.get('/', (req: Request, res: Response) => {
 })
 
 postsRouter.get('/:id', (req: Request, res: Response) => {
-    const foundPost = postsRepo.findProductById(req.body.id);
+    const foundPost = postsRepo.findProductById(req.params.id);
 
     if (!foundPost) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -30,7 +30,7 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 postsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
-    const deletionStatus = postsRepo.deletePost(req.body.id)
+    const deletionStatus = postsRepo.deletePost(req.params.id)
     if (deletionStatus) {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     } else {

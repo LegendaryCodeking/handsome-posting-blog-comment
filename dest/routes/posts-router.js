@@ -19,7 +19,7 @@ exports.postsRouter.get('/', (req, res) => {
         .json(foundPosts);
 });
 exports.postsRouter.get('/:id', (req, res) => {
-    const foundPost = posts_repo_1.postsRepo.findProductById(req.body.id);
+    const foundPost = posts_repo_1.postsRepo.findProductById(req.params.id);
     if (!foundPost) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
@@ -27,7 +27,7 @@ exports.postsRouter.get('/:id', (req, res) => {
     res.json(foundPost);
 });
 exports.postsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => {
-    const deletionStatus = posts_repo_1.postsRepo.deletePost(req.body.id);
+    const deletionStatus = posts_repo_1.postsRepo.deletePost(req.params.id);
     if (deletionStatus) {
         res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
     }

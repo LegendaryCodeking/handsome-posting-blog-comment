@@ -19,7 +19,7 @@ exports.blogsRouter.get('/', (req, res) => {
         .json(foundBlogs);
 });
 exports.blogsRouter.get('/:id', (req, res) => {
-    const foundBlog = blogs_repo_1.blogsRepo.findBlogById(req.body.id);
+    const foundBlog = blogs_repo_1.blogsRepo.findBlogById(req.params.id);
     if (!foundBlog) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
@@ -27,7 +27,7 @@ exports.blogsRouter.get('/:id', (req, res) => {
     res.json(foundBlog);
 });
 exports.blogsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => {
-    let deleteStatus = blogs_repo_1.blogsRepo.deleteBlog(req.body.id);
+    let deleteStatus = blogs_repo_1.blogsRepo.deleteBlog(req.params.id);
     if (deleteStatus) {
         res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
     }

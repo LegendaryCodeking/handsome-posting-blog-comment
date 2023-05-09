@@ -20,7 +20,7 @@ blogsRouter.get('/', (req: Request, res: Response) => {
 })
 
 blogsRouter.get('/:id', (req: Request, res: Response) => {
-    const foundBlog = blogsRepo.findBlogById(req.body.id)
+    const foundBlog = blogsRepo.findBlogById(req.params.id)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
@@ -30,7 +30,7 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 blogsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
-    let deleteStatus = blogsRepo.deleteBlog(req.body.id)
+    let deleteStatus = blogsRepo.deleteBlog(req.params.id)
     if (deleteStatus) {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     } else {
