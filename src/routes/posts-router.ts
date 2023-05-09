@@ -4,6 +4,7 @@ import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {authorizationCheck} from "../middlewares/authorization-mw";
 import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
+import {RequestWithParams} from "../types/posts-types";
 
 export const postsRouter = Router({})
 
@@ -29,7 +30,7 @@ postsRouter.get('/', (req: Request,
         .json(foundPosts)
 })
 
-postsRouter.get('/:id', (req: Request<{id: string}>,
+postsRouter.get('/:id', (req: RequestWithParams<{id: string}>,
                          res: Response) => {
     const foundPost = postsRepo.findProductById(req.params.id);
 
@@ -43,7 +44,7 @@ postsRouter.get('/:id', (req: Request<{id: string}>,
 
 postsRouter.delete('/:id',
     authorizationCheck,
-    (req: Request<{id: string}>,
+    (req: RequestWithParams<{id: string}>,
      res: Response) => {
     const deletionStatus = postsRepo.deletePost(req.params.id)
     if (deletionStatus) {
@@ -74,7 +75,7 @@ postsRouter.put('/:id',
     content,
     blogId,
     inputValidationMw,
-    (req: Request<{id: string}>,
+    (req: RequestWithParams<{id: string}>,
      res: Response) => {
         let updateStatus = postsRepo.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (updateStatus) {
