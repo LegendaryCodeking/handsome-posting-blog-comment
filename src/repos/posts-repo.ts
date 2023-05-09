@@ -69,8 +69,8 @@ export const postsRepo = {
         } else {
             return false;
         }
-
-
+    },
+    deleteAll(){
+        db_posts.posts = [];
     }
-
 }

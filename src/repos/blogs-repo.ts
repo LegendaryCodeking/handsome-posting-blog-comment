@@ -63,5 +63,8 @@ export const blogsRepo = {
         } else {
             return false;
         }
+    },
+    deleteAll(){
+        db_blogs.blogs = [];
     }
 }

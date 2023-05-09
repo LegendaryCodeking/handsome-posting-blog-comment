@@ -1,6 +1,7 @@
 import express from 'express'
-import {blogsRouter, db_blogs} from "./routes/blogs-router";
+import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
+import {testingRouter} from "./routes/testing-router";
 
 export const STATUSES_HTTP = {
     OK_200: 200,
@@ -19,11 +20,7 @@ app.use(jsonBodyMW)
 
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
-
-app.delete('/testing/all-data', (req, res) => {
-    db_blogs.blogs = [];
-    res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-})
+app.use('/testing', testingRouter)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
