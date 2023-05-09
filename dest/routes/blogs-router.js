@@ -86,15 +86,15 @@ exports.blogsRouter.delete('/:id', authorizationCheck, (req, res) => {
     res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
 });
 exports.blogsRouter.post('/', authorizationCheck, nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
-    const createdPost = {
+    const createdBlog = {
         "id": (+(new Date())).toString(),
         "name": req.body.name,
         "description": req.body.description,
         "websiteUrl": req.body.websiteUrl
     };
-    exports.db_blogs.blogs.push(createdPost);
+    exports.db_blogs.blogs.push(createdBlog);
     res.status(index_1.STATUSES_HTTP.CREATED_201)
-        .json(createdPost);
+        .json(createdBlog);
 });
 exports.blogsRouter.put('/:id', authorizationCheck, nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
     const foundBlog = exports.db_blogs.blogs.find(c => +c.id === +req.params.id);

@@ -2,36 +2,7 @@ import {NextFunction, Request, Response, Router} from 'express'
 import {body, validationResult} from "express-validator";
 import {STATUSES_HTTP} from "../index";
 import {db_blogs} from "./blogs-router";
-
-export let db_posts = {
-    posts: [
-        {
-            "id": "1",
-            "title": "Very interesting story number 111111111",
-            "shortDescription": "Very interesting story number 111111111 short desc",
-            "content": "Very interesting story number 111111111 outstanding content",
-            "blogId": "111111111",
-            "blogName": "BingoBlog"
-        },
-        {
-            "id": "2",
-            "title": "Very interesting story number 222222",
-            "shortDescription": "Very interesting story number 222222 short desc",
-            "content": "Very interesting story number 222222 outstanding content",
-            "blogId": "222222",
-            "blogName": "ShlakoBlocun"
-        },
-        {
-            "id": "3",
-            "title": "Very interesting story number 3333333333",
-            "shortDescription": "Very interesting story number 3333333333 short desc",
-            "content": "Very interesting story number 3333333333 outstanding content",
-            "blogId": "3333333333",
-            "blogName": "DogMemes"
-        }
-
-    ]
-}
+import {postsRepo} from "../repos/posts-repo";
 
 const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
@@ -40,9 +11,18 @@ const authorizationCheck = (req: Request, res: Response, next: NextFunction) => 
         next();
     }
 }
-const titleValidation = body("title").isString().withMessage("Title should be string").trim().isLength({min: 1, max: 15}).withMessage("The length should be from 1 to 15 symbols")
-const shortDescription = body("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({min: 1, max: 100}).withMessage("The length should be from 1 to 100 symbols")
-const content = body("content").isString().withMessage("content should be string").trim().isLength({min: 1, max: 1000}).withMessage("The length should be from 1 to 1000 symbols")
+const titleValidation = body("title").isString().withMessage("Title should be string").trim().isLength({
+    min: 1,
+    max: 15
+}).withMessage("The length should be from 1 to 15 symbols")
+const shortDescription = body("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({
+    min: 1,
+    max: 100
+}).withMessage("The length should be from 1 to 100 symbols")
+const content = body("content").isString().withMessage("content should be string").trim().isLength({
+    min: 1,
+    max: 1000
+}).withMessage("The length should be from 1 to 1000 symbols")
 const blogId = body('blogId').isString().withMessage("blogId should be string").trim().isLength({min: 1}).withMessage("The length should be > 0").custom(async value => {
     const foundBlog = await db_blogs.blogs.find(c => +c.id === +value);
     if (!foundBlog) {
@@ -55,8 +35,13 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            //@ts-ignore
-            .json({errorsMessages: result.array({ onlyFirstError: true }).map(val => ({"message": val.msg, "field": val["path"]}))});
+            .json({
+                errorsMessages: result.array({onlyFirstError: true}).map(val => ({
+                    "message": val.msg,
+                    //@ts-ignore
+                    "field": val["path"]
+                }))
+            });
     } else {
         next();
     }
@@ -66,8 +51,7 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
 export const postsRouter = Router({})
 
 postsRouter.get('/', (req: Request, res: Response) => {
-    let foundPosts = db_posts.posts
-
+    let foundPosts = postsRepo.findPosts();
     if (!foundPosts.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);
@@ -78,7 +62,7 @@ postsRouter.get('/', (req: Request, res: Response) => {
 })
 
 postsRouter.get('/:id', (req: Request, res: Response) => {
-    const foundPost = db_posts.posts.find(c => +c.id === +req.params.id)
+    const foundPost = postsRepo.findProductById(req.body.id);
 
     if (!foundPost) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -89,16 +73,12 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 postsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
-    const foundPost = db_posts.posts.find(c => +c.id === +req.params.id)
-
-    if (!foundPost) {
+    const deletionStatus = postsRepo.deletePost(req.body.id)
+    if (deletionStatus) {
+        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
+    } else {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        return;
     }
-
-    db_posts.posts = db_posts.posts.filter(c => +c.id !== +req.params.id)
-
-    res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
 })
 
 postsRouter.post('/',
@@ -109,18 +89,7 @@ postsRouter.post('/',
     blogId,
     inputValidationMw,
     (req: Request, res: Response) => {
-
-        const createdPost = {
-            "id": (+(new Date())).toString(),
-            "title": req.body.title,
-            "shortDescription": req.body.shortDescription,
-            "content": req.body.content,
-            "blogId": req.body.blogId,
-            "blogName": "BlogName"
-        }
-
-        db_posts.posts.push(createdPost)
-
+        let createdPost = postsRepo.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdPost)
     })
@@ -133,19 +102,11 @@ postsRouter.put('/:id',
     blogId,
     inputValidationMw,
     (req: Request, res: Response) => {
-
-        const foundPost = db_posts.posts.find(c => +c.id === +req.params.id);
-
-        if (!foundPost) {
+        let updateStatus = postsRepo.updatePost(req.body.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-            return;
+        } else {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
-
-        foundPost.title = req.body.title;
-        foundPost.shortDescription = req.body.shortDescription;
-        foundPost.content = req.body.content;
-        foundPost.blogId = req.body.blogId;
-
-        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 )

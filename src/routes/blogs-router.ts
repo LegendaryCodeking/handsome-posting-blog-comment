@@ -104,17 +104,17 @@ blogsRouter.post('/',
     inputValidationMw,
     (req: Request, res: Response) => {
 
-        const createdPost = {
+        const createdBlog = {
             "id": (+(new Date())).toString(),
             "name": req.body.name,
             "description": req.body.description,
             "websiteUrl": req.body.websiteUrl
         }
 
-        db_blogs.blogs.push(createdPost)
+        db_blogs.blogs.push(createdBlog)
 
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdPost)
+            .json(createdBlog)
     })
 
 
