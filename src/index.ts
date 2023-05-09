@@ -6,8 +6,8 @@ import {testingRouter} from "./routes/testing-router";
 const app = express()
 const port = 7050
 
-// const jsonBodyMW = express.json()
-// app.use(jsonBodyMW)
+const jsonBodyMW = express.json()
+app.use(jsonBodyMW)
 
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)

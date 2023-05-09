@@ -9,8 +9,8 @@ const posts_router_1 = require("./routes/posts-router");
 const testing_router_1 = require("./routes/testing-router");
 const app = (0, express_1.default)();
 const port = 7050;
-// const jsonBodyMW = express.json()
-// app.use(jsonBodyMW)
+const jsonBodyMW = express_1.default.json();
+app.use(jsonBodyMW);
 app.use('/blogs', blogs_router_1.blogsRouter);
 app.use('/posts', posts_router_1.postsRouter);
 app.use('/testing', testing_router_1.testingRouter);
