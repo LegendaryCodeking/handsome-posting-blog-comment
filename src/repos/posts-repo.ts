@@ -1,4 +1,6 @@
-let db_posts = {
+import {PostType} from "../routes/posts-router";
+
+let db_posts : {posts: PostType[]} = {
     posts: [
         {
             "id": "1",

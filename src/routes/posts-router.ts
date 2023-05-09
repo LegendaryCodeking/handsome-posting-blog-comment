@@ -7,7 +7,18 @@ import {STATUSES_HTTP} from "./http-statuses-const";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', (req: Request, res: Response) => {
+export type PostType = {
+    "id": string,
+    "title": string,
+    "shortDescription": string,
+    "content": string,
+    "blogId": string,
+    "blogName": string
+}
+
+
+postsRouter.get('/', (req: Request,
+                      res: Response<PostType[]>) => {
     let foundPosts = postsRepo.findPosts();
     if (!foundPosts.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
@@ -18,7 +29,8 @@ postsRouter.get('/', (req: Request, res: Response) => {
         .json(foundPosts)
 })
 
-postsRouter.get('/:id', (req: Request, res: Response) => {
+postsRouter.get('/:id', (req: Request<{id: string}>,
+                         res: Response) => {
     const foundPost = postsRepo.findProductById(req.params.id);
 
     if (!foundPost) {
@@ -29,7 +41,10 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
     res.json(foundPost)
 })
 
-postsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
+postsRouter.delete('/:id',
+    authorizationCheck,
+    (req: Request<{id: string}>,
+     res: Response) => {
     const deletionStatus = postsRepo.deletePost(req.params.id)
     if (deletionStatus) {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
@@ -45,7 +60,8 @@ postsRouter.post('/',
     content,
     blogId,
     inputValidationMw,
-    (req: Request, res: Response) => {
+    (req: Request,
+     res: Response<PostType>) => {
         let createdPost = postsRepo.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdPost)
@@ -58,7 +74,8 @@ postsRouter.put('/:id',
     content,
     blogId,
     inputValidationMw,
-    (req: Request, res: Response) => {
+    (req: Request<{id: string}>,
+     res: Response) => {
         let updateStatus = postsRepo.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
