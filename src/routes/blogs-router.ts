@@ -59,7 +59,7 @@ blogsRouter.put('/:id',
     urlValidation,
     inputValidationMw,
     (req: Request, res: Response) => {
-        let updateStatus = blogsRepo.updateBlog(req.body.id, req.body.name, req.body.description, req.body.websiteUrl)
+        let updateStatus = blogsRepo.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {

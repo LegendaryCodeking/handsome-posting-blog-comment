@@ -59,7 +59,7 @@ postsRouter.put('/:id',
     blogId,
     inputValidationMw,
     (req: Request, res: Response) => {
-        let updateStatus = postsRepo.updatePost(req.body.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        let updateStatus = postsRepo.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         } else {

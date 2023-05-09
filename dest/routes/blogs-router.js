@@ -41,7 +41,7 @@ exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_valida
         .json(createdBlog);
 });
 exports.blogsRouter.put('/:id', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => {
-    let updateStatus = blogs_repo_1.blogsRepo.updateBlog(req.body.id, req.body.name, req.body.description, req.body.websiteUrl);
+    let updateStatus = blogs_repo_1.blogsRepo.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
     if (updateStatus) {
         res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
     }
