@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsRouter = exports.db_blogs = void 0;
+exports.blogsRouter = void 0;
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const index_1 = require("../index");
+const blogs_repo_1 = require("../repos/blogs-repo");
 const authorizationCheck = (req, res, next) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
         res.sendStatus(401);
@@ -28,38 +29,21 @@ const inputValidationMw = (req, res, next) => {
     const result = (0, express_validator_1.validationResult)(req);
     if (!result.isEmpty()) {
         res.status(index_1.STATUSES_HTTP.BAD_REQUEST_400)
-            //@ts-ignore
-            .json({ errorsMessages: result.array({ onlyFirstError: true }).map(val => ({ "message": val.msg, "field": val["path"] })) });
+            .json({
+            errorsMessages: result.array({ onlyFirstError: true }).map(val => ({
+                "message": val.msg,
+                //@ts-ignore
+                "field": val["path"]
+            }))
+        });
     }
     else {
         next();
     }
 };
-exports.db_blogs = {
-    blogs: [
-        {
-            "id": "1",
-            "name": "Marieh Kondo",
-            "description": "Bingo article about Marieh Kondo and his famous book",
-            "websiteUrl": "https://telegra.ph/Marieh-Kondo-02-14"
-        },
-        {
-            "id": "2",
-            "name": "Meandr",
-            "description": "Bingo article about Meandr",
-            "websiteUrl": "https://telegra.ph/Meandr-02-14"
-        },
-        {
-            "id": "3",
-            "name": "Dzhiro dItaliya",
-            "description": "Bingo article about famous italian bicycle race Dzhiro dItaliya",
-            "websiteUrl": "https://telegra.ph/Dzhiro-dItaliya-02-13"
-        }
-    ]
-};
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => {
-    let foundBlogs = exports.db_blogs.blogs;
+    let foundBlogs = blogs_repo_1.blogsRepo.findBlogs();
     if (!foundBlogs.length) {
         res.status(index_1.STATUSES_HTTP.NOT_FOUND_404)
             .json(foundBlogs);
@@ -69,7 +53,7 @@ exports.blogsRouter.get('/', (req, res) => {
         .json(foundBlogs);
 });
 exports.blogsRouter.get('/:id', (req, res) => {
-    const foundBlog = exports.db_blogs.blogs.find(c => +c.id === +req.params.id);
+    const foundBlog = blogs_repo_1.blogsRepo.findBlogById(req.body.id);
     if (!foundBlog) {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
@@ -77,33 +61,25 @@ exports.blogsRouter.get('/:id', (req, res) => {
     res.json(foundBlog);
 });
 exports.blogsRouter.delete('/:id', authorizationCheck, (req, res) => {
-    const foundBlog = exports.db_blogs.blogs.find(c => +c.id === +req.params.id);
-    if (!foundBlog) {
-        res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
-        return;
+    let deleteStatus = blogs_repo_1.blogsRepo.deleteBlog(req.body.id);
+    if (deleteStatus) {
+        res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
     }
-    exports.db_blogs.blogs = exports.db_blogs.blogs.filter(c => +c.id !== +req.params.id);
-    res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
+    else {
+        res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
+    }
 });
 exports.blogsRouter.post('/', authorizationCheck, nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
-    const createdBlog = {
-        "id": (+(new Date())).toString(),
-        "name": req.body.name,
-        "description": req.body.description,
-        "websiteUrl": req.body.websiteUrl
-    };
-    exports.db_blogs.blogs.push(createdBlog);
+    let createdBlog = blogs_repo_1.blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
     res.status(index_1.STATUSES_HTTP.CREATED_201)
         .json(createdBlog);
 });
 exports.blogsRouter.put('/:id', authorizationCheck, nameValidation, descriptionValidation, urlValidation, inputValidationMw, (req, res) => {
-    const foundBlog = exports.db_blogs.blogs.find(c => +c.id === +req.params.id);
-    if (!foundBlog) {
-        res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
-        return;
+    let updateStatus = blogs_repo_1.blogsRepo.updateBlog(req.body.id, req.body.name, req.body.description, req.body.websiteUrl);
+    if (updateStatus) {
+        res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
     }
-    foundBlog.name = req.body.name;
-    foundBlog.description = req.body.description;
-    foundBlog.websiteUrl = req.body.websiteUrl;
-    res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
+    else {
+        res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
+    }
 });

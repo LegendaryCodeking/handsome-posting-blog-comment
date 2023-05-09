@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response, Router} from 'express'
 import {body, validationResult} from "express-validator";
 import {STATUSES_HTTP} from "../index";
+import {blogsRepo} from "../repos/blogs-repo";
 
 const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
@@ -26,41 +27,23 @@ const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            //@ts-ignore
-            .json({errorsMessages: result.array({ onlyFirstError: true }).map(val => ({"message": val.msg, "field": val["path"]}))});
+            .json({
+                errorsMessages: result.array({onlyFirstError: true}).map(val => ({
+                    "message": val.msg,
+                    //@ts-ignore
+                    "field": val["path"]
+                }))
+            });
     } else {
         next();
     }
 }
 
-export let db_blogs = {
-    blogs: [
-        {
-            "id": "1",
-            "name": "Marieh Kondo",
-            "description": "Bingo article about Marieh Kondo and his famous book",
-            "websiteUrl": "https://telegra.ph/Marieh-Kondo-02-14"
-        },
-        {
-            "id": "2",
-            "name": "Meandr",
-            "description": "Bingo article about Meandr",
-            "websiteUrl": "https://telegra.ph/Meandr-02-14"
-        },
-        {
-            "id": "3",
-            "name": "Dzhiro dItaliya",
-            "description": "Bingo article about famous italian bicycle race Dzhiro dItaliya",
-            "websiteUrl": "https://telegra.ph/Dzhiro-dItaliya-02-13"
-        }
-
-    ]
-}
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', (req: Request, res: Response) => {
-    let foundBlogs = db_blogs.blogs
+    let foundBlogs = blogsRepo.findBlogs()
 
     if (!foundBlogs.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
@@ -72,8 +55,7 @@ blogsRouter.get('/', (req: Request, res: Response) => {
 })
 
 blogsRouter.get('/:id', (req: Request, res: Response) => {
-    const foundBlog = db_blogs.blogs.find(c => +c.id === +req.params.id)
-
+    const foundBlog = blogsRepo.findBlogById(req.body.id)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
@@ -82,17 +64,13 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
     res.json(foundBlog)
 })
 
-blogsRouter.delete('/:id', authorizationCheck,  (req: Request, res: Response) => {
-    const foundBlog = db_blogs.blogs.find(c => +c.id === +req.params.id)
-
-    if (!foundBlog) {
+blogsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
+    let deleteStatus = blogsRepo.deleteBlog(req.body.id)
+    if (deleteStatus) {
+        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
+    } else {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        return;
     }
-
-    db_blogs.blogs = db_blogs.blogs.filter(c => +c.id !== +req.params.id)
-
-    res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
 })
 
 
@@ -103,20 +81,11 @@ blogsRouter.post('/',
     urlValidation,
     inputValidationMw,
     (req: Request, res: Response) => {
-
-        const createdBlog = {
-            "id": (+(new Date())).toString(),
-            "name": req.body.name,
-            "description": req.body.description,
-            "websiteUrl": req.body.websiteUrl
-        }
-
-        db_blogs.blogs.push(createdBlog)
+        let createdBlog = blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdBlog)
     })
-
 
 blogsRouter.put('/:id',
     authorizationCheck,
@@ -125,18 +94,11 @@ blogsRouter.put('/:id',
     urlValidation,
     inputValidationMw,
     (req: Request, res: Response) => {
-
-        const foundBlog = db_blogs.blogs.find(c => +c.id === +req.params.id);
-
-        if (!foundBlog) {
+        let updateStatus = blogsRepo.updateBlog(req.body.id, req.body.name, req.body.description, req.body.websiteUrl)
+        if (updateStatus) {
+            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
+        } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-            return;
         }
-
-        foundBlog.name = req.body.name;
-        foundBlog.description = req.body.description;
-        foundBlog.websiteUrl = req.body.websiteUrl;
-
-        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 )
