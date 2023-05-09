@@ -61,7 +61,7 @@ postsRouter.put('/:id',
     (req: Request, res: Response) => {
         let updateStatus = postsRepo.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (updateStatus) {
-            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }

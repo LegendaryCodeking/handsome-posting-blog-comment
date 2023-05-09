@@ -43,7 +43,7 @@ exports.postsRouter.post('/', authorization_mw_1.authorizationCheck, post_valida
 exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => {
     let updateStatus = posts_repo_1.postsRepo.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (updateStatus) {
-        res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
+        res.sendStatus(index_1.STATUSES_HTTP.NO_CONTENT_204);
     }
     else {
         res.sendStatus(index_1.STATUSES_HTTP.NOT_FOUND_404);
