@@ -1,7 +1,7 @@
 import {Router} from "express";
-import {STATUSES_HTTP} from "../index";
 import {blogsRepo} from "../repos/blogs-repo";
 import {postsRepo} from "../repos/posts-repo";
+import {STATUSES_HTTP} from "./http-statuses-const";
 
 export const testingRouter = Router({})
 

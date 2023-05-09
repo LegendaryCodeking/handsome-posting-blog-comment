@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
-import {STATUSES_HTTP} from "../index";
+import {STATUSES_HTTP} from "../routes/http-statuses-const";
 
 export const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
