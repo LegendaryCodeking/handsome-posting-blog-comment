@@ -31,10 +31,32 @@ let db_posts = {
 };
 exports.postsRepo = {
     findPosts() {
-        return db_posts.posts;
+        return db_posts.posts.map(post => {
+            return {
+                id: post.id,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName
+            };
+        });
     },
     findProductById(id) {
-        return db_posts.posts.find(c => +c.id === +id);
+        let foundPost = db_posts.posts.find(c => +c.id === +id);
+        if (foundPost) {
+            return {
+                id: foundPost.id,
+                title: foundPost.title,
+                shortDescription: foundPost.shortDescription,
+                content: foundPost.content,
+                blogId: foundPost.blogId,
+                blogName: foundPost.blogName
+            };
+        }
+        else {
+            return foundPost;
+        }
     },
     deletePost(id) {
         const foundPost = db_posts.posts.find(c => +c.id === +id);

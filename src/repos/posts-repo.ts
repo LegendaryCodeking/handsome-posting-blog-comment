@@ -1,6 +1,6 @@
 import {PostType} from "../routes/posts-router";
 
-let db_posts : {posts: PostType[]} = {
+let db_posts: { posts: PostType[] } = {
     posts: [
         {
             "id": "1",
@@ -32,10 +32,31 @@ let db_posts : {posts: PostType[]} = {
 
 export const postsRepo = {
     findPosts() {
-        return db_posts.posts;
+        return db_posts.posts.map(post => {
+            return {
+                id: post.id,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName
+            }
+        });
     },
     findProductById(id: string) {
-        return db_posts.posts.find(c => +c.id === +id)
+        let foundPost = db_posts.posts.find(c => +c.id === +id)
+        if (foundPost) {
+            return {
+                id: foundPost.id,
+                title: foundPost.title,
+                shortDescription: foundPost.shortDescription,
+                content: foundPost.content,
+                blogId: foundPost.blogId,
+                blogName: foundPost.blogName
+            }
+        } else {
+            return foundPost
+        }
     },
     deletePost(id: string) {
         const foundPost = db_posts.posts.find(c => +c.id === +id)
@@ -72,7 +93,7 @@ export const postsRepo = {
             return false;
         }
     },
-    deleteAll(){
+    deleteAll() {
         db_posts.posts = [];
     }
 }
