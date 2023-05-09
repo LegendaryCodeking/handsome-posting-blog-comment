@@ -1,3 +1,3 @@
 export type PostUpdateInputModel = {
-    title: string
+    id: string
 }

@@ -1,3 +1,3 @@
 export type PostGetInputModel = {
-    title: string
+    id: string
 }
