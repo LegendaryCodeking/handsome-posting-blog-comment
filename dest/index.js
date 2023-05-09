@@ -3,18 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.STATUSES_HTTP = void 0;
 const express_1 = __importDefault(require("express"));
 const blogs_router_1 = require("./routes/blogs-router");
 const posts_router_1 = require("./routes/posts-router");
 const testing_router_1 = require("./routes/testing-router");
-exports.STATUSES_HTTP = {
-    OK_200: 200,
-    CREATED_201: 201,
-    NO_CONTENT_204: 204,
-    BAD_REQUEST_400: 400,
-    NOT_FOUND_404: 404
-};
 const app = (0, express_1.default)();
 const port = 7050;
 const jsonBodyMW = express_1.default.json();

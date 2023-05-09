@@ -1,9 +1,9 @@
 import {Request, Response, Router} from 'express'
-import {STATUSES_HTTP} from "../index";
 import {postsRepo} from "../repos/posts-repo";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {authorizationCheck} from "../middlewares/authorization-mw";
 import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
+import {STATUSES_HTTP} from "./http-statuses-const";
 
 export const postsRouter = Router({})
 

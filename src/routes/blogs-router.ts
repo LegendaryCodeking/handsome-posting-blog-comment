@@ -1,9 +1,9 @@
 import {Request, Response, Router} from 'express'
-import {STATUSES_HTTP} from "../index";
 import {blogsRepo} from "../repos/blogs-repo";
 import {descriptionValidation, nameValidation, urlValidation} from "../middlewares/blog-validation-mw";
 import {authorizationCheck} from "../middlewares/authorization-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
+import {STATUSES_HTTP} from "./http-statuses-const";
 
 export const blogsRouter = Router({})
 
