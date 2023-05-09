@@ -10,16 +10,6 @@ import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 
 export const postsRouter = Router({})
 
-export type PostType = {
-    "id": string,
-    "title": string,
-    "shortDescription": string,
-    "content": string,
-    "blogId": string,
-    "blogName": string
-}
-
-
 postsRouter.get('/', (req: Request,
                       res: Response<PostViewModel[]>) => {
     let foundPosts = postsRepo.findPosts();

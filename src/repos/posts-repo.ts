@@ -1,4 +1,5 @@
-import {PostType} from "../routes/posts-router";
+import {PostType} from "../models/PostModel";
+import {PostViewModel} from "../models/PostViewModel";
 
 let db_posts: { posts: PostType[] } = {
     posts: [
@@ -30,30 +31,25 @@ let db_posts: { posts: PostType[] } = {
     ]
 }
 
+const getPostViewModel = (post:PostType): PostViewModel => {
+    return {
+        id: post.id,
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        blogId: post.blogId,
+        blogName: post.blogName
+    }
+}
+
 export const postsRepo = {
     findPosts() {
-        return db_posts.posts.map(post => {
-            return {
-                id: post.id,
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                blogName: post.blogName
-            }
-        });
+        return db_posts.posts.map(post => getPostViewModel(post));
     },
     findProductById(id: string) {
         let foundPost = db_posts.posts.find(c => +c.id === +id)
         if (foundPost) {
-            return {
-                id: foundPost.id,
-                title: foundPost.title,
-                shortDescription: foundPost.shortDescription,
-                content: foundPost.content,
-                blogId: foundPost.blogId,
-                blogName: foundPost.blogName
-            }
+            return getPostViewModel(foundPost)
         } else {
             return foundPost
         }

@@ -29,30 +29,24 @@ let db_posts = {
         }
     ]
 };
+const getPostViewModel = (post) => {
+    return {
+        id: post.id,
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        blogId: post.blogId,
+        blogName: post.blogName
+    };
+};
 exports.postsRepo = {
     findPosts() {
-        return db_posts.posts.map(post => {
-            return {
-                id: post.id,
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                blogName: post.blogName
-            };
-        });
+        return db_posts.posts.map(post => getPostViewModel(post));
     },
     findProductById(id) {
         let foundPost = db_posts.posts.find(c => +c.id === +id);
         if (foundPost) {
-            return {
-                id: foundPost.id,
-                title: foundPost.title,
-                shortDescription: foundPost.shortDescription,
-                content: foundPost.content,
-                blogId: foundPost.blogId,
-                blogName: foundPost.blogName
-            };
+            return getPostViewModel(foundPost);
         }
         else {
             return foundPost;
