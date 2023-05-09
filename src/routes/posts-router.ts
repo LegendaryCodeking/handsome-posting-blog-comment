@@ -1,52 +1,9 @@
-import {NextFunction, Request, Response, Router} from 'express'
-import {body, validationResult} from "express-validator";
+import {Request, Response, Router} from 'express'
 import {STATUSES_HTTP} from "../index";
 import {postsRepo} from "../repos/posts-repo";
-import {blogsRepo} from "../repos/blogs-repo";
-
-const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
-        res.sendStatus(401)
-    } else {
-        next();
-    }
-}
-const titleValidation = body("title").isString().withMessage("Title should be string").trim().isLength({
-    min: 1,
-    max: 15
-}).withMessage("The length should be from 1 to 15 symbols")
-const shortDescription = body("shortDescription").isString().withMessage("shortDescription should be string").trim().isLength({
-    min: 1,
-    max: 100
-}).withMessage("The length should be from 1 to 100 symbols")
-const content = body("content").isString().withMessage("content should be string").trim().isLength({
-    min: 1,
-    max: 1000
-}).withMessage("The length should be from 1 to 1000 symbols")
-const blogId = body('blogId').isString().withMessage("blogId should be string").trim().isLength({min: 1}).withMessage("The length should be > 0").custom(async value => {
-    const foundBlog = await blogsRepo.findBlogById(value);
-    if (!foundBlog) {
-        throw new Error('There is no blog with such ID');
-    }
-})
-
-
-const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-        res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            .json({
-                errorsMessages: result.array({onlyFirstError: true}).map(val => ({
-                    "message": val.msg,
-                    //@ts-ignore
-                    "field": val["path"]
-                }))
-            });
-    } else {
-        next();
-    }
-}
-
+import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
+import {authorizationCheck} from "../middlewares/authorization-mw";
+import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 
 export const postsRouter = Router({})
 
