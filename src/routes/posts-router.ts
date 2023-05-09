@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response, Router} from 'express'
 import {body, validationResult} from "express-validator";
 import {STATUSES_HTTP} from "../index";
-import {db_blogs} from "./blogs-router";
 import {postsRepo} from "../repos/posts-repo";
+import {blogsRepo} from "../repos/blogs-repo";
 
 const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
@@ -24,7 +24,7 @@ const content = body("content").isString().withMessage("content should be string
     max: 1000
 }).withMessage("The length should be from 1 to 1000 symbols")
 const blogId = body('blogId').isString().withMessage("blogId should be string").trim().isLength({min: 1}).withMessage("The length should be > 0").custom(async value => {
-    const foundBlog = await db_blogs.blogs.find(c => +c.id === +value);
+    const foundBlog = await blogsRepo.findBlogById(value);
     if (!foundBlog) {
         throw new Error('There is no blog with such ID');
     }

@@ -39,7 +39,7 @@ export const blogsRepo = {
             return false;
         }
     },
-    createBlog(name: string, description: string, websiteUrl: string ) {
+    createBlog(name: string, description: string, websiteUrl: string) {
         const createdBlog = {
             "id": (+(new Date())).toString(),
             "name": name,
@@ -49,7 +49,7 @@ export const blogsRepo = {
 
         db_blogs.blogs.push(createdBlog)
 
-         return createdBlog;
+        return createdBlog;
     },
     updateBlog(id: string, name: string, description: string, websiteUrl: string) {
 
@@ -63,10 +63,5 @@ export const blogsRepo = {
         } else {
             return false;
         }
-
-
     }
-
-
-
 }

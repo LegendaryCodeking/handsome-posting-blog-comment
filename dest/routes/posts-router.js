@@ -13,8 +13,8 @@ exports.postsRouter = void 0;
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const index_1 = require("../index");
-const blogs_router_1 = require("./blogs-router");
 const posts_repo_1 = require("../repos/posts-repo");
+const blogs_repo_1 = require("../repos/blogs-repo");
 const authorizationCheck = (req, res, next) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
         res.sendStatus(401);
@@ -36,7 +36,7 @@ const content = (0, express_validator_1.body)("content").isString().withMessage(
     max: 1000
 }).withMessage("The length should be from 1 to 1000 symbols");
 const blogId = (0, express_validator_1.body)('blogId').isString().withMessage("blogId should be string").trim().isLength({ min: 1 }).withMessage("The length should be > 0").custom((value) => __awaiter(void 0, void 0, void 0, function* () {
-    const foundBlog = yield blogs_router_1.db_blogs.blogs.find(c => +c.id === +value);
+    const foundBlog = yield blogs_repo_1.blogsRepo.findBlogById(value);
     if (!foundBlog) {
         throw new Error('There is no blog with such ID');
     }
