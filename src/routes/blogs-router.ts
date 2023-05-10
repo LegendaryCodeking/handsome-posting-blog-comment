@@ -4,10 +4,13 @@ import {descriptionValidation, nameValidation, urlValidation} from "../middlewar
 import {authorizationCheck} from "../middlewares/authorization-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
+import {RequestWithParamsBlog} from "../types/blogs-types";
+import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
+import {BlogViewModel} from "../models/BlogViewModel";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', (req: Request, res: Response) => {
+blogsRouter.get('/', (req: Request, res: Response<BlogViewModel[]>) => {
     let foundBlogs = blogsRepo.findBlogs()
 
     if (!foundBlogs.length) {
@@ -19,7 +22,7 @@ blogsRouter.get('/', (req: Request, res: Response) => {
         .json(foundBlogs)
 })
 
-blogsRouter.get('/:id', (req: Request, res: Response) => {
+blogsRouter.get('/:id', (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response<BlogViewModel>) => {
     const foundBlog = blogsRepo.findBlogById(req.params.id)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -29,7 +32,7 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
     res.json(foundBlog)
 })
 
-blogsRouter.delete('/:id', authorizationCheck, (req: Request, res: Response) => {
+blogsRouter.delete('/:id', authorizationCheck, (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
     let deleteStatus = blogsRepo.deleteBlog(req.params.id)
     if (deleteStatus) {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
@@ -45,7 +48,7 @@ blogsRouter.post('/',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    (req: Request, res: Response) => {
+    (req: Request, res: Response<BlogViewModel>) => {
         let createdBlog = blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
 
         res.status(STATUSES_HTTP.CREATED_201)
@@ -58,7 +61,7 @@ blogsRouter.put('/:id',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    (req: Request, res: Response) => {
+    (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
         let updateStatus = blogsRepo.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)

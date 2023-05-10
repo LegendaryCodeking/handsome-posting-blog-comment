@@ -1,4 +1,7 @@
-let db_blogs = {
+import {BlogType} from "../models/BlogModel";
+import {BlogViewModel} from "../models/BlogViewModel";
+
+let db_blogs: {blogs: BlogType[]} = {
     blogs: [
         {
             "id": "1",
@@ -22,12 +25,27 @@ let db_blogs = {
     ]
 }
 
+const getBlogViewModel = (blog:BlogType): BlogViewModel => {
+    return {
+        "id": blog.id,
+        "name": blog.name,
+        "description": blog.description,
+        "websiteUrl": blog.websiteUrl
+    }
+}
+
+
 export const blogsRepo = {
     findBlogs() {
-        return db_blogs.blogs;
+        return db_blogs.blogs.map(blog => getBlogViewModel(blog));
     },
     findBlogById(id: string) {
-        return db_blogs.blogs.find(c => +c.id === +id);
+        let foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        if (foundBlog) {
+            return getBlogViewModel(foundBlog)
+        } else {
+            return foundBlog
+        }
     },
     deleteBlog(id: string) {
         const foundBlog = db_blogs.blogs.find(c => +c.id === +id)

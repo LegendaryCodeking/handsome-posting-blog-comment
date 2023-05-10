@@ -23,12 +23,26 @@ let db_blogs = {
         }
     ]
 };
+const getBlogViewModel = (blog) => {
+    return {
+        "id": blog.id,
+        "name": blog.name,
+        "description": blog.description,
+        "websiteUrl": blog.websiteUrl
+    };
+};
 exports.blogsRepo = {
     findBlogs() {
-        return db_blogs.blogs;
+        return db_blogs.blogs.map(blog => getBlogViewModel(blog));
     },
     findBlogById(id) {
-        return db_blogs.blogs.find(c => +c.id === +id);
+        let foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        if (foundBlog) {
+            return getBlogViewModel(foundBlog);
+        }
+        else {
+            return foundBlog;
+        }
     },
     deleteBlog(id) {
         const foundBlog = db_blogs.blogs.find(c => +c.id === +id);
