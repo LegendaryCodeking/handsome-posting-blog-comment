@@ -3,7 +3,7 @@ import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
 import {testingRouter} from "./routes/testing-router";
 
-const app = express()
+export const app = express()
 const port = 7050
 
 const jsonBodyMW = express.json()
