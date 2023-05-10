@@ -55,6 +55,10 @@ describe('/blogs', () => {
             "description": "Bingo article about Richard Feynman",
             "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
         })
+
+        await request(app)
+            .get('/blogs')
+            .expect(STATUSES_HTTP.OK_200, [createdBlog])
     })
 
 
