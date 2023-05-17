@@ -14,31 +14,142 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const index_1 = require("../../index");
+const http_statuses_const_1 = require("../../routes/http-statuses-const");
 describe('/blogs', () => {
-    it('', () => __awaiter(void 0, void 0, void 0, function* () {
+    beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app).delete('/testing/all-data');
+    }));
+    it('should return 404 and empty array', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(index_1.app)
             .get('/blogs')
-            .expect(200, []);
+            .expect(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404, []);
     }));
-    // it('', () => {
-    //
-    // })
-    // it('', () => {
-    //
-    // })
-    // it('', () => {
-    //
-    // })
-    // it('', () => {
-    //
-    // })
-    // it('', () => {
-    //
-    // })
-    // it('', () => {
-    //
-    // })
-    // it('', () => {
-    //
-    // })
+    it('should return 404 for not existing blog', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .get('/blogs/22222222220')
+            .expect(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+    }));
+    it('should not create blog without AUTH', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .post('/blogs')
+            .send({
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman",
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.UNAUTHORIZED_401);
+        yield (0, supertest_1.default)(index_1.app)
+            .get('/blogs')
+            .expect(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404, []);
+    }));
+    /*
+    * Created variable outside the next test to have option use
+    * id of created blog in the further put test
+    * */
+    let createdBlog1 = {
+        "id": "",
+        "name": "",
+        "description": "",
+        "websiteUrl": ""
+    };
+    it('should create blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        let readyResponse = yield (0, supertest_1.default)(index_1.app)
+            .post('/blogs')
+            .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
+            .send({
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman",
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
+        createdBlog1 = readyResponse.body;
+        expect(createdBlog1).toEqual({
+            "id": expect.any(String),
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman",
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+        });
+        yield (0, supertest_1.default)(index_1.app)
+            .get('/blogs')
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, [createdBlog1]);
+    }));
+    let createdBlog2 = {
+        "id": "",
+        "name": "",
+        "description": "",
+        "websiteUrl": ""
+    };
+    it('should create one more blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        let readyResponse = yield (0, supertest_1.default)(index_1.app)
+            .post('/blogs')
+            .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
+            .send({
+            "name": "Red Fox",
+            "description": "Bingo article about Red Fox",
+            "websiteUrl": "https://telegra.ph/Red-Fox-03-33"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
+        createdBlog2 = readyResponse.body;
+        expect(createdBlog2).toEqual({
+            "id": expect.any(String),
+            "name": "Red Fox",
+            "description": "Bingo article about Red Fox",
+            "websiteUrl": "https://telegra.ph/Red-Fox-03-33"
+        });
+        yield (0, supertest_1.default)(index_1.app)
+            .get('/blogs')
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, [createdBlog1, createdBlog2]);
+    }));
+    it('should not update blog with AUTH and incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .put(`/blogs/${createdBlog1.id}`)
+            .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
+            .send({
+            "name": "",
+            "description": "Bingo article about Richard Feynman 2222",
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.BAD_REQUEST_400);
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`/blogs/${createdBlog1.id}`)
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, createdBlog1);
+    }));
+    it('should update blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .put(`/blogs/${createdBlog1.id}`)
+            .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
+            .send({
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman 2222",
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`/blogs/${createdBlog1.id}`)
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, Object.assign(Object.assign({}, createdBlog1), { "description": "Bingo article about Richard Feynman 2222", "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11" }));
+    }));
+    it('should not update blog without AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .put(`/blogs/${createdBlog1.id}`)
+            .send({
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman 33333",
+            "websiteUrl": "https://telegra.ph/Richard-Fey33333nman-05-11"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.UNAUTHORIZED_401);
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`/blogs/${createdBlog1.id}`)
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, Object.assign(Object.assign({}, createdBlog1), { "description": "Bingo article about Richard Feynman 2222", "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11" }));
+    }));
+    it('should not update blog with AUTH and nonexistent шв ', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .put(`/blogs/404`)
+            .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
+            .send({
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman 2222",
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+        })
+            .expect(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+    }));
 });
