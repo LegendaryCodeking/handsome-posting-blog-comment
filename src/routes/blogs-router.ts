@@ -7,11 +7,12 @@ import {STATUSES_HTTP} from "./http-statuses-const";
 import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
+import {BlogType} from "../models/BlogModel";
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response<BlogViewModel[]>) => {
-    let foundBlogs = await blogsRepo.findBlogs()
+    let foundBlogs: BlogType[] = await blogsRepo.findBlogs()
 
     if (!foundBlogs.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
@@ -23,7 +24,7 @@ blogsRouter.get('/', async (req: Request, res: Response<BlogViewModel[]>) => {
 })
 
 blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response<BlogViewModel>) => {
-    const foundBlog = await blogsRepo.findBlogById(req.params.id)
+    const foundBlog: BlogType | null = await blogsRepo.findBlogById(req.params.id)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
@@ -32,8 +33,8 @@ blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>,
     res.json(foundBlog)
 })
 
-blogsRouter.delete('/:id', authorizationCheck, (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
-    let deleteStatus = blogsRepo.deleteBlog(req.params.id)
+blogsRouter.delete('/:id', authorizationCheck, async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
+    let deleteStatus: boolean = await blogsRepo.deleteBlog(req.params.id)
     if (deleteStatus) {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     } else {

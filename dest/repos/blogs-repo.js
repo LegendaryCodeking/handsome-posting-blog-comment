@@ -59,14 +59,10 @@ exports.blogsRepo = {
         });
     },
     deleteBlog(id) {
-        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
-        if (foundBlog) {
-            __db_blogs.blogs = __db_blogs.blogs.filter(c => +c.id !== +id);
-            return true;
-        }
-        else {
-            return false;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.deleteOne({ "id": id });
+            return result.deletedCount === 1;
+        });
     },
     createBlog(name, description, websiteUrl) {
         const createdBlog = {

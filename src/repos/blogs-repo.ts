@@ -2,7 +2,7 @@ import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {blogsCollection} from "./db";
 
-let __db_blogs: {blogs: BlogType[]} = {
+let __db_blogs: { blogs: BlogType[] } = {
     blogs: [
         {
             "id": "1",
@@ -26,7 +26,7 @@ let __db_blogs: {blogs: BlogType[]} = {
     ]
 }
 
-const getBlogViewModel = (blog:BlogType): BlogViewModel => {
+const getBlogViewModel = (blog: BlogType): BlogViewModel => {
     return {
         "id": blog.id,
         "name": blog.name,
@@ -41,22 +41,16 @@ export const blogsRepo = {
         return blogsCollection.find({}).map(blog => getBlogViewModel(blog)).toArray();
     },
     async findBlogById(id: string): Promise<BlogType | null> {
-        let foundBlog: BlogType | null  = await blogsCollection.findOne({"id": id})
+        let foundBlog: BlogType | null = await blogsCollection.findOne({"id": id})
         if (foundBlog) {
             return getBlogViewModel(foundBlog)
         } else {
             return null
         }
     },
-    deleteBlog(id: string) {
-        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id)
-
-        if (foundBlog) {
-            __db_blogs.blogs = __db_blogs.blogs.filter(c => +c.id !== +id)
-            return true;
-        } else {
-            return false;
-        }
+    async deleteBlog(id: string): Promise<boolean> {
+        const result = await blogsCollection.deleteOne({"id": id});
+        return result.deletedCount === 1
     },
     createBlog(name: string, description: string, websiteUrl: string) {
         const createdBlog = {
@@ -83,7 +77,7 @@ export const blogsRepo = {
             return false;
         }
     },
-    deleteAll(){
+    deleteAll() {
         __db_blogs.blogs = [];
     }
 }
