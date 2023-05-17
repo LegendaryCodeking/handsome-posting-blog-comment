@@ -40,12 +40,12 @@ export const blogsRepo = {
     async findBlogs(): Promise<BlogType[]> {
         return blogsCollection.find({}).map(blog => getBlogViewModel(blog)).toArray();
     },
-    findBlogById(id: string) {
-        let foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
+    async findBlogById(id: string): Promise<BlogType | null> {
+        let foundBlog: BlogType | null  = await blogsCollection.findOne({"id": id})
         if (foundBlog) {
             return getBlogViewModel(foundBlog)
         } else {
-            return foundBlog
+            return null
         }
     },
     deleteBlog(id: string) {

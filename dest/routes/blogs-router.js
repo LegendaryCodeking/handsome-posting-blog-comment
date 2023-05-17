@@ -27,14 +27,14 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.status(http_statuses_const_1.STATUSES_HTTP.OK_200)
         .json(foundBlogs);
 }));
-exports.blogsRouter.get('/:id', (req, res) => {
-    const foundBlog = blogs_repo_1.blogsRepo.findBlogById(req.params.id);
+exports.blogsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const foundBlog = yield blogs_repo_1.blogsRepo.findBlogById(req.params.id);
     if (!foundBlog) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
     }
     res.json(foundBlog);
-});
+}));
 exports.blogsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => {
     let deleteStatus = blogs_repo_1.blogsRepo.deleteBlog(req.params.id);
     if (deleteStatus) {

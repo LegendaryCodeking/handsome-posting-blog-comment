@@ -48,13 +48,15 @@ exports.blogsRepo = {
         });
     },
     findBlogById(id) {
-        let foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
-        if (foundBlog) {
-            return getBlogViewModel(foundBlog);
-        }
-        else {
-            return foundBlog;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            let foundBlog = yield db_1.blogsCollection.findOne({ "id": id });
+            if (foundBlog) {
+                return getBlogViewModel(foundBlog);
+            }
+            else {
+                return null;
+            }
+        });
     },
     deleteBlog(id) {
         const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
