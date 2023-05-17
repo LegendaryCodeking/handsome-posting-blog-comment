@@ -49,8 +49,8 @@ blogsRouter.post('/',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    (req: Request, res: Response<BlogViewModel>) => {
-        let createdBlog = blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
+    async (req: Request, res: Response<BlogViewModel>) => {
+        let createdBlog: BlogType = await blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdBlog)

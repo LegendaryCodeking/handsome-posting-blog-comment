@@ -44,11 +44,11 @@ exports.blogsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, 
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
     }
 }));
-exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => {
-    let createdBlog = blogs_repo_1.blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
+exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let createdBlog = yield blogs_repo_1.blogsRepo.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdBlog);
-});
+}));
 exports.blogsRouter.put('/:id', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => {
     let updateStatus = blogs_repo_1.blogsRepo.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
     if (updateStatus) {
