@@ -1,7 +1,8 @@
 import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
+import {blogsCollection} from "./db";
 
-let db_blogs: {blogs: BlogType[]} = {
+let __db_blogs: {blogs: BlogType[]} = {
     blogs: [
         {
             "id": "1",
@@ -36,11 +37,11 @@ const getBlogViewModel = (blog:BlogType): BlogViewModel => {
 
 
 export const blogsRepo = {
-    findBlogs() {
-        return db_blogs.blogs.map(blog => getBlogViewModel(blog));
+    async findBlogs(): Promise<BlogType[]> {
+        return blogsCollection.find({}).map(blog => getBlogViewModel(blog)).toArray();
     },
     findBlogById(id: string) {
-        let foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        let foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
         if (foundBlog) {
             return getBlogViewModel(foundBlog)
         } else {
@@ -48,10 +49,10 @@ export const blogsRepo = {
         }
     },
     deleteBlog(id: string) {
-        const foundBlog = db_blogs.blogs.find(c => +c.id === +id)
+        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id)
 
         if (foundBlog) {
-            db_blogs.blogs = db_blogs.blogs.filter(c => +c.id !== +id)
+            __db_blogs.blogs = __db_blogs.blogs.filter(c => +c.id !== +id)
             return true;
         } else {
             return false;
@@ -65,13 +66,13 @@ export const blogsRepo = {
             "websiteUrl": websiteUrl
         }
 
-        db_blogs.blogs.push(createdBlog)
+        __db_blogs.blogs.push(createdBlog)
 
         return createdBlog;
     },
     updateBlog(id: string, name: string, description: string, websiteUrl: string) {
 
-        const foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
 
         if (foundBlog) {
             foundBlog.name = name;
@@ -83,6 +84,6 @@ export const blogsRepo = {
         }
     },
     deleteAll(){
-        db_blogs.blogs = [];
+        __db_blogs.blogs = [];
     }
 }

@@ -1,7 +1,17 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepo = void 0;
-let db_blogs = {
+const db_1 = require("./db");
+let __db_blogs = {
     blogs: [
         {
             "id": "1",
@@ -33,10 +43,12 @@ const getBlogViewModel = (blog) => {
 };
 exports.blogsRepo = {
     findBlogs() {
-        return db_blogs.blogs.map(blog => getBlogViewModel(blog));
+        return __awaiter(this, void 0, void 0, function* () {
+            return db_1.blogsCollection.find({}).map(blog => getBlogViewModel(blog)).toArray();
+        });
     },
     findBlogById(id) {
-        let foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        let foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
         if (foundBlog) {
             return getBlogViewModel(foundBlog);
         }
@@ -45,9 +57,9 @@ exports.blogsRepo = {
         }
     },
     deleteBlog(id) {
-        const foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
         if (foundBlog) {
-            db_blogs.blogs = db_blogs.blogs.filter(c => +c.id !== +id);
+            __db_blogs.blogs = __db_blogs.blogs.filter(c => +c.id !== +id);
             return true;
         }
         else {
@@ -61,11 +73,11 @@ exports.blogsRepo = {
             "description": description,
             "websiteUrl": websiteUrl
         };
-        db_blogs.blogs.push(createdBlog);
+        __db_blogs.blogs.push(createdBlog);
         return createdBlog;
     },
     updateBlog(id, name, description, websiteUrl) {
-        const foundBlog = db_blogs.blogs.find(c => +c.id === +id);
+        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
         if (foundBlog) {
             foundBlog.name = name;
             foundBlog.description = description;
@@ -77,6 +89,6 @@ exports.blogsRepo = {
         }
     },
     deleteAll() {
-        db_blogs.blogs = [];
+        __db_blogs.blogs = [];
     }
 };

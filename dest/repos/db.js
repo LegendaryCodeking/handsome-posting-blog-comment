@@ -9,11 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runDb = void 0;
+exports.runDb = exports.blogsCollection = exports.postsCollection = void 0;
 const mongodb_1 = require("mongodb");
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
 const client = new mongodb_1.MongoClient(mongoUri);
 const db = client.db("forum");
+exports.postsCollection = db.collection("posts");
+exports.blogsCollection = db.collection("blogs");
 function runDb() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

@@ -1,9 +1,13 @@
 import {MongoClient} from 'mongodb'
+import {PostType} from "../models/PostModel";
+import {BlogType} from "../models/BlogModel";
 
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
 
 const client = new MongoClient(mongoUri);
 const db = client.db("forum")
+export const postsCollection = db.collection<PostType>("posts")
+export const blogsCollection = db.collection<BlogType>("blogs")
 
 export async function runDb() {
     try {

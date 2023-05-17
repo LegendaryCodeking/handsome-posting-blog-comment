@@ -10,8 +10,8 @@ import {BlogViewModel} from "../models/BlogViewModel";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', (req: Request, res: Response<BlogViewModel[]>) => {
-    let foundBlogs = blogsRepo.findBlogs()
+blogsRouter.get('/', async (req: Request, res: Response<BlogViewModel[]>) => {
+    let foundBlogs = await blogsRepo.findBlogs()
 
     if (!foundBlogs.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
