@@ -1,36 +1,6 @@
 import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
-import {db, postsCollection} from "./db";
-
-let db_posts: { posts: PostType[] } = {
-    posts: [
-        {
-            "id": "1",
-            "title": "Very interesting story number 111111111",
-            "shortDescription": "Very interesting story number 111111111 short desc",
-            "content": "Very interesting story number 111111111 outstanding content",
-            "blogId": "111111111",
-            "blogName": "BingoBlog"
-        },
-        {
-            "id": "2",
-            "title": "Very interesting story number 222222",
-            "shortDescription": "Very interesting story number 222222 short desc",
-            "content": "Very interesting story number 222222 outstanding content",
-            "blogId": "222222",
-            "blogName": "ShlakoBlocun"
-        },
-        {
-            "id": "3",
-            "title": "Very interesting story number 3333333333",
-            "shortDescription": "Very interesting story number 3333333333 short desc",
-            "content": "Very interesting story number 3333333333 outstanding content",
-            "blogId": "3333333333",
-            "blogName": "DogMemes"
-        }
-
-    ]
-}
+import {postsCollection} from "./db";
 
 const getPostViewModel = (post: PostType): PostViewModel => {
     return {
@@ -44,27 +14,22 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 }
 
 export const postsRepo = {
-    findPosts() {
-        return db_posts.posts.map(post => getPostViewModel(post));
+    async findPosts(): Promise<PostType[]> {
+        return postsCollection.find({}).map(post => getPostViewModel(post)).toArray();
     },
-    findProductById(id: string) {
-        let foundPost = db_posts.posts.find(c => +c.id === +id)
+    async findProductById(id: string): Promise<PostType | null> {
+        let foundPost: PostType | null = await postsCollection.findOne({"id": id})
         if (foundPost) {
             return getPostViewModel(foundPost)
         } else {
-            return foundPost
+            return null
         }
     },
-    deletePost(id: string) {
-        const foundPost = db_posts.posts.find(c => +c.id === +id)
-        if (foundPost) {
-            db_posts.posts = db_posts.posts.filter(c => +c.id !== +id)
-            return true;
-        } else {
-            return false;
-        }
+    async deletePost(id: string): Promise<boolean> {
+        let result = await postsCollection.deleteOne({"id": id})
+        return result.deletedCount === 1
     },
-    createPost(title: string, shortDescription: string, content: string, blogId: string) {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostType> {
         const createdPost = {
             "id": (+(new Date())).toString(),
             "title": title,
@@ -74,24 +39,19 @@ export const postsRepo = {
             "blogName": "BlogName"
         };
 
-        db_posts.posts.push(createdPost);
+        await postsCollection.insertOne(createdPost)
         return createdPost;
     },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        const foundPost = db_posts.posts.find(c => +c.id === +id);
-
-        if (foundPost) {
-            foundPost.title = title;
-            foundPost.shortDescription = shortDescription;
-            foundPost.content = content;
-            foundPost.blogId = blogId;
-            return true;
-        } else {
-            return false;
-        }
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
+        let result = await postsCollection.updateOne({"id": id}, {
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId
+        })
+        return result.matchedCount === 1
     },
-     async deleteAll() {
-         await postsCollection.deleteMany({})
-        // db.createCollection("posts")
+    async deleteAll() {
+        await postsCollection.deleteMany({})
     }
 }
