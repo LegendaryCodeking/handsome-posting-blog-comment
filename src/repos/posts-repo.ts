@@ -1,5 +1,6 @@
 import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
+import {postsCollection} from "./db";
 
 let db_posts: { posts: PostType[] } = {
     posts: [
@@ -89,7 +90,7 @@ export const postsRepo = {
             return false;
         }
     },
-    deleteAll() {
-        db_posts.posts = [];
+    async deleteAll() {
+         await postsCollection.drop()
     }
 }

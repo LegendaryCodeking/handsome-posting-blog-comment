@@ -72,7 +72,7 @@ export const blogsRepo = {
         })
        return result.matchedCount === 1
     },
-    deleteAll() {
-        __db_blogs.blogs = [];
+    async deleteAll() {
+        await blogsCollection.drop()
     }
 }
