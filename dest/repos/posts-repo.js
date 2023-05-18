@@ -18,7 +18,8 @@ const getPostViewModel = (post) => {
         shortDescription: post.shortDescription,
         content: post.content,
         blogId: post.blogId,
-        blogName: post.blogName
+        blogName: post.blogName,
+        createdAt: post.createdAt
     };
 };
 exports.postsRepo = {
@@ -52,7 +53,8 @@ exports.postsRepo = {
                 "shortDescription": shortDescription,
                 "content": content,
                 "blogId": blogId,
-                "blogName": "BlogName"
+                "blogName": "BlogName",
+                "createdAt": new Date().toISOString()
             };
             yield db_1.postsCollection.insertOne(createdPost);
             return createdPost;

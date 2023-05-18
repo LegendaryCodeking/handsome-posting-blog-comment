@@ -9,7 +9,8 @@ const getPostViewModel = (post: PostType): PostViewModel => {
         shortDescription: post.shortDescription,
         content: post.content,
         blogId: post.blogId,
-        blogName: post.blogName
+        blogName: post.blogName,
+        createdAt: post.createdAt
     }
 }
 
@@ -36,7 +37,9 @@ export const postsRepo = {
             "shortDescription": shortDescription,
             "content": content,
             "blogId": blogId,
-            "blogName": "BlogName"
+            "blogName": "BlogName",
+            "createdAt": new Date().toISOString()
+
         };
 
         await postsCollection.insertOne(createdPost)
