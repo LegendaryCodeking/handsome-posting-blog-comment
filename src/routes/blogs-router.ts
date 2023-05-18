@@ -62,8 +62,8 @@ blogsRouter.put('/:id',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
-        let updateStatus = blogsRepo.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
+    async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
+        let updateStatus: boolean = await blogsRepo.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {

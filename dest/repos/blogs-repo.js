@@ -77,16 +77,14 @@ exports.blogsRepo = {
         });
     },
     updateBlog(id, name, description, websiteUrl) {
-        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
-        if (foundBlog) {
-            foundBlog.name = name;
-            foundBlog.description = description;
-            foundBlog.websiteUrl = websiteUrl;
-            return true;
-        }
-        else {
-            return false;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.updateOne({ "id": id }, {
+                "name": name,
+                "description": description,
+                "websiteUrl": websiteUrl
+            });
+            return result.matchedCount === 1;
+        });
     },
     deleteAll() {
         __db_blogs.blogs = [];

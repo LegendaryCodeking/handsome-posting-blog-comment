@@ -60,22 +60,17 @@ export const blogsRepo = {
             "websiteUrl": websiteUrl
         }
 
-       await blogsCollection.insertOne(createdBlog)
+        await blogsCollection.insertOne(createdBlog)
 
         return createdBlog;
     },
-    updateBlog(id: string, name: string, description: string, websiteUrl: string) {
-
-        const foundBlog = __db_blogs.blogs.find(c => +c.id === +id);
-
-        if (foundBlog) {
-            foundBlog.name = name;
-            foundBlog.description = description;
-            foundBlog.websiteUrl = websiteUrl;
-            return true;
-        } else {
-            return false;
-        }
+    async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
+        const result = await blogsCollection.updateOne({"id": id}, {
+            "name": name,
+            "description": description,
+            "websiteUrl": websiteUrl
+        })
+       return result.matchedCount === 1
     },
     deleteAll() {
         __db_blogs.blogs = [];
