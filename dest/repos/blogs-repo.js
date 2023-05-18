@@ -78,11 +78,11 @@ exports.blogsRepo = {
     },
     updateBlog(id, name, description, websiteUrl) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.blogsCollection.updateOne({ "id": id }, {
-                "name": name,
-                "description": description,
-                "websiteUrl": websiteUrl
-            });
+            const result = yield db_1.blogsCollection.updateOne({ "id": id }, { $set: {
+                    "name": name,
+                    "description": description,
+                    "websiteUrl": websiteUrl
+                } });
             return result.matchedCount === 1;
         });
     },

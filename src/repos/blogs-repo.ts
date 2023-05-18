@@ -2,30 +2,6 @@ import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {blogsCollection} from "./db";
 
-let __db_blogs: { blogs: BlogType[] } = {
-    blogs: [
-        {
-            "id": "1",
-            "name": "Marieh Kondo",
-            "description": "Bingo article about Marieh Kondo and his famous book",
-            "websiteUrl": "https://telegra.ph/Marieh-Kondo-02-14"
-        },
-        {
-            "id": "2",
-            "name": "Meandr",
-            "description": "Bingo article about Meandr",
-            "websiteUrl": "https://telegra.ph/Meandr-02-14"
-        },
-        {
-            "id": "3",
-            "name": "Dzhiro dItaliya",
-            "description": "Bingo article about famous italian bicycle race Dzhiro dItaliya",
-            "websiteUrl": "https://telegra.ph/Dzhiro-dItaliya-02-13"
-        }
-
-    ]
-}
-
 const getBlogViewModel = (blog: BlogType): BlogViewModel => {
     return {
         "id": blog.id,
@@ -72,7 +48,9 @@ export const blogsRepo = {
         }})
        return result.matchedCount === 1
     },
-    async deleteAll() {
-        await blogsCollection.drop()
+     async deleteAll() {
+         await blogsCollection.deleteMany({});
+        // db.createCollection("blogs")
+
     }
 }

@@ -1,6 +1,6 @@
 import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
-import {postsCollection} from "./db";
+import {db, postsCollection} from "./db";
 
 let db_posts: { posts: PostType[] } = {
     posts: [
@@ -32,7 +32,7 @@ let db_posts: { posts: PostType[] } = {
     ]
 }
 
-const getPostViewModel = (post:PostType): PostViewModel => {
+const getPostViewModel = (post: PostType): PostViewModel => {
     return {
         id: post.id,
         title: post.title,
@@ -90,7 +90,8 @@ export const postsRepo = {
             return false;
         }
     },
-    async deleteAll() {
-         await postsCollection.drop()
+     async deleteAll() {
+         await postsCollection.deleteMany({})
+        // db.createCollection("posts")
     }
 }

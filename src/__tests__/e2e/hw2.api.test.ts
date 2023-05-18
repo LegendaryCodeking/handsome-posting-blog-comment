@@ -61,6 +61,7 @@ describe('/blogs', () => {
         createdBlog1 = readyResponse.body
 
         expect(createdBlog1).toEqual({
+            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
@@ -69,7 +70,12 @@ describe('/blogs', () => {
 
         await request(app)
             .get('/blogs')
-            .expect(STATUSES_HTTP.OK_200, [createdBlog1])
+            .expect(STATUSES_HTTP.OK_200, [{
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
+                "description": createdBlog1.description,
+                "websiteUrl": createdBlog1.websiteUrl
+            }])
     })
 
     let createdBlog2: BlogType = {
@@ -93,6 +99,7 @@ describe('/blogs', () => {
         createdBlog2 = readyResponse.body
 
         expect(createdBlog2).toEqual({
+            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Red Fox",
             "description": "Bingo article about Red Fox",
@@ -101,7 +108,17 @@ describe('/blogs', () => {
 
         await request(app)
             .get('/blogs')
-            .expect(STATUSES_HTTP.OK_200, [createdBlog1,createdBlog2])
+            .expect(STATUSES_HTTP.OK_200, [{
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
+                "description": createdBlog1.description,
+                "websiteUrl": createdBlog1.websiteUrl
+            }, {
+                "id": createdBlog2.id,
+                "name": createdBlog2.name,
+                "description": createdBlog2.description,
+                "websiteUrl": createdBlog2.websiteUrl
+            }])
     })
 
     it('should not update blog with AUTH and incorrect input data', async () => {
@@ -118,7 +135,12 @@ describe('/blogs', () => {
 
         await request(app)
             .get(`/blogs/${createdBlog1.id}`)
-            .expect(STATUSES_HTTP.OK_200, createdBlog1)
+            .expect(STATUSES_HTTP.OK_200, {
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
+                "description": createdBlog1.description,
+                "websiteUrl": createdBlog1.websiteUrl
+            })
     })
 
     it('should update blog with AUTH and correct input data', async () => {
@@ -136,7 +158,8 @@ describe('/blogs', () => {
         await request(app)
             .get(`/blogs/${createdBlog1.id}`)
             .expect(STATUSES_HTTP.OK_200, {
-                ...createdBlog1,
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
                 "description": "Bingo article about Richard Feynman 2222",
                 "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
             })
@@ -156,7 +179,8 @@ describe('/blogs', () => {
         await request(app)
             .get(`/blogs/${createdBlog1.id}`)
             .expect(STATUSES_HTTP.OK_200, {
-                ...createdBlog1,
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
                 "description": "Bingo article about Richard Feynman 2222",
                 "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
             })

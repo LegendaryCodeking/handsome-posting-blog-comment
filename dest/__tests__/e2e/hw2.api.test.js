@@ -64,6 +64,7 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
         createdBlog1 = readyResponse.body;
         expect(createdBlog1).toEqual({
+            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
@@ -71,7 +72,12 @@ describe('/blogs', () => {
         });
         yield (0, supertest_1.default)(index_1.app)
             .get('/blogs')
-            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, [createdBlog1]);
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, [{
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
+                "description": createdBlog1.description,
+                "websiteUrl": createdBlog1.websiteUrl
+            }]);
     }));
     let createdBlog2 = {
         "id": "",
@@ -91,6 +97,7 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
         createdBlog2 = readyResponse.body;
         expect(createdBlog2).toEqual({
+            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Red Fox",
             "description": "Bingo article about Red Fox",
@@ -98,7 +105,17 @@ describe('/blogs', () => {
         });
         yield (0, supertest_1.default)(index_1.app)
             .get('/blogs')
-            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, [createdBlog1, createdBlog2]);
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, [{
+                "id": createdBlog1.id,
+                "name": createdBlog1.name,
+                "description": createdBlog1.description,
+                "websiteUrl": createdBlog1.websiteUrl
+            }, {
+                "id": createdBlog2.id,
+                "name": createdBlog2.name,
+                "description": createdBlog2.description,
+                "websiteUrl": createdBlog2.websiteUrl
+            }]);
     }));
     it('should not update blog with AUTH and incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(index_1.app)
@@ -112,7 +129,12 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.BAD_REQUEST_400);
         yield (0, supertest_1.default)(index_1.app)
             .get(`/blogs/${createdBlog1.id}`)
-            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, createdBlog1);
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, {
+            "id": createdBlog1.id,
+            "name": createdBlog1.name,
+            "description": createdBlog1.description,
+            "websiteUrl": createdBlog1.websiteUrl
+        });
     }));
     it('should update blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(index_1.app)
@@ -126,7 +148,12 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
         yield (0, supertest_1.default)(index_1.app)
             .get(`/blogs/${createdBlog1.id}`)
-            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, Object.assign(Object.assign({}, createdBlog1), { "description": "Bingo article about Richard Feynman 2222", "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11" }));
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, {
+            "id": createdBlog1.id,
+            "name": createdBlog1.name,
+            "description": "Bingo article about Richard Feynman 2222",
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+        });
     }));
     it('should not update blog without AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(index_1.app)
@@ -139,7 +166,12 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.UNAUTHORIZED_401);
         yield (0, supertest_1.default)(index_1.app)
             .get(`/blogs/${createdBlog1.id}`)
-            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, Object.assign(Object.assign({}, createdBlog1), { "description": "Bingo article about Richard Feynman 2222", "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11" }));
+            .expect(http_statuses_const_1.STATUSES_HTTP.OK_200, {
+            "id": createdBlog1.id,
+            "name": createdBlog1.name,
+            "description": "Bingo article about Richard Feynman 2222",
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+        });
     }));
     it('should not update blog with AUTH and nonexistent шв ', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(index_1.app)
