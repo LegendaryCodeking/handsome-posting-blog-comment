@@ -27,7 +27,9 @@ describe('/blogs', () => {
             .send({
                 "name": "Richard Feynman",
                 "description": "Bingo article about Richard Feynman",
-                "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+                "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
+                "createdAt": "2023-05-18T11:39:35.408Z",
+                "isMembership": true
             })
             .expect(STATUSES_HTTP.UNAUTHORIZED_401)
 
@@ -44,7 +46,9 @@ describe('/blogs', () => {
         "id": "",
         "name": "",
         "description": "",
-        "websiteUrl": ""
+        "websiteUrl": "",
+        "createdAt": "",
+        "isMembership": false
     };
 
     it('should create blog with AUTH and correct input data', async () => {
@@ -54,7 +58,7 @@ describe('/blogs', () => {
             .send({
                 "name": "Richard Feynman",
                 "description": "Bingo article about Richard Feynman",
-                "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+                "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
             })
             .expect(STATUSES_HTTP.CREATED_201)
 
@@ -65,7 +69,10 @@ describe('/blogs', () => {
             "id": expect.any(String),
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
-            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
+            "createdAt": expect.any(String),
+            "isMembership": false
+
         })
 
         await request(app)
@@ -74,7 +81,9 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl
+                "websiteUrl": createdBlog1.websiteUrl,
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             }])
     })
 
@@ -82,7 +91,9 @@ describe('/blogs', () => {
         "id": "",
         "name": "",
         "description": "",
-        "websiteUrl": ""
+        "websiteUrl": "",
+        "createdAt": "",
+        "isMembership": false
     };
 
     it('should create one more blog with AUTH and correct input data', async () => {
@@ -103,7 +114,9 @@ describe('/blogs', () => {
             "id": expect.any(String),
             "name": "Red Fox",
             "description": "Bingo article about Red Fox",
-            "websiteUrl": "https://telegra.ph/Red-Fox-03-33"
+            "websiteUrl": "https://telegra.ph/Red-Fox-03-33",
+            "createdAt": expect.any(String),
+            "isMembership": false
         })
 
         await request(app)
@@ -112,12 +125,16 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl
+                "websiteUrl": createdBlog1.websiteUrl,
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             }, {
                 "id": createdBlog2.id,
                 "name": createdBlog2.name,
                 "description": createdBlog2.description,
-                "websiteUrl": createdBlog2.websiteUrl
+                "websiteUrl": createdBlog2.websiteUrl,
+                "createdAt": createdBlog2.createdAt,
+                "isMembership": createdBlog2.isMembership
             }])
     })
 
@@ -139,7 +156,9 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl
+                "websiteUrl": createdBlog1.websiteUrl,
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             })
     })
 
@@ -161,7 +180,9 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": "Bingo article about Richard Feynman 2222",
-                "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+                "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11",
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             })
     })
 
@@ -182,7 +203,9 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": "Bingo article about Richard Feynman 2222",
-                "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+                "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11",
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             })
     })
 

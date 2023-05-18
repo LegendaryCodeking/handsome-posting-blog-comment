@@ -35,7 +35,9 @@ describe('/blogs', () => {
             .send({
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
-            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
+            "createdAt": "2023-05-18T11:39:35.408Z",
+            "isMembership": true
         })
             .expect(http_statuses_const_1.STATUSES_HTTP.UNAUTHORIZED_401);
         yield (0, supertest_1.default)(index_1.app)
@@ -50,7 +52,9 @@ describe('/blogs', () => {
         "id": "",
         "name": "",
         "description": "",
-        "websiteUrl": ""
+        "websiteUrl": "",
+        "createdAt": "",
+        "isMembership": false
     };
     it('should create blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
         let readyResponse = yield (0, supertest_1.default)(index_1.app)
@@ -59,7 +63,7 @@ describe('/blogs', () => {
             .send({
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
-            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
         })
             .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
         createdBlog1 = readyResponse.body;
@@ -68,7 +72,9 @@ describe('/blogs', () => {
             "id": expect.any(String),
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
-            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11"
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
+            "createdAt": expect.any(String),
+            "isMembership": false
         });
         yield (0, supertest_1.default)(index_1.app)
             .get('/blogs')
@@ -76,14 +82,18 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl
+                "websiteUrl": createdBlog1.websiteUrl,
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             }]);
     }));
     let createdBlog2 = {
         "id": "",
         "name": "",
         "description": "",
-        "websiteUrl": ""
+        "websiteUrl": "",
+        "createdAt": "",
+        "isMembership": false
     };
     it('should create one more blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
         let readyResponse = yield (0, supertest_1.default)(index_1.app)
@@ -101,7 +111,9 @@ describe('/blogs', () => {
             "id": expect.any(String),
             "name": "Red Fox",
             "description": "Bingo article about Red Fox",
-            "websiteUrl": "https://telegra.ph/Red-Fox-03-33"
+            "websiteUrl": "https://telegra.ph/Red-Fox-03-33",
+            "createdAt": expect.any(String),
+            "isMembership": false
         });
         yield (0, supertest_1.default)(index_1.app)
             .get('/blogs')
@@ -109,12 +121,16 @@ describe('/blogs', () => {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
                 "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl
+                "websiteUrl": createdBlog1.websiteUrl,
+                "createdAt": createdBlog1.createdAt,
+                "isMembership": createdBlog1.isMembership
             }, {
                 "id": createdBlog2.id,
                 "name": createdBlog2.name,
                 "description": createdBlog2.description,
-                "websiteUrl": createdBlog2.websiteUrl
+                "websiteUrl": createdBlog2.websiteUrl,
+                "createdAt": createdBlog2.createdAt,
+                "isMembership": createdBlog2.isMembership
             }]);
     }));
     it('should not update blog with AUTH and incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -133,7 +149,9 @@ describe('/blogs', () => {
             "id": createdBlog1.id,
             "name": createdBlog1.name,
             "description": createdBlog1.description,
-            "websiteUrl": createdBlog1.websiteUrl
+            "websiteUrl": createdBlog1.websiteUrl,
+            "createdAt": createdBlog1.createdAt,
+            "isMembership": createdBlog1.isMembership
         });
     }));
     it('should update blog with AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -152,7 +170,9 @@ describe('/blogs', () => {
             "id": createdBlog1.id,
             "name": createdBlog1.name,
             "description": "Bingo article about Richard Feynman 2222",
-            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11",
+            "createdAt": createdBlog1.createdAt,
+            "isMembership": createdBlog1.isMembership
         });
     }));
     it('should not update blog without AUTH and correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -170,7 +190,9 @@ describe('/blogs', () => {
             "id": createdBlog1.id,
             "name": createdBlog1.name,
             "description": "Bingo article about Richard Feynman 2222",
-            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11"
+            "websiteUrl": "https://telegra.ph/Richard-Fey2222nman-05-11",
+            "createdAt": createdBlog1.createdAt,
+            "isMembership": createdBlog1.isMembership
         });
     }));
     it('should not update blog with AUTH and nonexistent шв ', () => __awaiter(void 0, void 0, void 0, function* () {
