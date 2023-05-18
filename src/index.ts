@@ -10,6 +10,7 @@ const port = process.env.PORT || 7050
 const jsonBodyMW = express.json()
 app.use(jsonBodyMW)
 
+
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/testing', testingRouter)
