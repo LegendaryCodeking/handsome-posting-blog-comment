@@ -16,7 +16,9 @@ const getBlogViewModel = (blog) => {
         "id": blog.id,
         "name": blog.name,
         "description": blog.description,
-        "websiteUrl": blog.websiteUrl
+        "websiteUrl": blog.websiteUrl,
+        "createdAt": blog.createdAt,
+        "isMembership": blog.isMembership
     };
 };
 exports.blogsRepo = {
@@ -48,7 +50,9 @@ exports.blogsRepo = {
                 "id": (+(new Date())).toString(),
                 "name": name,
                 "description": description,
-                "websiteUrl": websiteUrl
+                "websiteUrl": websiteUrl,
+                "createdAt": new Date().toISOString(),
+                "isMembership": false
             };
             yield db_1.blogsCollection.insertOne(createdBlog);
             return createdBlog;
@@ -67,7 +71,6 @@ exports.blogsRepo = {
     deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
             yield db_1.blogsCollection.deleteMany({});
-            // db.createCollection("blogs")
         });
     }
 };

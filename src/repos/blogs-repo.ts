@@ -7,7 +7,9 @@ const getBlogViewModel = (blog: BlogType): BlogViewModel => {
         "id": blog.id,
         "name": blog.name,
         "description": blog.description,
-        "websiteUrl": blog.websiteUrl
+        "websiteUrl": blog.websiteUrl,
+        "createdAt": blog.createdAt,
+        "isMembership": blog.isMembership
     }
 }
 
@@ -33,7 +35,9 @@ export const blogsRepo = {
             "id": (+(new Date())).toString(),
             "name": name,
             "description": description,
-            "websiteUrl": websiteUrl
+            "websiteUrl": websiteUrl,
+            "createdAt": new Date().toISOString(),
+            "isMembership": false
         }
 
         await blogsCollection.insertOne(createdBlog)
@@ -50,7 +54,6 @@ export const blogsRepo = {
     },
      async deleteAll() {
          await blogsCollection.deleteMany({});
-        // db.createCollection("blogs")
 
     }
 }
