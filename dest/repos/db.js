@@ -16,13 +16,11 @@ exports.runDb = exports.blogsCollection = exports.postsCollection = void 0;
 const mongodb_1 = require("mongodb");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const mongoUri = process.env.MONGO_URL || "sssssssssss";
+const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
 const client = new mongodb_1.MongoClient(mongoUri);
 const db = client.db("forum");
 exports.postsCollection = db.collection("posts");
 exports.blogsCollection = db.collection("blogs");
-// export const createPosts = db.createCollection("posts")
-// export const createBlogs = db.createCollection("blogs")
 function runDb() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

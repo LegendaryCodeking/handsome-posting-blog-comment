@@ -11,28 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepo = void 0;
 const db_1 = require("./db");
-let __db_blogs = {
-    blogs: [
-        {
-            "id": "1",
-            "name": "Marieh Kondo",
-            "description": "Bingo article about Marieh Kondo and his famous book",
-            "websiteUrl": "https://telegra.ph/Marieh-Kondo-02-14"
-        },
-        {
-            "id": "2",
-            "name": "Meandr",
-            "description": "Bingo article about Meandr",
-            "websiteUrl": "https://telegra.ph/Meandr-02-14"
-        },
-        {
-            "id": "3",
-            "name": "Dzhiro dItaliya",
-            "description": "Bingo article about famous italian bicycle race Dzhiro dItaliya",
-            "websiteUrl": "https://telegra.ph/Dzhiro-dItaliya-02-13"
-        }
-    ]
-};
 const getBlogViewModel = (blog) => {
     return {
         "id": blog.id,
@@ -88,7 +66,8 @@ exports.blogsRepo = {
     },
     deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield db_1.blogsCollection.drop();
+            yield db_1.blogsCollection.deleteMany({});
+            // db.createCollection("blogs")
         });
     }
 };
