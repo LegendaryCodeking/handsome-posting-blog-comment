@@ -62,12 +62,12 @@ exports.postsRepo = {
     },
     updatePost(id, title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.postsCollection.updateOne({ "id": id }, {
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blogId
-            });
+            let result = yield db_1.postsCollection.updateOne({ "id": id }, { $set: {
+                    title: title,
+                    shortDescription: shortDescription,
+                    content: content,
+                    blogId: blogId
+                } });
             return result.matchedCount === 1;
         });
     },

@@ -46,12 +46,12 @@ export const postsRepo = {
         return getPostViewModel(createdPost);
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        let result = await postsCollection.updateOne({"id": id}, {
+        let result = await postsCollection.updateOne({"id": id}, {$set: {
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId
-        })
+        }})
         return result.matchedCount === 1
     },
     async deleteAll() {
