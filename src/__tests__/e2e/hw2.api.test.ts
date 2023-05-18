@@ -65,7 +65,6 @@ describe('/blogs', () => {
         createdBlog1 = readyResponse.body
 
         expect(createdBlog1).toEqual({
-            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
@@ -110,7 +109,6 @@ describe('/blogs', () => {
         createdBlog2 = readyResponse.body
 
         expect(createdBlog2).toEqual({
-            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Red Fox",
             "description": "Bingo article about Red Fox",

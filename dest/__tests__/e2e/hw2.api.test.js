@@ -68,7 +68,6 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
         createdBlog1 = readyResponse.body;
         expect(createdBlog1).toEqual({
-            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
@@ -107,7 +106,6 @@ describe('/blogs', () => {
             .expect(http_statuses_const_1.STATUSES_HTTP.CREATED_201);
         createdBlog2 = readyResponse.body;
         expect(createdBlog2).toEqual({
-            "_id": expect.any(String),
             "id": expect.any(String),
             "name": "Red Fox",
             "description": "Bingo article about Red Fox",

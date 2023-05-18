@@ -55,7 +55,8 @@ exports.blogsRepo = {
                 "isMembership": false
             };
             yield db_1.blogsCollection.insertOne(createdBlog);
-            return createdBlog;
+            //return createdBlog;
+            return getBlogViewModel(createdBlog);
         });
     },
     updateBlog(id, name, description, websiteUrl) {

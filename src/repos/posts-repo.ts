@@ -43,7 +43,7 @@ export const postsRepo = {
         };
 
         await postsCollection.insertOne(createdPost)
-        return createdPost;
+        return getPostViewModel(createdPost);
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         let result = await postsCollection.updateOne({"id": id}, {

@@ -57,7 +57,7 @@ exports.postsRepo = {
                 "createdAt": new Date().toISOString()
             };
             yield db_1.postsCollection.insertOne(createdPost);
-            return createdPost;
+            return getPostViewModel(createdPost);
         });
     },
     updatePost(id, title, shortDescription, content, blogId) {
