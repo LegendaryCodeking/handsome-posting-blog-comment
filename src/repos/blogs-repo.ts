@@ -65,11 +65,11 @@ export const blogsRepo = {
         return createdBlog;
     },
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        const result = await blogsCollection.updateOne({"id": id}, {
+        const result = await blogsCollection.updateOne({"id": id},{$set: {
             "name": name,
             "description": description,
             "websiteUrl": websiteUrl
-        })
+        }})
        return result.matchedCount === 1
     },
     async deleteAll() {
