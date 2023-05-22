@@ -41,6 +41,16 @@ blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>,
     res.json(foundBlog)
 })
 
+blogsRouter.get('/:id/posts', async (req: Request, res: Response<BlogViewModel[]>) => {
+    const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
+    if (!foundBlog) {
+        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+        return;
+    }
+
+
+})
+
 blogsRouter.delete('/:id', authorizationCheck, async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
     let deleteStatus: boolean = await blogsService.deleteBlog(req.params.id)
     if (deleteStatus) {
@@ -49,7 +59,6 @@ blogsRouter.delete('/:id', authorizationCheck, async (req: RequestWithParamsBlog
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
     }
 })
-
 
 blogsRouter.post('/',
     authorizationCheck,

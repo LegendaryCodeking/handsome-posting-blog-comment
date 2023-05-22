@@ -43,6 +43,13 @@ exports.blogsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
     }
     res.json(foundBlog);
 }));
+exports.blogsRouter.get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const foundBlog = yield blogs_service_1.blogsService.findBlogById(req.params.id);
+    if (!foundBlog) {
+        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+        return;
+    }
+}));
 exports.blogsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let deleteStatus = yield blogs_service_1.blogsService.deleteBlog(req.params.id);
     if (deleteStatus) {
