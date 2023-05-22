@@ -8,11 +8,19 @@ import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {BlogType} from "../models/BlogModel";
+import {BlogsFilterModel} from "../models/BlogsFilterModel";
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response<BlogViewModel[]>) => {
-    let foundBlogs: BlogType[] = await blogsService.findBlogs()
+    let queryFilter: BlogsFilterModel = {
+        searchNameTerm: req.query.searchNameTerm?.toString() || null,
+        sortBy: req.query.sortBy?.toString() || "createdAt",
+        sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
+        pageNumber: +(req.query.pageNumber ?? 1),
+        pageSize: +(req.query.pageSize ?? 10)
+    }
+    let foundBlogs: BlogType[] = await blogsService.findBlogs(queryFilter)
 
     if (!foundBlogs.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)

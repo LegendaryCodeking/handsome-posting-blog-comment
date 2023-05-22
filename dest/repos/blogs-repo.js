@@ -22,9 +22,17 @@ const getBlogViewModel = (blog) => {
     };
 };
 exports.blogsRepo = {
-    findBlogs() {
+    findBlogs(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
-            return db_1.blogsCollection.find({}).map(blog => getBlogViewModel(blog)).toArray();
+            let re = new RegExp(queryFilter.searchNameTerm + "");
+            const findFilter = queryFilter.searchNameTerm === null ? {} : { "name": re };
+            const sortField = queryFilter["sortBy"];
+            return db_1.blogsCollection
+                .find(findFilter)
+                .sort({ sortField: queryFilter.sortDirection === 'asc' ? 1 : -1 })
+                .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
+                .limit(queryFilter.pageSize)
+                .map(blog => getBlogViewModel(blog)).toArray();
         });
     },
     findBlogById(id) {
@@ -53,11 +61,13 @@ exports.blogsRepo = {
     },
     updateBlog(id, name, description, websiteUrl) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.blogsCollection.updateOne({ "id": id }, { $set: {
+            const result = yield db_1.blogsCollection.updateOne({ "id": id }, {
+                $set: {
                     "name": name,
                     "description": description,
                     "websiteUrl": websiteUrl
-                } });
+                }
+            });
             return result.matchedCount === 1;
         });
     },

@@ -18,7 +18,15 @@ const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let foundBlogs = yield blogs_service_1.blogsService.findBlogs();
+    var _a, _b, _c, _d, _e;
+    let queryFilter = {
+        searchNameTerm: ((_a = req.query.searchNameTerm) === null || _a === void 0 ? void 0 : _a.toString()) || null,
+        sortBy: ((_b = req.query.sortBy) === null || _b === void 0 ? void 0 : _b.toString()) || "createdAt",
+        sortDirection: (_c = (req.query.sortDirection === 'asc' ? 'asc' : undefined)) !== null && _c !== void 0 ? _c : 'desc',
+        pageNumber: +((_d = req.query.pageNumber) !== null && _d !== void 0 ? _d : 1),
+        pageSize: +((_e = req.query.pageSize) !== null && _e !== void 0 ? _e : 10)
+    };
+    let foundBlogs = yield blogs_service_1.blogsService.findBlogs(queryFilter);
     if (!foundBlogs.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
             .json(foundBlogs);
