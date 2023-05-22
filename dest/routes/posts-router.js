@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRouter = void 0;
 const express_1 = require("express");
-const posts_repo_1 = require("../repos/posts-repo");
+const posts_service_1 = require("../domain/posts-service");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 const authorization_mw_1 = require("../middlewares/authorization-mw");
 const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let foundPosts = yield posts_repo_1.postsRepo.findPosts();
+    let foundPosts = yield posts_service_1.postsService.findPosts();
     if (!foundPosts.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);
@@ -28,7 +28,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         .json(foundPosts);
 }));
 exports.postsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const foundPost = yield posts_repo_1.postsRepo.findProductById(req.params.id);
+    const foundPost = yield posts_service_1.postsService.findProductById(req.params.id);
     if (!foundPost) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
@@ -36,7 +36,7 @@ exports.postsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
     res.json(foundPost);
 }));
 exports.postsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const deletionStatus = yield posts_repo_1.postsRepo.deletePost(req.params.id);
+    const deletionStatus = yield posts_service_1.postsService.deletePost(req.params.id);
     if (deletionStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
     }
@@ -45,12 +45,12 @@ exports.postsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, 
     }
 }));
 exports.postsRouter.post('/', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let createdPost = yield posts_repo_1.postsRepo.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+    let createdPost = yield posts_service_1.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 }));
 exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let updateStatus = yield posts_repo_1.postsRepo.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+    let updateStatus = yield posts_service_1.postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (updateStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
     }

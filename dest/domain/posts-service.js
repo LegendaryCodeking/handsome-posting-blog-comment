@@ -9,62 +9,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postsRepo = void 0;
-const db_1 = require("./db");
-const getPostViewModel = (post) => {
-    return {
-        id: post.id,
-        title: post.title,
-        shortDescription: post.shortDescription,
-        content: post.content,
-        blogId: post.blogId,
-        blogName: post.blogName,
-        createdAt: post.createdAt
-    };
-};
-exports.postsRepo = {
+exports.postsService = void 0;
+const posts_repo_1 = require("../repos/posts-repo");
+exports.postsService = {
     findPosts() {
         return __awaiter(this, void 0, void 0, function* () {
-            return db_1.postsCollection.find({}).map(post => getPostViewModel(post)).toArray();
+            return posts_repo_1.postsRepo.findPosts();
         });
     },
-    findPostsById(id) {
+    findProductById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let foundPost = yield db_1.postsCollection.findOne({ "id": id });
-            if (foundPost) {
-                return getPostViewModel(foundPost);
-            }
-            else {
-                return null;
-            }
+            return posts_repo_1.postsRepo.findPostsById(id);
         });
     },
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.postsCollection.deleteOne({ "id": id });
-            return result.deletedCount === 1;
+            return posts_repo_1.postsRepo.deletePost(id);
         });
     },
-    createPost(createdPost) {
+    createPost(title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield db_1.postsCollection.insertOne(createdPost);
-            return getPostViewModel(createdPost);
+            const createdPost = {
+                "id": (+(new Date())).toString(),
+                "title": title,
+                "shortDescription": shortDescription,
+                "content": content,
+                "blogId": blogId,
+                "blogName": "BlogName",
+                "createdAt": new Date().toISOString()
+            };
+            return yield posts_repo_1.postsRepo.createPost(createdPost);
         });
     },
     updatePost(id, title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.postsCollection.updateOne({ "id": id }, { $set: {
-                    title: title,
-                    shortDescription: shortDescription,
-                    content: content,
-                    blogId: blogId
-                } });
-            return result.matchedCount === 1;
+            return posts_repo_1.postsRepo.updatePost(id, title, shortDescription, content, blogId);
         });
     },
     deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield db_1.postsCollection.deleteMany({});
+            yield posts_repo_1.postsRepo.deleteAll();
         });
     }
 };
