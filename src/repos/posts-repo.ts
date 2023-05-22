@@ -18,7 +18,7 @@ export const postsRepo = {
     async findPosts(): Promise<PostType[]> {
         return postsCollection.find({}).map(post => getPostViewModel(post)).toArray();
     },
-    async findProductById(id: string): Promise<PostType | null> {
+    async findPostsById(id: string): Promise<PostType | null> {
         let foundPost: PostType | null = await postsCollection.findOne({"id": id})
         if (foundPost) {
             return getPostViewModel(foundPost)
@@ -30,17 +30,7 @@ export const postsRepo = {
         let result = await postsCollection.deleteOne({"id": id})
         return result.deletedCount === 1
     },
-    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostType> {
-        const createdPost = {
-            "id": (+(new Date())).toString(),
-            "title": title,
-            "shortDescription": shortDescription,
-            "content": content,
-            "blogId": blogId,
-            "blogName": "BlogName",
-            "createdAt": new Date().toISOString()
-
-        };
+    async createPost(createdPost: PostType): Promise<PostType> {
 
         await postsCollection.insertOne(createdPost)
         return getPostViewModel(createdPost);
