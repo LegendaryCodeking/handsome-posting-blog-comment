@@ -19,11 +19,10 @@ export const blogsRepo = {
     async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogType[]> {
         let  re = new RegExp(queryFilter.searchNameTerm + "");
         const findFilter: any = queryFilter.searchNameTerm === null ? {} : {"name": re}
-        const sortField: string = queryFilter["sortBy"]
 
         return blogsCollection
             .find(findFilter)
-            .sort({sortField: queryFilter.sortDirection === 'asc' ? 1 : -1})
+            .sort({[queryFilter.sortBy] : (queryFilter.sortDirection === 'asc' ? 1 : -1)})
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
             .map(blog => getBlogViewModel(blog)).toArray();

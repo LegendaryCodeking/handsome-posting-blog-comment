@@ -26,10 +26,9 @@ exports.blogsRepo = {
         return __awaiter(this, void 0, void 0, function* () {
             let re = new RegExp(queryFilter.searchNameTerm + "");
             const findFilter = queryFilter.searchNameTerm === null ? {} : { "name": re };
-            const sortField = queryFilter["sortBy"];
             return db_1.blogsCollection
                 .find(findFilter)
-                .sort({ sortField: queryFilter.sortDirection === 'asc' ? 1 : -1 })
+                .sort({ [queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1) })
                 .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
                 .limit(queryFilter.pageSize)
                 .map(blog => getBlogViewModel(blog)).toArray();
