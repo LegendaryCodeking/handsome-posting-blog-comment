@@ -30,16 +30,7 @@ export const blogsRepo = {
         const result = await blogsCollection.deleteOne({"id": id});
         return result.deletedCount === 1
     },
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogType> {
-        const createdBlog = {
-            "id": (+(new Date())).toString(),
-            "name": name,
-            "description": description,
-            "websiteUrl": websiteUrl,
-            "createdAt": new Date().toISOString(),
-            "isMembership": false
-        }
-
+    async createBlog(createdBlog: BlogType): Promise<BlogType> {
         await blogsCollection.insertOne(createdBlog)
 
         //return createdBlog;
