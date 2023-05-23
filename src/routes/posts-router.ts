@@ -7,20 +7,14 @@ import {STATUSES_HTTP} from "./http-statuses-const";
 import {RequestWithParams} from "../types/posts-types";
 import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
-import {PostFilterModel} from "../models/PostFilterModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
+import {queryPagination} from "../models/BlogsFilterModel";
 
 export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request,
                             res: Response<PostsWithPaginationModel>) => {
-    let queryFilter: PostFilterModel = {
-        sortBy: req.query.sortBy?.toString() || "createdAt",
-        sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
-        pageNumber: +(req.query.pageNumber ?? 1),
-        pageSize: +(req.query.pageSize ?? 10),
-        blogId: ''
-    }
+    const queryFilter = queryPagination(req.query)
 
     let foundPosts = await postsService.findPosts(queryFilter);
     if (!foundPosts.items.length) {

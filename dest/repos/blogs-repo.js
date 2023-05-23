@@ -23,22 +23,22 @@ const getBlogViewModel = (blog) => {
 };
 exports.blogsRepo = {
     findBlogs(queryFilter) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            let re = new RegExp(queryFilter.searchNameTerm + '', 'i');
-            const findFilter = queryFilter.searchNameTerm === null ? {} : { "name": re };
+            const filter = { name: { $regex: (_a = queryFilter.searchNameTerm) !== null && _a !== void 0 ? _a : '', $options: 'i' } };
+            const sortFilter = { [queryFilter.sortBy]: queryFilter.sortDirection };
             let foundBlogs = yield db_1.blogsCollection
-                .find(findFilter)
-                .sort({ [queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1) })
+                .find(filter)
+                .sort(sortFilter)
                 .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
                 .limit(queryFilter.pageSize)
                 .map(blog => getBlogViewModel(blog)).toArray();
-            let totalCount = yield db_1.blogsCollection
-                .find(findFilter).toArray();
+            let totalCount = yield db_1.blogsCollection.countDocuments(filter);
             return {
-                "pagesCount": Math.ceil(totalCount.length / queryFilter.pageSize),
+                "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
                 "page": queryFilter.pageNumber,
                 "pageSize": queryFilter.pageSize,
-                "totalCount": totalCount.length,
+                "totalCount": totalCount,
                 "items": foundBlogs
             };
         });

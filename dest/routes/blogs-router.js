@@ -16,18 +16,12 @@ const blog_validation_mw_1 = require("../middlewares/blog-validation-mw");
 const authorization_mw_1 = require("../middlewares/authorization-mw");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
+const BlogsFilterModel_1 = require("../models/BlogsFilterModel");
 const posts_service_1 = require("../domain/posts-service");
 const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e;
-    let queryFilter = {
-        searchNameTerm: ((_a = req.query.searchNameTerm) === null || _a === void 0 ? void 0 : _a.toString()) || null,
-        sortBy: ((_b = req.query.sortBy) === null || _b === void 0 ? void 0 : _b.toString()) || "createdAt",
-        sortDirection: (_c = (req.query.sortDirection === 'asc' ? 'asc' : undefined)) !== null && _c !== void 0 ? _c : 'desc',
-        pageNumber: +((_d = req.query.pageNumber) !== null && _d !== void 0 ? _d : 1),
-        pageSize: +((_e = req.query.pageSize) !== null && _e !== void 0 ? _e : 10)
-    };
+    let queryFilter = (0, BlogsFilterModel_1.queryPagination)(req.query);
     let foundBlogs = yield blogs_service_1.blogsService.findBlogs(queryFilter);
     if (!foundBlogs.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
@@ -46,21 +40,14 @@ exports.blogsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
     res.json(foundBlog);
 }));
 exports.blogsRouter.get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _f, _g, _h, _j;
-    const foundBlog = yield blogs_service_1.blogsService.findBlogById(req.params.id);
+    const blogId = req.params.id;
+    const foundBlog = yield blogs_service_1.blogsService.findBlogById(blogId);
     if (!foundBlog) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
     }
-    // Copy from posts-router
-    let queryFilter = {
-        sortBy: ((_f = req.query.sortBy) === null || _f === void 0 ? void 0 : _f.toString()) || "createdAt",
-        sortDirection: (_g = (req.query.sortDirection === 'asc' ? 'asc' : undefined)) !== null && _g !== void 0 ? _g : 'desc',
-        pageNumber: +((_h = req.query.pageNumber) !== null && _h !== void 0 ? _h : 1),
-        pageSize: +((_j = req.query.pageSize) !== null && _j !== void 0 ? _j : 10),
-        blogId: req.params.id.toString()
-    };
-    let foundPosts = yield posts_service_1.postsService.findPosts(queryFilter);
+    const queryFilter = (0, BlogsFilterModel_1.queryPagination)(req.query);
+    let foundPosts = yield blogs_service_1.blogsService.findPostsByBlogId(queryFilter);
     if (!foundPosts.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);

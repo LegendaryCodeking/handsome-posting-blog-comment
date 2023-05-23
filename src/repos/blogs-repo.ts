@@ -1,8 +1,9 @@
 import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {blogsCollection} from "./db";
-import {BlogsFilterModel} from "../models/BlogsFilterModel";
+import {FilterModel} from "../models/BlogsFilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
+import {Filter, Sort} from "mongodb";
 
 const getBlogViewModel = (blog: BlogType): BlogViewModel => {
     return {
@@ -17,25 +18,26 @@ const getBlogViewModel = (blog: BlogType): BlogViewModel => {
 
 
 export const blogsRepo = {
-    async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogsWithPaginationModel> {
-        let  re = new RegExp(queryFilter.searchNameTerm + '', 'i');
-        const findFilter: any = queryFilter.searchNameTerm === null ? {} : {"name": re}
+    async findBlogs(queryFilter: FilterModel): Promise<BlogsWithPaginationModel> {
+
+        const filter: Filter<BlogType> = {name: {$regex: queryFilter.searchNameTerm ?? '', $options: 'i'}}
+
+        const sortFilter: Sort = {[queryFilter.sortBy] : queryFilter.sortDirection}
 
         let foundBlogs =  await blogsCollection
-            .find(findFilter)
-            .sort({[queryFilter.sortBy] : (queryFilter.sortDirection === 'asc' ? 1 : -1)})
+            .find(filter)
+            .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
             .map(blog => getBlogViewModel(blog)).toArray();
 
-        let totalCount = await blogsCollection
-            .find(findFilter).toArray()
+        let totalCount = await blogsCollection.countDocuments(filter)
 
         return {
-            "pagesCount": Math.ceil(totalCount.length / queryFilter.pageSize),
+            "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
             "page": queryFilter.pageNumber,
             "pageSize": queryFilter.pageSize,
-            "totalCount": totalCount.length,
+            "totalCount": totalCount,
             "items": foundBlogs
         }
     },

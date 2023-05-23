@@ -8,8 +8,7 @@ import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {BlogType} from "../models/BlogModel";
-import {BlogsFilterModel} from "../models/BlogsFilterModel";
-import {PostFilterModel} from "../models/PostFilterModel";
+import {queryPagination} from "../models/BlogsFilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
@@ -19,13 +18,7 @@ import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response<BlogsWithPaginationModel>) => {
-    let queryFilter: BlogsFilterModel = {
-        searchNameTerm: req.query.searchNameTerm?.toString() || null,
-        sortBy: req.query.sortBy?.toString() || "createdAt",
-        sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
-        pageNumber: +(req.query.pageNumber ?? 1),
-        pageSize: +(req.query.pageSize ?? 10)
-    }
+    let queryFilter = queryPagination(req.query)
     let foundBlogs: BlogsWithPaginationModel = await blogsService.findBlogs(queryFilter)
 
     if (!foundBlogs.items.length) {
@@ -48,22 +41,17 @@ blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>,
 })
 
 blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostsWithPaginationModel>) => {
-    const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
+    const blogId = req.params.id
+    const foundBlog: BlogType | null = await blogsService.findBlogById(blogId)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
     }
 
-    // Copy from posts-router
-    let queryFilter: PostFilterModel = {
-        sortBy: req.query.sortBy?.toString() || "createdAt",
-        sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
-        pageNumber: +(req.query.pageNumber ?? 1),
-        pageSize: +(req.query.pageSize ?? 10),
-        blogId: req.params.id.toString()
-    }
+    const queryFilter = queryPagination(req.query)
 
-    let foundPosts = await postsService.findPosts(queryFilter);
+    let foundPosts = await blogsService.findPostsByBlogId(queryFilter);
+
     if (!foundPosts.items.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);

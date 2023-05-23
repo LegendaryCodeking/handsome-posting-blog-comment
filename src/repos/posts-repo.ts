@@ -1,8 +1,9 @@
 import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
 import {postsCollection} from "./db";
-import {PostFilterModel} from "../models/PostFilterModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
+import {Filter, Sort} from "mongodb";
+import {FilterModel} from "../models/BlogsFilterModel";
 
 const getPostViewModel = (post: PostType): PostViewModel => {
     return {
@@ -17,25 +18,25 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 }
 
 export const postsRepo = {
-    async findPosts(queryFilter: PostFilterModel): Promise<PostsWithPaginationModel> {
-        let findFilter = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
+    async findPosts(queryFilter: FilterModel): Promise<PostsWithPaginationModel> {
+        const findFilter: Filter<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
+        const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy] : queryFilter.sortDirection} : {[queryFilter.sortBy] : queryFilter.sortDirection, 'createdAt': 1})
 
         let foundPosts = await postsCollection
             .find(findFilter)
-            .sort((queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1)} : {[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1), 'createdAt': 1}))
+            .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
             .map(post => getPostViewModel(post)).toArray();
 
 
-        let totalCount = await postsCollection
-            .find(findFilter).toArray()
+        let totalCount = await postsCollection.countDocuments(findFilter)
 
         return {
-            "pagesCount": Math.ceil(totalCount.length / queryFilter.pageSize),
+            "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
             "page": queryFilter.pageNumber,
             "pageSize": queryFilter.pageSize,
-            "totalCount": totalCount.length,
+            "totalCount": totalCount,
             "items": foundPosts
         }
     },

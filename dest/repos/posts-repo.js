@@ -25,20 +25,20 @@ const getPostViewModel = (post) => {
 exports.postsRepo = {
     findPosts(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
-            let findFilter = queryFilter.blogId === '' ? {} : { blogId: queryFilter.blogId };
+            const findFilter = queryFilter.blogId === '' ? {} : { blogId: queryFilter.blogId };
+            const sortFilter = (queryFilter.sortBy === 'createdAt' ? { [queryFilter.sortBy]: queryFilter.sortDirection } : { [queryFilter.sortBy]: queryFilter.sortDirection, 'createdAt': 1 });
             let foundPosts = yield db_1.postsCollection
                 .find(findFilter)
-                .sort((queryFilter.sortBy === 'createdAt' ? { [queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1) } : { [queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1), 'createdAt': 1 }))
+                .sort(sortFilter)
                 .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
                 .limit(queryFilter.pageSize)
                 .map(post => getPostViewModel(post)).toArray();
-            let totalCount = yield db_1.postsCollection
-                .find(findFilter).toArray();
+            let totalCount = yield db_1.postsCollection.countDocuments(findFilter);
             return {
-                "pagesCount": Math.ceil(totalCount.length / queryFilter.pageSize),
+                "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
                 "page": queryFilter.pageNumber,
                 "pageSize": queryFilter.pageSize,
-                "totalCount": totalCount.length,
+                "totalCount": totalCount,
                 "items": foundPosts
             };
         });

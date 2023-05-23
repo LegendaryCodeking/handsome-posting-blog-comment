@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsService = void 0;
 const blogs_repo_1 = require("../repos/blogs-repo");
+const posts_repo_1 = require("../repos/posts-repo");
 exports.blogsService = {
     findBlogs(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -48,6 +49,11 @@ exports.blogsService = {
     deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
             yield blogs_repo_1.blogsRepo.deleteAll();
+        });
+    },
+    findPostsByBlogId(queryFilter) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return posts_repo_1.postsRepo.findPosts(queryFilter);
         });
     }
 };

@@ -1,11 +1,12 @@
 import {BlogType} from "../models/BlogModel";
 import {blogsRepo} from "../repos/blogs-repo";
-import {BlogsFilterModel} from "../models/BlogsFilterModel";
+import {FilterModel} from "../models/BlogsFilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
+import {postsRepo} from "../repos/posts-repo";
 
 
 export const blogsService = {
-    async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogsWithPaginationModel> {
+    async findBlogs(queryFilter: FilterModel): Promise<BlogsWithPaginationModel> {
         return blogsRepo.findBlogs(queryFilter);
     },
     async findBlogById(id: string): Promise<BlogType | null> {
@@ -33,5 +34,8 @@ export const blogsService = {
     async deleteAll() {
         await blogsRepo.deleteAll();
 
+    },
+    async findPostsByBlogId(queryFilter: FilterModel) {
+        return postsRepo.findPosts(queryFilter)
     }
 }
