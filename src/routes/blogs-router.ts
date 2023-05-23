@@ -12,7 +12,7 @@ import {BlogsFilterModel} from "../models/BlogsFilterModel";
 import {PostFilterModel} from "../models/PostFilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
-import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
+import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 
 export const blogsRouter = Router({})
 
@@ -102,6 +102,13 @@ blogsRouter.post('/:id/posts',
     inputValidationMw,
     async (req: Request,
            res: Response<PostViewModel>) => {
+
+        const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
+        if (!foundBlog) {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+            return;
+        }
+
         let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdPost)
