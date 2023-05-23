@@ -32,11 +32,13 @@ exports.blogsRepo = {
                 .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
                 .limit(queryFilter.pageSize)
                 .map(blog => getBlogViewModel(blog)).toArray();
+            let totalCount = yield db_1.blogsCollection
+                .find(findFilter).toArray();
             return {
-                "pagesCount": 0,
-                "page": 0,
-                "pageSize": 0,
-                "totalCount": 0,
+                "pagesCount": Math.floor(totalCount.length / queryFilter.pageSize),
+                "page": queryFilter.pageNumber,
+                "pageSize": queryFilter.pageSize,
+                "totalCount": totalCount.length,
                 "items": foundBlogs
             };
         });

@@ -28,11 +28,14 @@ export const blogsRepo = {
             .limit(queryFilter.pageSize)
             .map(blog => getBlogViewModel(blog)).toArray();
 
+        let totalCount = await blogsCollection
+            .find(findFilter).toArray()
+
         return {
-            "pagesCount": 0,
-            "page": 0,
-            "pageSize": 0,
-            "totalCount": 0,
+            "pagesCount": Math.floor(totalCount.length / queryFilter.pageSize),
+            "page": queryFilter.pageNumber,
+            "pageSize": queryFilter.pageSize,
+            "totalCount": totalCount.length,
             "items": foundBlogs
         }
     },

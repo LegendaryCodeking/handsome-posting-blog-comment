@@ -32,11 +32,13 @@ exports.postsRepo = {
                 .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
                 .limit(queryFilter.pageSize)
                 .map(post => getPostViewModel(post)).toArray();
+            let totalCount = yield db_1.postsCollection
+                .find(findFilter).toArray();
             return {
-                "pagesCount": 0,
-                "page": 0,
-                "pageSize": 0,
-                "totalCount": 0,
+                "pagesCount": Math.floor(totalCount.length / queryFilter.pageSize),
+                "page": queryFilter.pageNumber,
+                "pageSize": queryFilter.pageSize,
+                "totalCount": totalCount.length,
                 "items": foundPosts
             };
         });

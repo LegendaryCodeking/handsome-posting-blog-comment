@@ -26,11 +26,15 @@ export const postsRepo = {
             .limit(queryFilter.pageSize)
             .map(post => getPostViewModel(post)).toArray();
 
+
+        let totalCount = await postsCollection
+            .find(findFilter).toArray()
+
         return {
-            "pagesCount": 0,
-            "page": 0,
-            "pageSize": 0,
-            "totalCount": 0,
+            "pagesCount": Math.floor(totalCount.length / queryFilter.pageSize),
+            "page": queryFilter.pageNumber,
+            "pageSize": queryFilter.pageSize,
+            "totalCount": totalCount.length,
             "items": foundPosts
         }
     },
