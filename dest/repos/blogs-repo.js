@@ -24,7 +24,7 @@ const getBlogViewModel = (blog) => {
 exports.blogsRepo = {
     findBlogs(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
-            let re = new RegExp(queryFilter.searchNameTerm + "");
+            let re = new RegExp(queryFilter.searchNameTerm + '', 'i');
             const findFilter = queryFilter.searchNameTerm === null ? {} : { "name": re };
             let foundBlogs = yield db_1.blogsCollection
                 .find(findFilter)

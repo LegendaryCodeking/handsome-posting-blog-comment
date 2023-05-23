@@ -18,7 +18,7 @@ const getBlogViewModel = (blog: BlogType): BlogViewModel => {
 
 export const blogsRepo = {
     async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogsWithPaginationModel> {
-        let  re = new RegExp(queryFilter.searchNameTerm + "");
+        let  re = new RegExp(queryFilter.searchNameTerm + '', 'i');
         const findFilter: any = queryFilter.searchNameTerm === null ? {} : {"name": re}
 
         let foundBlogs =  await blogsCollection
