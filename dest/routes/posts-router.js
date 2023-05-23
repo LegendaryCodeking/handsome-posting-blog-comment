@@ -23,7 +23,8 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         sortBy: ((_a = req.query.sortBy) === null || _a === void 0 ? void 0 : _a.toString()) || "createdAt",
         sortDirection: (_b = (req.query.sortDirection === 'asc' ? 'asc' : undefined)) !== null && _b !== void 0 ? _b : 'desc',
         pageNumber: +((_c = req.query.pageNumber) !== null && _c !== void 0 ? _c : 1),
-        pageSize: +((_d = req.query.pageSize) !== null && _d !== void 0 ? _d : 10)
+        pageSize: +((_d = req.query.pageSize) !== null && _d !== void 0 ? _d : 10),
+        blogId: ''
     };
     let foundPosts = yield posts_service_1.postsService.findPosts(queryFilter);
     if (!foundPosts.length) {

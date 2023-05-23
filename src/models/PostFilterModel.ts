@@ -3,4 +3,5 @@ export type PostFilterModel = {
     sortDirection: 'asc' | 'desc'
     pageNumber: number
     pageSize: number
+    blogId: string
 }

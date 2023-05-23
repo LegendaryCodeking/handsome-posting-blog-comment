@@ -25,11 +25,12 @@ const getPostViewModel = (post) => {
 exports.postsRepo = {
     findPosts(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
+            let findFilter = queryFilter.blogId === '' ? {} : { blogId: queryFilter.blogId };
             return db_1.postsCollection
-                .find({})
+                .find(findFilter)
                 .sort({ [queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1) })
                 .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
-                .limit(queryFilter.pageNumber)
+                .limit(queryFilter.pageSize)
                 .map(post => getPostViewModel(post)).toArray();
         });
     },

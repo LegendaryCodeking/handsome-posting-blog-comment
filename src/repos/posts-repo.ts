@@ -17,13 +17,13 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 
 export const postsRepo = {
     async findPosts(queryFilter: PostFilterModel): Promise<PostType[]> {
-
+        let findFilter = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
 
         return postsCollection
-            .find({})
+            .find(findFilter)
             .sort({[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : - 1)})
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
-            .limit(queryFilter.pageNumber)
+            .limit(queryFilter.pageSize)
             .map(post => getPostViewModel(post)).toArray();
     },
     async findPostsById(id: string): Promise<PostType | null> {

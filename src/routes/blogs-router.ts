@@ -9,6 +9,9 @@ import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {BlogType} from "../models/BlogModel";
 import {BlogsFilterModel} from "../models/BlogsFilterModel";
+import {PostFilterModel} from "../models/PostFilterModel";
+import {postsService} from "../domain/posts-service";
+import {PostViewModel} from "../models/PostViewModel";
 
 export const blogsRouter = Router({})
 
@@ -41,13 +44,30 @@ blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>,
     res.json(foundBlog)
 })
 
-blogsRouter.get('/:id/posts', async (req: Request, res: Response<BlogViewModel[]>) => {
+blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostViewModel[]>) => {
     const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         return;
     }
 
+    // Copy from posts-router
+    let queryFilter: PostFilterModel = {
+        sortBy: req.query.sortBy?.toString() || "createdAt",
+        sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
+        pageNumber: +(req.query.pageNumber ?? 1),
+        pageSize: +(req.query.pageSize ?? 10),
+        blogId: req.params.id
+    }
+
+    let foundPosts = await postsService.findPosts(queryFilter);
+    if (!foundPosts.length) {
+        res.status(STATUSES_HTTP.NOT_FOUND_404)
+            .json(foundPosts);
+        return;
+    }
+    res.status(STATUSES_HTTP.OK_200)
+        .json(foundPosts)
 
 })
 

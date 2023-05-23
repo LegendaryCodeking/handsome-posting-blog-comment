@@ -17,7 +17,8 @@ postsRouter.get('/', async (req: Request,
         sortBy: req.query.sortBy?.toString() || "createdAt",
         sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
         pageNumber: +(req.query.pageNumber ?? 1),
-        pageSize: +(req.query.pageSize ?? 10)
+        pageSize: +(req.query.pageSize ?? 10),
+        blogId: ''
     }
 
     let foundPosts = await postsService.findPosts(queryFilter);
