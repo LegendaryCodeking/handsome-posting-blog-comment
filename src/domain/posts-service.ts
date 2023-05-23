@@ -1,7 +1,7 @@
 import {PostType} from "../models/PostModel";
 import {postsRepo} from "../repos/posts-repo";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {FilterModel} from "../models/BlogsFilterModel";
+import {FilterModel} from "../models/FilterModel";
 
 export const postsService = {
     async findPosts(queryFilter: FilterModel): Promise<PostsWithPaginationModel> {

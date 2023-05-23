@@ -8,7 +8,7 @@ import {RequestWithParams} from "../types/posts-types";
 import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {queryPagination} from "../models/BlogsFilterModel";
+import {queryPagination} from "../models/FilterModel";
 
 export const postsRouter = Router({})
 

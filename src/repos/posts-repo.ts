@@ -3,7 +3,7 @@ import {PostViewModel} from "../models/PostViewModel";
 import {postsCollection} from "./db";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
-import {FilterModel} from "../models/BlogsFilterModel";
+import {FilterModel} from "../models/FilterModel";
 
 const getPostViewModel = (post: PostType): PostViewModel => {
     return {

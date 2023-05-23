@@ -1,6 +1,6 @@
 import {BlogType} from "../models/BlogModel";
 import {blogsRepo} from "../repos/blogs-repo";
-import {FilterModel} from "../models/BlogsFilterModel";
+import {FilterModel} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 import {postsRepo} from "../repos/posts-repo";
 

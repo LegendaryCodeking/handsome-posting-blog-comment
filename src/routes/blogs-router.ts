@@ -8,7 +8,7 @@ import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {BlogType} from "../models/BlogModel";
-import {queryPagination} from "../models/BlogsFilterModel";
+import {queryPagination} from "../models/FilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
