@@ -13,9 +13,9 @@ export const queryPagination = (query: any): FilterModel => {
         searchNameTerm: query.searchNameTerm ?? '',
         sortBy: query.sortBy ?? 'createdAt',
         sortDirection: query.sortDirection === 'asc' ? 'asc': 'desc',
-        pageNumber: +(query.query.pageNumber ?? 1),
-        pageSize: +(query.query.pageSize ?? 10),
-        blogId: query.params.id.toString() ?? ''
+        pageNumber: +(query.pageNumber ?? 1),
+        pageSize: +(query.pageSize ?? 10),
+        blogId: query.params === undefined ? '' : query.params.id
 
     }
 }
