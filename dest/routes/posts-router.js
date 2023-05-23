@@ -27,7 +27,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         blogId: ''
     };
     let foundPosts = yield posts_service_1.postsService.findPosts(queryFilter);
-    if (!foundPosts.length) {
+    if (!foundPosts.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);
         return;

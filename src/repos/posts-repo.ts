@@ -2,6 +2,7 @@ import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
 import {postsCollection} from "./db";
 import {PostFilterModel} from "../models/PostFilterModel";
+import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 
 const getPostViewModel = (post: PostType): PostViewModel => {
     return {
@@ -16,15 +17,22 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 }
 
 export const postsRepo = {
-    async findPosts(queryFilter: PostFilterModel): Promise<PostType[]> {
+    async findPosts(queryFilter: PostFilterModel): Promise<PostsWithPaginationModel> {
         let findFilter = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
-
-        return postsCollection
+        let foundPosts = await postsCollection
             .find(findFilter)
             .sort({[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : - 1)})
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
             .map(post => getPostViewModel(post)).toArray();
+
+        return {
+            "pagesCount": 0,
+            "page": 0,
+            "pageSize": 0,
+            "totalCount": 0,
+            "items": foundPosts
+        }
     },
     async findPostsById(id: string): Promise<PostType | null> {
         let foundPost: PostType | null = await postsCollection.findOne({"id": id})

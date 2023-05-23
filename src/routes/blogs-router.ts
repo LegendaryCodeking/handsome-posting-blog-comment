@@ -13,6 +13,7 @@ import {PostFilterModel} from "../models/PostFilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
+import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 
 export const blogsRouter = Router({})
 
@@ -45,7 +46,7 @@ blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>,
     res.json(foundBlog)
 })
 
-blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostViewModel[]>) => {
+blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostsWithPaginationModel>) => {
     const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
     if (!foundBlog) {
         res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -62,7 +63,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostViewModel[]
     }
 
     let foundPosts = await postsService.findPosts(queryFilter);
-    if (!foundPosts.length) {
+    if (!foundPosts.items.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);
         return;

@@ -8,11 +8,12 @@ import {RequestWithParams} from "../types/posts-types";
 import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostFilterModel} from "../models/PostFilterModel";
+import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 
 export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request,
-                            res: Response<PostViewModel[]>) => {
+                            res: Response<PostsWithPaginationModel>) => {
     let queryFilter: PostFilterModel = {
         sortBy: req.query.sortBy?.toString() || "createdAt",
         sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
@@ -22,7 +23,7 @@ postsRouter.get('/', async (req: Request,
     }
 
     let foundPosts = await postsService.findPosts(queryFilter);
-    if (!foundPosts.length) {
+    if (!foundPosts.items.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
             .json(foundPosts);
         return;
