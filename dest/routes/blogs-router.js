@@ -83,7 +83,7 @@ exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_valida
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdBlog);
 }));
-exports.blogsRouter.post('/:id/posts', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/:id/posts', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let createdPost = yield posts_service_1.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString());
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);

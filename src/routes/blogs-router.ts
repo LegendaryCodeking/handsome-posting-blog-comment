@@ -99,7 +99,6 @@ blogsRouter.post('/:id/posts',
     titleValidation,
     shortDescription,
     content,
-    blogId,
     inputValidationMw,
     async (req: Request,
            res: Response<PostViewModel>) => {
