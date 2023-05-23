@@ -1,10 +1,11 @@
 import {BlogType} from "../models/BlogModel";
 import {blogsRepo} from "../repos/blogs-repo";
 import {BlogsFilterModel} from "../models/BlogsFilterModel";
+import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 
 
 export const blogsService = {
-    async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogType[]> {
+    async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogsWithPaginationModel> {
         return blogsRepo.findBlogs(queryFilter);
     },
     async findBlogById(id: string): Promise<BlogType | null> {

@@ -29,7 +29,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         pageSize: +((_e = req.query.pageSize) !== null && _e !== void 0 ? _e : 10)
     };
     let foundBlogs = yield blogs_service_1.blogsService.findBlogs(queryFilter);
-    if (!foundBlogs.length) {
+    if (!foundBlogs.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
             .json(foundBlogs);
         return;

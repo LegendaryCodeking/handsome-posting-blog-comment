@@ -2,6 +2,7 @@ import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {blogsCollection} from "./db";
 import {BlogsFilterModel} from "../models/BlogsFilterModel";
+import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 
 const getBlogViewModel = (blog: BlogType): BlogViewModel => {
     return {
@@ -16,16 +17,24 @@ const getBlogViewModel = (blog: BlogType): BlogViewModel => {
 
 
 export const blogsRepo = {
-    async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogType[]> {
+    async findBlogs(queryFilter: BlogsFilterModel): Promise<BlogsWithPaginationModel> {
         let  re = new RegExp(queryFilter.searchNameTerm + "");
         const findFilter: any = queryFilter.searchNameTerm === null ? {} : {"name": re}
 
-        return blogsCollection
+        let foundBlogs =  await blogsCollection
             .find(findFilter)
             .sort({[queryFilter.sortBy] : (queryFilter.sortDirection === 'asc' ? 1 : -1)})
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
             .map(blog => getBlogViewModel(blog)).toArray();
+
+        return {
+            "pagesCount": 0,
+            "page": 0,
+            "pageSize": 0,
+            "totalCount": 0,
+            "items": foundBlogs
+        }
     },
     async findBlogById(id: string): Promise<BlogType | null> {
         let foundBlog: BlogType | null = await blogsCollection.findOne({"id": id})

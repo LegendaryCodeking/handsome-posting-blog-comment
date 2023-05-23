@@ -14,10 +14,11 @@ import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
+import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: Request, res: Response<BlogViewModel[]>) => {
+blogsRouter.get('/', async (req: Request, res: Response<BlogsWithPaginationModel>) => {
     let queryFilter: BlogsFilterModel = {
         searchNameTerm: req.query.searchNameTerm?.toString() || null,
         sortBy: req.query.sortBy?.toString() || "createdAt",
@@ -25,9 +26,9 @@ blogsRouter.get('/', async (req: Request, res: Response<BlogViewModel[]>) => {
         pageNumber: +(req.query.pageNumber ?? 1),
         pageSize: +(req.query.pageSize ?? 10)
     }
-    let foundBlogs: BlogType[] = await blogsService.findBlogs(queryFilter)
+    let foundBlogs: BlogsWithPaginationModel = await blogsService.findBlogs(queryFilter)
 
-    if (!foundBlogs.length) {
+    if (!foundBlogs.items.length) {
         res.status(STATUSES_HTTP.NOT_FOUND_404)
             .json(foundBlogs);
         return;
