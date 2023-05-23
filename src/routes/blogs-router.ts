@@ -12,6 +12,7 @@ import {BlogsFilterModel} from "../models/BlogsFilterModel";
 import {PostFilterModel} from "../models/PostFilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
+import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 
 export const blogsRouter = Router({})
 
@@ -92,6 +93,21 @@ blogsRouter.post('/',
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdBlog)
     })
+
+blogsRouter.post('/:id/posts',
+    authorizationCheck,
+    titleValidation,
+    shortDescription,
+    content,
+    blogId,
+    inputValidationMw,
+    async (req: Request,
+           res: Response<PostViewModel>) => {
+        let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
+        res.status(STATUSES_HTTP.CREATED_201)
+            .json(createdPost)
+    })
+
 
 blogsRouter.put('/:id',
     authorizationCheck,

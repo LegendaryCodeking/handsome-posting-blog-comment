@@ -17,6 +17,7 @@ const authorization_mw_1 = require("../middlewares/authorization-mw");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 const posts_service_1 = require("../domain/posts-service");
+const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e;
@@ -81,6 +82,11 @@ exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_valida
     let createdBlog = yield blogs_service_1.blogsService.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdBlog);
+}));
+exports.blogsRouter.post('/:id/posts', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let createdPost = yield posts_service_1.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id);
+    res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
+        .json(createdPost);
 }));
 exports.blogsRouter.put('/:id', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let updateStatus = yield blogs_service_1.blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
