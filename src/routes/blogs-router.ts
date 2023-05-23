@@ -58,7 +58,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostViewModel[]
         sortDirection: (req.query.sortDirection === 'asc' ? 'asc' : undefined) ?? 'desc',
         pageNumber: +(req.query.pageNumber ?? 1),
         pageSize: +(req.query.pageSize ?? 10),
-        blogId: req.params.id
+        blogId: req.params.id.toString()
     }
 
     let foundPosts = await postsService.findPosts(queryFilter);
@@ -103,7 +103,7 @@ blogsRouter.post('/:id/posts',
     inputValidationMw,
     async (req: Request,
            res: Response<PostViewModel>) => {
-        let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
+        let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdPost)
     })

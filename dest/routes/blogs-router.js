@@ -58,7 +58,7 @@ exports.blogsRouter.get('/:id/posts', (req, res) => __awaiter(void 0, void 0, vo
         sortDirection: (_g = (req.query.sortDirection === 'asc' ? 'asc' : undefined)) !== null && _g !== void 0 ? _g : 'desc',
         pageNumber: +((_h = req.query.pageNumber) !== null && _h !== void 0 ? _h : 1),
         pageSize: +((_j = req.query.pageSize) !== null && _j !== void 0 ? _j : 10),
-        blogId: req.params.id
+        blogId: req.params.id.toString()
     };
     let foundPosts = yield posts_service_1.postsService.findPosts(queryFilter);
     if (!foundPosts.length) {
@@ -84,7 +84,7 @@ exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_valida
         .json(createdBlog);
 }));
 exports.blogsRouter.post('/:id/posts', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let createdPost = yield posts_service_1.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id);
+    let createdPost = yield posts_service_1.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString());
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 }));
