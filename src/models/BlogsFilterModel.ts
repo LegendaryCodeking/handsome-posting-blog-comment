@@ -7,15 +7,15 @@ export type FilterModel = {
     blogId: string
 }
 
-export const queryPagination = (query: any): FilterModel => {
+export const queryPagination = (req: any): FilterModel => {
 
     return {
-        searchNameTerm: query.searchNameTerm ?? '',
-        sortBy: query.sortBy ?? 'createdAt',
-        sortDirection: query.sortDirection === 'asc' ? 'asc': 'desc',
-        pageNumber: +(query.pageNumber ?? 1),
-        pageSize: +(query.pageSize ?? 10),
-        blogId: query.params === undefined ? '' : query.params.id
+        searchNameTerm: req.query.searchNameTerm ?? '',
+        sortBy: req.query.sortBy ?? 'createdAt',
+        sortDirection: req.query.sortDirection === 'asc' ? 'asc': 'desc',
+        pageNumber: +(req.query.pageNumber ?? 1),
+        pageSize: +(req.query.pageSize ?? 10),
+        blogId: req.params.id ?? ''
 
     }
 }

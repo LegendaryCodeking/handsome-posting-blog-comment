@@ -48,7 +48,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostsWithPagina
         return;
     }
 
-    const queryFilter = queryPagination(req.query)
+    const queryFilter = queryPagination(req)
 
     let foundPosts = await blogsService.findPostsByBlogId(queryFilter);
 

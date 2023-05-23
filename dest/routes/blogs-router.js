@@ -46,7 +46,7 @@ exports.blogsRouter.get('/:id/posts', (req, res) => __awaiter(void 0, void 0, vo
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
     }
-    const queryFilter = (0, BlogsFilterModel_1.queryPagination)(req.query);
+    const queryFilter = (0, BlogsFilterModel_1.queryPagination)(req);
     let foundPosts = yield blogs_service_1.blogsService.findPostsByBlogId(queryFilter);
     if (!foundPosts.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
