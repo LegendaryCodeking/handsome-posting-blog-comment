@@ -32,7 +32,7 @@ export const blogsRepo = {
             .find(findFilter).toArray()
 
         return {
-            "pagesCount": Math.floor(totalCount.length / queryFilter.pageSize),
+            "pagesCount": Math.ceil(totalCount.length / queryFilter.pageSize),
             "page": queryFilter.pageNumber,
             "pageSize": queryFilter.pageSize,
             "totalCount": totalCount.length,
