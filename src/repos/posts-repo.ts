@@ -19,10 +19,10 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 export const postsRepo = {
     async findPosts(queryFilter: PostFilterModel): Promise<PostsWithPaginationModel> {
         let findFilter = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
+
         let foundPosts = await postsCollection
             .find(findFilter)
-            .sort({[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1)})
-            .sort({createdAt: -1})
+            .sort((queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1)} : {[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1)}))
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
             .map(post => getPostViewModel(post)).toArray();
