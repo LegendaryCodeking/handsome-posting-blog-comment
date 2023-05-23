@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsService = void 0;
 const posts_repo_1 = require("../repos/posts-repo");
 exports.postsService = {
-    findPosts() {
+    findPosts(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
-            return posts_repo_1.postsRepo.findPosts();
+            return posts_repo_1.postsRepo.findPosts(queryFilter);
         });
     },
     findProductById(id) {

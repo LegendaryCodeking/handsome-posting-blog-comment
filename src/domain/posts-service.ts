@@ -1,9 +1,10 @@
 import {PostType} from "../models/PostModel";
 import {postsRepo} from "../repos/posts-repo";
+import {PostFilterModel} from "../models/PostFilterModel";
 
 export const postsService = {
-    async findPosts(): Promise<PostType[]> {
-        return postsRepo.findPosts()
+    async findPosts(queryFilter: PostFilterModel): Promise<PostType[]> {
+        return postsRepo.findPosts(queryFilter)
     },
     async findProductById(id: string): Promise<PostType | null> {
         return postsRepo.findPostsById(id)

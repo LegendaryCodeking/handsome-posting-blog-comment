@@ -1,6 +1,7 @@
 import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
 import {postsCollection} from "./db";
+import {PostFilterModel} from "../models/PostFilterModel";
 
 const getPostViewModel = (post: PostType): PostViewModel => {
     return {
@@ -15,8 +16,15 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 }
 
 export const postsRepo = {
-    async findPosts(): Promise<PostType[]> {
-        return postsCollection.find({}).map(post => getPostViewModel(post)).toArray();
+    async findPosts(queryFilter: PostFilterModel): Promise<PostType[]> {
+
+
+        return postsCollection
+            .find({})
+            .sort({[queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : - 1)})
+            .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
+            .limit(queryFilter.pageNumber)
+            .map(post => getPostViewModel(post)).toArray();
     },
     async findPostsById(id: string): Promise<PostType | null> {
         let foundPost: PostType | null = await postsCollection.findOne({"id": id})
@@ -36,12 +44,14 @@ export const postsRepo = {
         return getPostViewModel(createdPost);
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        let result = await postsCollection.updateOne({"id": id}, {$set: {
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId
-        }})
+        let result = await postsCollection.updateOne({"id": id}, {
+            $set: {
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                blogId: blogId
+            }
+        })
         return result.matchedCount === 1
     },
     async deleteAll() {

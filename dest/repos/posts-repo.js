@@ -23,9 +23,14 @@ const getPostViewModel = (post) => {
     };
 };
 exports.postsRepo = {
-    findPosts() {
+    findPosts(queryFilter) {
         return __awaiter(this, void 0, void 0, function* () {
-            return db_1.postsCollection.find({}).map(post => getPostViewModel(post)).toArray();
+            return db_1.postsCollection
+                .find({})
+                .sort({ [queryFilter.sortBy]: (queryFilter.sortDirection === 'asc' ? 1 : -1) })
+                .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
+                .limit(queryFilter.pageNumber)
+                .map(post => getPostViewModel(post)).toArray();
         });
     },
     findPostsById(id) {
@@ -53,12 +58,14 @@ exports.postsRepo = {
     },
     updatePost(id, title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.postsCollection.updateOne({ "id": id }, { $set: {
+            let result = yield db_1.postsCollection.updateOne({ "id": id }, {
+                $set: {
                     title: title,
                     shortDescription: shortDescription,
                     content: content,
                     blogId: blogId
-                } });
+                }
+            });
             return result.matchedCount === 1;
         });
     },
