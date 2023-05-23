@@ -19,7 +19,7 @@ const http_statuses_const_1 = require("./http-statuses-const");
 const BlogsFilterModel_1 = require("../models/BlogsFilterModel");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const queryFilter = (0, BlogsFilterModel_1.queryPagination)(req.query);
+    const queryFilter = (0, BlogsFilterModel_1.queryPagination)(req);
     let foundPosts = yield posts_service_1.postsService.findPosts(queryFilter);
     if (!foundPosts.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)

@@ -14,7 +14,7 @@ export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request,
                             res: Response<PostsWithPaginationModel>) => {
-    const queryFilter = queryPagination(req.query)
+    const queryFilter = queryPagination(req)
 
     let foundPosts = await postsService.findPosts(queryFilter);
     if (!foundPosts.items.length) {

@@ -18,7 +18,7 @@ import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response<BlogsWithPaginationModel>) => {
-    let queryFilter = queryPagination(req.query)
+    let queryFilter = queryPagination(req)
     let foundBlogs: BlogsWithPaginationModel = await blogsService.findBlogs(queryFilter)
 
     if (!foundBlogs.items.length) {
