@@ -16,5 +16,17 @@ exports.userService = {
         return __awaiter(this, void 0, void 0, function* () {
             return users_repo_1.usersRepo.findUsers(queryFilter);
         });
+    },
+    createUser(login, password, email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const createdUser = {
+                id: (+(new Date())).toString(),
+                login: login,
+                email: email,
+                password: "QWERTY1234" + password,
+                createdAt: new Date().toISOString()
+            };
+            return yield users_repo_1.usersRepo.createUser(createdUser);
+        });
     }
 };

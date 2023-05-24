@@ -15,6 +15,8 @@ const FilterModel_1 = require("../models/FilterModel");
 const http_statuses_const_1 = require("./http-statuses-const");
 const user_service_1 = require("../domain/user-service");
 const authorization_mw_1 = require("../middlewares/authorization-mw");
+const uservalidation_mw_1 = require("../middlewares/uservalidation-mw");
+const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 exports.usersRouter = (0, express_1.Router)({});
 exports.usersRouter.get('/', authorization_mw_1.superAuthorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let queryFilter = (0, FilterModel_1.queryPagination)(req);
@@ -26,4 +28,9 @@ exports.usersRouter.get('/', authorization_mw_1.superAuthorizationCheck, (req, r
     }
     res.status(http_statuses_const_1.STATUSES_HTTP.OK_200)
         .json(foundUsers);
+}));
+exports.usersRouter.post('/', authorization_mw_1.superAuthorizationCheck, uservalidation_mw_1.loginValidation, uservalidation_mw_1.passwordValidation, uservalidation_mw_1.emailValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let createdUser = yield user_service_1.userService.createUser(req.body.login, req.body.password, req.body.email);
+    res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
+        .json(createdUser);
 }));

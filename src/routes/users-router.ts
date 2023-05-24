@@ -4,6 +4,8 @@ import {STATUSES_HTTP} from "./http-statuses-const";
 import {userService} from "../domain/user-service";
 import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
 import {superAuthorizationCheck} from "../middlewares/authorization-mw";
+import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
+import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 
 export const usersRouter = Router({})
 
@@ -20,3 +22,16 @@ usersRouter.get('/', superAuthorizationCheck, async (req: Request, res: Response
         .json(foundUsers)
 
 })
+
+usersRouter.post('/',
+    superAuthorizationCheck,
+    loginValidation,
+    passwordValidation,
+    emailValidation,
+    inputValidationMw,
+    async (req, res) => {
+        let createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email)
+
+        res.status(STATUSES_HTTP.CREATED_201)
+            .json(createdUser)
+    })

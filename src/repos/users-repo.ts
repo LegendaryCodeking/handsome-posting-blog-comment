@@ -40,8 +40,11 @@ export const usersRepo = {
             "totalCount": totalCount,
             "items": foundUsers
         }
+    },
+    async createUser(createdUser: UserType): Promise<UserViewModel> {
+        await usersCollection.insertOne(createdUser)
 
-
+        return getUserViewModel(createdUser)
     }
 
 
