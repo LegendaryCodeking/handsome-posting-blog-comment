@@ -5,7 +5,10 @@ export type FilterModel = {
     pageNumber: number
     pageSize: number
     blogId: string
+    searchLoginTerm: string
+    searchEmailTerm: string
 }
+
 
 export const queryPagination = (req: any): FilterModel => {
 
@@ -15,7 +18,8 @@ export const queryPagination = (req: any): FilterModel => {
         sortDirection: req.query.sortDirection === 'asc' ? 'asc': 'desc',
         pageNumber: +(req.query.pageNumber ?? 1),
         pageSize: +(req.query.pageSize ?? 10),
-        blogId: req.params.id ?? ''
-
+        blogId: req.params.id ?? '',
+        searchLoginTerm: req.query.searchLoginTerm ?? '',
+        searchEmailTerm: req.query.searchEmailTerm ?? ''
     }
 }
