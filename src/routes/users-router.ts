@@ -1,11 +1,13 @@
-import {Request, Router} from "express";
+import {Request, Response, Router} from "express";
 import {queryPagination} from "../models/FilterModel";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {userService} from "../domain/user-service";
+import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
+import {superAuthorizationCheck} from "../middlewares/authorization-mw";
 
 export const usersRouter = Router({})
 
-usersRouter.get('/', async (req, res) => {
+usersRouter.get('/', superAuthorizationCheck, async (req: Request, res: Response<UsersWithPaginationModel>) => {
     let queryFilter = queryPagination(req)
     let foundUsers = await userService.findUsers(queryFilter)
 

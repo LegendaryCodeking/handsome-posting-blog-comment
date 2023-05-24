@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersRepo = void 0;
+const db_1 = require("./db");
 const getUserViewModel = (user) => {
     return {
         id: user.id,
@@ -20,7 +21,27 @@ const getUserViewModel = (user) => {
 };
 exports.usersRepo = {
     findUsers(queryFilter) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
+            const findFilter = {
+                $or: [{ login: { $regex: (_a = queryFilter.searchLoginTerm) !== null && _a !== void 0 ? _a : '', $options: 'i' } },
+                    { email: { $regex: (_b = queryFilter.searchEmailTerm) !== null && _b !== void 0 ? _b : '', $options: 'i' } }]
+            };
+            const sortFilter = { [queryFilter.sortBy]: queryFilter.sortDirection };
+            let foundUsers = yield db_1.usersCollection
+                .find(findFilter)
+                .sort(sortFilter)
+                .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
+                .limit(queryFilter.pageSize)
+                .map(blog => getUserViewModel(blog)).toArray();
+            let totalCount = yield db_1.usersCollection.countDocuments(findFilter);
+            return {
+                "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
+                "page": queryFilter.pageNumber,
+                "pageSize": queryFilter.pageSize,
+                "totalCount": totalCount,
+                "items": foundUsers
+            };
         });
     }
 };
