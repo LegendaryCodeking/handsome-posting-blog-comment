@@ -34,3 +34,12 @@ exports.usersRouter.post('/', authorization_mw_1.superAuthorizationCheck, userva
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdUser);
 }));
+exports.usersRouter.delete('/:id', authorization_mw_1.superAuthorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let deletionStatus = yield user_service_1.userService.deleteUser(req.params.id);
+    if (deletionStatus) {
+        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
+    }
+    else {
+        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+    }
+}));

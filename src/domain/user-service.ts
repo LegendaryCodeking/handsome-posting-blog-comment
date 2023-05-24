@@ -18,6 +18,9 @@ export const userService = {
             createdAt: new Date().toISOString()
         }
         return await usersRepo.createUser(createdUser)
+    },
+    async deleteUser(id: string) : Promise<boolean> {
+        return usersRepo.deleteUser(id)
     }
 
 

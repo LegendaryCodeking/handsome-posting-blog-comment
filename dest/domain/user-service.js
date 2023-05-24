@@ -28,5 +28,10 @@ exports.userService = {
             };
             return yield users_repo_1.usersRepo.createUser(createdUser);
         });
+    },
+    deleteUser(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return users_repo_1.usersRepo.deleteUser(id);
+        });
     }
 };

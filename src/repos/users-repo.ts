@@ -45,6 +45,10 @@ export const usersRepo = {
         await usersCollection.insertOne(createdUser)
 
         return getUserViewModel(createdUser)
+    },
+    async deleteUser(id: string): Promise<boolean> {
+        const result = await usersCollection.deleteOne({"id": id});
+        return result.deletedCount === 1
     }
 
 

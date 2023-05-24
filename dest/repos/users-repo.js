@@ -49,5 +49,11 @@ exports.usersRepo = {
             yield db_1.usersCollection.insertOne(createdUser);
             return getUserViewModel(createdUser);
         });
+    },
+    deleteUser(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.usersCollection.deleteOne({ "id": id });
+            return result.deletedCount === 1;
+        });
     }
 };

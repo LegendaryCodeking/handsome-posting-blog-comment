@@ -35,3 +35,15 @@ usersRouter.post('/',
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdUser)
     })
+
+usersRouter.delete('/:id',
+    superAuthorizationCheck,
+    async (req, res) => {
+    let deletionStatus: boolean = await userService.deleteUser(req.params.id)
+        if (deletionStatus) {
+            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
+        } else {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+        }
+
+    })
