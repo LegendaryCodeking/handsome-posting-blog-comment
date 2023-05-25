@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emailValidation = exports.loginValidation = exports.passwordValidation = void 0;
 const express_validator_1 = require("express-validator");
-exports.passwordValidation = (0, express_validator_1.body)("name")
+exports.passwordValidation = (0, express_validator_1.body)("password")
     .isString().withMessage(`Pass should be string`)
     .trim()
     .isLength({ min: 6, max: 20 }).withMessage(`Pass length should be from 6 to 20 symbols`);
-exports.loginValidation = (0, express_validator_1.body)("name")
+exports.loginValidation = (0, express_validator_1.body)("login")
     .isString().withMessage(`login should be string`)
     .trim()
     .isLength({ min: 3, max: 10 }).withMessage(`login length should be from 3 to 10 symbols`)

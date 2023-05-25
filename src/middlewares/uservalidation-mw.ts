@@ -1,11 +1,11 @@
 import {body} from "express-validator";
 
-export const passwordValidation = body("name")
+export const passwordValidation = body("password")
     .isString().withMessage(`Pass should be string`)
     .trim()
     .isLength({min: 6, max: 20}).withMessage(`Pass length should be from 6 to 20 symbols`)
 
-export const loginValidation = body("name")
+export const loginValidation = body("login")
     .isString().withMessage(`login should be string`)
     .trim()
     .isLength({min: 3, max: 10}).withMessage(`login length should be from 3 to 10 symbols`)
