@@ -36,9 +36,7 @@ exports.usersRouter.post('/', authorization_mw_1.authorizationCheck, uservalidat
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdUser);
 }));
-exports.usersRouter.delete('/:id', 
-// superAuthorizationCheck,
-(req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.usersRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let deletionStatus = yield user_service_1.userService.deleteUser(req.params.id);
     if (deletionStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);

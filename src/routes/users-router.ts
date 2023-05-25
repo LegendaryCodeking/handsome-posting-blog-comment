@@ -39,7 +39,7 @@ usersRouter.post('/',
     })
 
 usersRouter.delete('/:id',
-    // superAuthorizationCheck,
+    authorizationCheck,
     async (req, res) => {
     let deletionStatus: boolean = await userService.deleteUser(req.params.id)
         if (deletionStatus) {
