@@ -10,7 +10,7 @@ import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 export const usersRouter = Router({})
 
 usersRouter.get('/',
-    // superAuthorizationCheck,
+    authorizationCheck,
     async (req: Request, res: Response<UsersWithPaginationModel>) => {
     let queryFilter = queryPagination(req)
     let foundUsers = await userService.findUsers(queryFilter)

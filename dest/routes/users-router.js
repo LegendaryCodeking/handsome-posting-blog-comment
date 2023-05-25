@@ -18,9 +18,7 @@ const authorization_mw_1 = require("../middlewares/authorization-mw");
 const uservalidation_mw_1 = require("../middlewares/uservalidation-mw");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 exports.usersRouter = (0, express_1.Router)({});
-exports.usersRouter.get('/', 
-// superAuthorizationCheck,
-(req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.usersRouter.get('/', authorization_mw_1.authorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let queryFilter = (0, FilterModel_1.queryPagination)(req);
     let foundUsers = yield user_service_1.userService.findUsers(queryFilter);
     if (!foundUsers.items.length) {
