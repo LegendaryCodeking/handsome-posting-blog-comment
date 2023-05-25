@@ -37,6 +37,9 @@ export const userService = {
         const passwordHash = await this._generateHash(password,salt)
         return user.password === passwordHash;
 
+    },
+    async deleteAll() {
+        await usersRepo.deleteAll()
     }
 
 

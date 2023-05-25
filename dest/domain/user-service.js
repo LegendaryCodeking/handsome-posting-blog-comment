@@ -55,5 +55,10 @@ exports.userService = {
             const passwordHash = yield this._generateHash(password, salt);
             return user.password === passwordHash;
         });
+    },
+    deleteAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield users_repo_1.usersRepo.deleteAll();
+        });
     }
 };
