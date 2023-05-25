@@ -33,7 +33,8 @@ export const userService = {
         const user = await usersRepo.findByLoginOrEmail(loginOrEmail)
         if(!user) return false
         //@ts-ignore
-        const salt = user.password.split("$").pop().substr(0,22)
+        const passArray = user.password.split("$")
+        const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0,22)}`
         const passwordHash = await this._generateHash(password,salt)
         return user.password === passwordHash;
 
