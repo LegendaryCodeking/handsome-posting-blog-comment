@@ -15,11 +15,6 @@ usersRouter.get('/',
     let queryFilter = queryPagination(req)
     let foundUsers = await userService.findUsers(queryFilter)
 
-    if (!foundUsers.items.length) {
-        res.status(STATUSES_HTTP.NOT_FOUND_404)
-            .json(foundUsers)
-        return;
-    }
     res.status(STATUSES_HTTP.OK_200)
         .json(foundUsers)
 
