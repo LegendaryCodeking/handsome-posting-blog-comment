@@ -49,17 +49,27 @@ exports.userService = {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield users_repo_1.usersRepo.findByLoginOrEmail(loginOrEmail);
             if (!user)
-                return false;
+                return null;
             //@ts-ignore
             const passArray = user.password.split("$");
             const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0, 22)}`;
             const passwordHash = yield this._generateHash(password, salt);
-            return user.password === passwordHash;
+            if (user.password === passwordHash) {
+                return user;
+            }
+            else {
+                return null;
+            }
         });
     },
     deleteAll() {
         return __awaiter(this, void 0, void 0, function* () {
             yield users_repo_1.usersRepo.deleteAll();
         });
-    }
+    },
+    findUserById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return users_repo_1.usersRepo.findUserById(id);
+        });
+    },
 };

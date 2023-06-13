@@ -29,19 +29,25 @@ export const userService = {
     async _generateHash(password: string, salt: string) {
         return await bcrypt.hash(password, salt)
     },
-    async checkCredentials(loginOrEmail: string,password: string) {
+    async checkCredentials(loginOrEmail: string,password: string): Promise<UserViewModel | null> {
         const user = await usersRepo.findByLoginOrEmail(loginOrEmail)
-        if(!user) return false
+        if(!user) return null
         //@ts-ignore
         const passArray = user.password.split("$")
         const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0,22)}`
         const passwordHash = await this._generateHash(password,salt)
-        return user.password === passwordHash;
+        if(user.password === passwordHash) {
+            return user;
+        } else {
+            return null
+        }
 
     },
     async deleteAll() {
         await usersRepo.deleteAll()
-    }
+    },
 
-
+    async findUserById(id: string): Promise<UserViewModel | null> {
+        return usersRepo.findUserById(id)
+    },
 }

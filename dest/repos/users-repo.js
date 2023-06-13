@@ -66,5 +66,16 @@ exports.usersRepo = {
         return __awaiter(this, void 0, void 0, function* () {
             yield db_1.usersCollection.deleteMany({});
         });
+    },
+    findUserById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield db_1.usersCollection.findOne({ id: id });
+            if (user) {
+                return user;
+            }
+            else {
+                return null;
+            }
+        });
     }
 };

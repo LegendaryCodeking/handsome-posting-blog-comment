@@ -9,18 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authRouter = void 0;
-const express_1 = require("express");
-const user_service_1 = require("../domain/user-service");
-const http_statuses_const_1 = require("./http-statuses-const");
-const jwt_service_1 = require("../application/jwt-service");
-exports.authRouter = (0, express_1.Router)({});
-exports.authRouter.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_service_1.userService.checkCredentials(req.body.loginOrEmail, req.body.password);
-    if (user) {
-        const token = yield jwt_service_1.jwtService.createJWT(user);
-        res.status(201).send(token);
-        return;
+exports.commentService = void 0;
+const comments_repo_1 = require("../repos/comments-repo");
+exports.commentService = {
+    findCommentById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return comments_repo_1.commentsRepo.findCommentById(id);
+        });
+    },
+    updateComment(id, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return comments_repo_1.commentsRepo.updateComment(id, content);
+        });
+    },
+    deleteComment(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return comments_repo_1.commentsRepo.deleteComment(id);
+        });
     }
-    res.sendStatus(http_statuses_const_1.STATUSES_HTTP.UNAUTHORIZED_401);
-}));
+};

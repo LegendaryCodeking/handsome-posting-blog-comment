@@ -56,7 +56,15 @@ export const usersRepo = {
     },
     async deleteAll() {
         await usersCollection.deleteMany({});
+    },
+
+
+    async findUserById(id: string) {
+        let user = await usersCollection.findOne({id: id})
+        if (user) {
+            return user
+        } else {
+            return null
+        }
     }
-
-
 }

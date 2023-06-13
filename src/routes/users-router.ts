@@ -3,7 +3,7 @@ import {queryPagination} from "../models/FilterModel";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {userService} from "../domain/user-service";
 import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
-import {authorizationCheck, superAuthorizationCheck} from "../middlewares/authorization-mw";
+import {authorizationCheck} from "../middlewares/authorization-mw";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 
