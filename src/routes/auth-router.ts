@@ -15,3 +15,4 @@ authRouter.post('/login', async (req: Request,  res: Response) => {
     }
     res.sendStatus(STATUSES_HTTP.UNAUTHORIZED_401);
 })
+
