@@ -25,7 +25,7 @@ const getCommentViewModel = (comment) => {
 exports.commentsRepo = {
     findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let foundComment = yield db_1.commentsCollection.findOne({ "id": id });
+            let foundComment = yield db_1.postsCollection.findOne({ "id": id });
             if (foundComment) {
                 return getCommentViewModel(foundComment);
             }
@@ -36,7 +36,8 @@ exports.commentsRepo = {
     },
     updateComment(id, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.commentsCollection.updateOne({ "id": id }, {
+            let postId = id.split("_._._")[0];
+            let result = yield db_1.postsCollection.updateOne({ "id": postId, "comments.id": id }, {
                 $set: {
                     content: content
                 }
@@ -46,8 +47,14 @@ exports.commentsRepo = {
     },
     deleteComment(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.commentsCollection.deleteOne({ "id": id });
+            let result = yield db_1.postsCollection.deleteOne({ "id": id });
             return result.deletedCount === 1;
+        });
+    },
+    createComment(postId, newComment) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield db_1.postsCollection.updateOne({ "id": postId }, { $push: { ["comments"]: newComment } });
+            return getCommentViewModel(newComment);
         });
     }
 };

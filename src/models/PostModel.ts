@@ -1,3 +1,6 @@
+import {CommentModel} from "./CommentModel";
+import {CommentViewModel} from "./CommentViewModel";
+
 export type PostType = {
     "id": string,
     "title": string,
@@ -5,5 +8,6 @@ export type PostType = {
     "content": string,
     "blogId": string,
     "blogName": string,
-    "createdAt": string
+    "createdAt": string,
+    "comments": CommentViewModel[]
 }

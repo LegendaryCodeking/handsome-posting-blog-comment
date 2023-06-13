@@ -9,6 +9,8 @@ import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {queryPagination} from "../models/FilterModel";
+import {CommentViewModel} from "../models/CommentViewModel";
+import {commentService} from "../domain/comment-service";
 
 export const postsRouter = Router({})
 
@@ -81,3 +83,21 @@ postsRouter.put('/:id',
         }
     }
 )
+
+// working with comments
+postsRouter.post('/:postId/comments', authorizationCheck, inputValidationMw,
+    async (req: Request,
+           res: Response<CommentViewModel>) => {
+        // Проверяем, что пост существует
+        const foundPost = await postsService.findProductById(req.params.id);
+
+        if (!foundPost) {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+            return;
+        }
+
+        let createComment = await commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
+
+
+    })
+

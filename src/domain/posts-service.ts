@@ -21,7 +21,8 @@ export const postsService = {
             "content": content,
             "blogId": blogId,
             "blogName": "BlogName",
-            "createdAt": new Date().toISOString()
+            "createdAt": new Date().toISOString(),
+            "comments": []
 
         };
 

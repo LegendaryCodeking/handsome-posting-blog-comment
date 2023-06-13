@@ -17,6 +17,7 @@ const authorization_mw_1 = require("../middlewares/authorization-mw");
 const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 const FilterModel_1 = require("../models/FilterModel");
+const comment_service_1 = require("../domain/comment-service");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const queryFilter = (0, FilterModel_1.queryPagination)(req);
@@ -59,4 +60,14 @@ exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_vali
     else {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
     }
+}));
+// working with comments
+exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheck, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Проверяем, что пост существует
+    const foundPost = yield posts_service_1.postsService.findProductById(req.params.id);
+    if (!foundPost) {
+        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+        return;
+    }
+    let createComment = yield comment_service_1.commentService.createComment(req.params.postId, req.body.content, req.user.id, req.user.login);
 }));

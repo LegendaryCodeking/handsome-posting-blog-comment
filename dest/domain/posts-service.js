@@ -36,7 +36,8 @@ exports.postsService = {
                 "content": content,
                 "blogId": blogId,
                 "blogName": "BlogName",
-                "createdAt": new Date().toISOString()
+                "createdAt": new Date().toISOString(),
+                "comments": []
             };
             return yield posts_repo_1.postsRepo.createPost(createdPost);
         });

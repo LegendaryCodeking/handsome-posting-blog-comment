@@ -26,5 +26,20 @@ exports.commentService = {
         return __awaiter(this, void 0, void 0, function* () {
             return comments_repo_1.commentsRepo.deleteComment(id);
         });
+    },
+    createComment(postId, content, userId, userLogin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const newComment = {
+                // В ID коммента будет вшит ID поста, к которому этот коммент оставлен
+                "id": postId + "_._._" + (+(new Date())).toString(),
+                "content": content,
+                "commentatorInfo": {
+                    "userId": userId,
+                    "userLogin": userLogin
+                },
+                "createdAt": new Date().toISOString()
+            };
+            return comments_repo_1.commentsRepo.createComment(postId, newComment);
+        });
     }
 };

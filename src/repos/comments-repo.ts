@@ -1,5 +1,5 @@
 import {CommentViewModel} from "../models/CommentViewModel";
-import {commentsCollection} from "./db";
+import {postsCollection} from "./db";
 import {CommentModel} from "../models/CommentModel";
 
 
@@ -19,7 +19,7 @@ const getCommentViewModel = (comment: CommentModel): CommentViewModel => {
 export const commentsRepo = {
 
     async findCommentById(id: string): Promise<CommentViewModel | null> {
-        let foundComment: CommentModel | null = await commentsCollection.findOne({"id": id})
+        let foundComment: CommentModel | null = await postsCollection.findOne({"id": id})
         if (foundComment) {
             return getCommentViewModel(foundComment)
         } else {
@@ -28,7 +28,8 @@ export const commentsRepo = {
 
     },
     async updateComment(id: string, content: string): Promise<boolean> {
-        let result = await commentsCollection.updateOne({"id": id}, {
+        let postId = id.split("_._._")[0]
+        let result = await postsCollection.updateOne({"id": postId, "comments.id": id }, {
             $set: {
                 content: content
             }
@@ -36,7 +37,11 @@ export const commentsRepo = {
         return result.matchedCount === 1
     },
     async deleteComment(id: string): Promise<boolean> {
-        let result = await commentsCollection.deleteOne({"id": id})
+        let result = await postsCollection.deleteOne({"id": id})
         return result.deletedCount === 1
+    },
+    async createComment(postId: string, newComment: CommentViewModel ): Promise<CommentViewModel> {
+        await postsCollection.updateOne({"id": postId},{$push: {["comments"]: newComment }})
+        return getCommentViewModel(newComment);
     }
 }

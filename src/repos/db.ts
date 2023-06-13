@@ -13,7 +13,7 @@ const db = client.db("forum")
 export const postsCollection = db.collection<PostType>("posts")
 export const blogsCollection = db.collection<BlogType>("blogs")
 export const usersCollection = db.collection<UserType>("users")
-export const commentsCollection = db.collection<CommentModel>("comments")
+//export const commentsCollection = db.collection<CommentModel>("comments")
 
 export async function runDb() {
     try {
