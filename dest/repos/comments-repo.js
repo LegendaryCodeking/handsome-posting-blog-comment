@@ -25,7 +25,9 @@ const getCommentViewModel = (comment) => {
 exports.commentsRepo = {
     findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let foundComment = yield db_1.postsCollection.findOne({ "id": id });
+            // async findCommentById(id: string): Promise<CommentViewModel | null> {
+            let postId = id.split("_._._")[0];
+            let foundComment = yield db_1.postsCollection.findOne({ "id": postId }, {});
             if (foundComment) {
                 return getCommentViewModel(foundComment);
             }
@@ -39,7 +41,7 @@ exports.commentsRepo = {
             let postId = id.split("_._._")[0];
             let result = yield db_1.postsCollection.updateOne({ "id": postId, "comments.id": id }, {
                 $set: {
-                    content: content
+                    "comments.$.content": content
                 }
             });
             return result.matchedCount === 1;

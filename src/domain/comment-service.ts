@@ -1,5 +1,6 @@
-import {CommentViewModel} from "../models/CommentViewModel";
+
 import {commentsRepo} from "../repos/comments-repo";
+import {CommentViewModel, CreateCommentModel} from "../models/CommentModel";
 
 
 export const commentService = {
@@ -12,10 +13,11 @@ export const commentService = {
     async deleteComment(id: string): Promise<boolean> {
         return commentsRepo.deleteComment(id);
     },
-    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<boolean> {
-        const newComment: CommentViewModel = {
+    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewModel> {
+        const newComment: CreateCommentModel = {
             // В ID коммента будет вшит ID поста, к которому этот коммент оставлен
-            "id": postId + "_._._" + (+(new Date())).toString(),
+            "id": (+(new Date())).toString(),
+            "postId": postId,
             "content": content,
             "commentatorInfo": {
                 "userId": userId,
@@ -24,6 +26,6 @@ export const commentService = {
             "createdAt": new Date().toISOString()
         }
 
-        return commentsRepo.createComment(postId, newComment);
+        return commentsRepo.createComment(newComment);
     }
 }

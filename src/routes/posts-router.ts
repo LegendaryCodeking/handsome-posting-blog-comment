@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {postsService} from "../domain/posts-service";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {authorizationCheck} from "../middlewares/authorization-mw";
+import {authorizationCheck, authorizationCheckBearer} from "../middlewares/authorization-mw";
 import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {RequestWithParams} from "../types/posts-types";
@@ -9,8 +9,9 @@ import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {queryPagination} from "../models/FilterModel";
-import {CommentViewModel} from "../models/CommentViewModel";
+
 import {commentService} from "../domain/comment-service";
+import {CommentViewModel} from "../models/CommentModel";
 
 export const postsRouter = Router({})
 
@@ -85,7 +86,9 @@ postsRouter.put('/:id',
 )
 
 // working with comments
-postsRouter.post('/:postId/comments', authorizationCheck, inputValidationMw,
+postsRouter.post('/:postId/comments',
+    authorizationCheckBearer,
+    inputValidationMw,
     async (req: Request,
            res: Response<CommentViewModel>) => {
         // Проверяем, что пост существует
@@ -97,7 +100,8 @@ postsRouter.post('/:postId/comments', authorizationCheck, inputValidationMw,
         }
 
         let createComment = await commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
-
+        res.status(STATUSES_HTTP.CREATED_201)
+            .json(createComment)
 
     })
 

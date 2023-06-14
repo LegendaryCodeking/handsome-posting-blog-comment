@@ -1,13 +1,12 @@
-import {CommentModel} from "./CommentModel";
-import {CommentViewModel} from "./CommentViewModel";
+import {ObjectId} from "mongodb";
 
 export type PostType = {
-    "id": string,
+    _id?: ObjectId,
+    "id": string
     "title": string,
     "shortDescription": string,
     "content": string,
     "blogId": string,
     "blogName": string,
     "createdAt": string,
-    "comments": CommentViewModel[]
 }

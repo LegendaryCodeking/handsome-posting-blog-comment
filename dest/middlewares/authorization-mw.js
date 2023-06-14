@@ -9,17 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorizationCheck = void 0;
-// export const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
-//     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
-//         res.sendStatus(401)
-//     } else {
-//         next();
-//     }
-// }
+exports.authorizationCheckBearer = exports.authorizationCheck = void 0;
+const authorizationCheck = (req, res, next) => {
+    if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
+        res.sendStatus(401);
+    }
+    else {
+        next();
+    }
+};
+exports.authorizationCheck = authorizationCheck;
 const jwt_service_1 = require("../application/jwt-service");
 const user_service_1 = require("../domain/user-service");
-const authorizationCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const authorizationCheckBearer = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.headers.authorization) {
         res.sendStatus(401);
         return;
@@ -33,4 +35,4 @@ const authorizationCheck = (req, res, next) => __awaiter(void 0, void 0, void 0,
     }
     res.sendStatus(401);
 });
-exports.authorizationCheck = authorizationCheck;
+exports.authorizationCheckBearer = authorizationCheckBearer;

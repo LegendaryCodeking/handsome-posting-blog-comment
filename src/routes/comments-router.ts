@@ -1,16 +1,17 @@
 import {Request, Response, Router} from "express";
-import {authorizationCheck} from "../middlewares/authorization-mw";
+import {authorizationCheckBearer} from "../middlewares/authorization-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {commentService} from "../domain/comment-service";
-import {CommentViewModel} from "../models/CommentViewModel";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
+import {CommentViewModel} from "../models/CommentModel";
 
 export const commentsRouter = Router({})
 
 
 commentsRouter.get('/:id',
-    authorizationCheck,
+    authorizationCheckBearer,
+    inputValidationMw,
     async (req: Request, res: Response) => {
         let foundComment: CommentViewModel | null = await commentService.findCommentById(req.params.id)
         if (!foundComment) {
@@ -23,7 +24,7 @@ commentsRouter.get('/:id',
 )
 
 commentsRouter.put('/:id',
-    authorizationCheck,
+    authorizationCheckBearer,
     contentValidation,
     inputValidationMw,
     async (req: Request, res: Response) => {
@@ -37,7 +38,8 @@ commentsRouter.put('/:id',
 )
 
 commentsRouter.delete('/:id',
-    authorizationCheck,
+    authorizationCheckBearer,
+    inputValidationMw,
     async (req: Request, res: Response) => {
         let deletionStatus: boolean = await commentService.deleteComment(req.params.id)
         if (deletionStatus) {

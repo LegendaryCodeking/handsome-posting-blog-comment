@@ -62,7 +62,7 @@ exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_vali
     }
 }));
 // working with comments
-exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheck, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Проверяем, что пост существует
     const foundPost = yield posts_service_1.postsService.findProductById(req.params.id);
     if (!foundPost) {

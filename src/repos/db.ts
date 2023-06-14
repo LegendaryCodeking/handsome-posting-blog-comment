@@ -3,7 +3,7 @@ import {PostType} from "../models/PostModel";
 import {BlogType} from "../models/BlogModel";
 import dotenv from 'dotenv'
 import {UserType} from "../models/UserModel";
-import {CommentModel} from "../models/CommentModel";
+import {CommentDbModel} from "../models/CommentModel";
 dotenv.config()
 
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
@@ -13,7 +13,7 @@ const db = client.db("forum")
 export const postsCollection = db.collection<PostType>("posts")
 export const blogsCollection = db.collection<BlogType>("blogs")
 export const usersCollection = db.collection<UserType>("users")
-//export const commentsCollection = db.collection<CommentModel>("comments")
+export const commentsCollection = db.collection<CommentDbModel>("comments")
 
 export async function runDb() {
     try {
