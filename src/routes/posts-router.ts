@@ -92,7 +92,7 @@ postsRouter.post('/:postId/comments',
     async (req: Request,
            res: Response<CommentViewModel>) => {
         // Проверяем, что пост существует
-        const foundPost = await postsService.findProductById(req.params.id);
+        const foundPost = await postsService.findProductById(req.params.postId);
 
         if (!foundPost) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)

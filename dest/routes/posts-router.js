@@ -64,10 +64,12 @@ exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_vali
 // working with comments
 exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Проверяем, что пост существует
-    const foundPost = yield posts_service_1.postsService.findProductById(req.params.id);
+    const foundPost = yield posts_service_1.postsService.findProductById(req.params.postId);
     if (!foundPost) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
     }
     let createComment = yield comment_service_1.commentService.createComment(req.params.postId, req.body.content, req.user.id, req.user.login);
+    res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
+        .json(createComment);
 }));
