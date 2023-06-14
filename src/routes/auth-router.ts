@@ -10,7 +10,7 @@ authRouter.post('/login', async (req: Request,  res: Response) => {
     const user: UserViewModel | null = await userService.checkCredentials(req.body.loginOrEmail, req.body.password)
     if (user) {
         const token = await jwtService.createJWT(user)
-        res.status(201).send(token)
+        res.status(200).send(token)
         return;
     }
     res.sendStatus(STATUSES_HTTP.UNAUTHORIZED_401);

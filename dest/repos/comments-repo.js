@@ -14,6 +14,7 @@ const db_1 = require("./db");
 const getCommentViewModel = (comment) => {
     return {
         id: comment.id,
+        postId: comment.postId,
         content: comment.content,
         commentatorInfo: {
             userId: comment.commentatorInfo.userId,
@@ -25,9 +26,7 @@ const getCommentViewModel = (comment) => {
 exports.commentsRepo = {
     findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            // async findCommentById(id: string): Promise<CommentViewModel | null> {
-            let postId = id.split("_._._")[0];
-            let foundComment = yield db_1.postsCollection.findOne({ "id": postId }, {});
+            let foundComment = yield db_1.commentsCollection.findOne({ "id": id });
             if (foundComment) {
                 return getCommentViewModel(foundComment);
             }
@@ -38,10 +37,9 @@ exports.commentsRepo = {
     },
     updateComment(id, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            let postId = id.split("_._._")[0];
-            let result = yield db_1.postsCollection.updateOne({ "id": postId, "comments.id": id }, {
+            let result = yield db_1.commentsCollection.updateOne({ "id": id }, {
                 $set: {
-                    "comments.$.content": content
+                    "content": content
                 }
             });
             return result.matchedCount === 1;
@@ -49,13 +47,13 @@ exports.commentsRepo = {
     },
     deleteComment(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield db_1.postsCollection.deleteOne({ "id": id });
+            let result = yield db_1.commentsCollection.deleteOne({ "id": id });
             return result.deletedCount === 1;
         });
     },
-    createComment(postId, newComment) {
+    createComment(newComment) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield db_1.postsCollection.updateOne({ "id": postId }, { $push: { ["comments"]: newComment } });
+            yield db_1.commentsCollection.insertOne(newComment);
             return getCommentViewModel(newComment);
         });
     }

@@ -31,7 +31,8 @@ exports.commentService = {
         return __awaiter(this, void 0, void 0, function* () {
             const newComment = {
                 // В ID коммента будет вшит ID поста, к которому этот коммент оставлен
-                "id": postId + "_._._" + (+(new Date())).toString(),
+                "id": (+(new Date())).toString(),
+                "postId": postId,
                 "content": content,
                 "commentatorInfo": {
                     "userId": userId,
@@ -39,7 +40,7 @@ exports.commentService = {
                 },
                 "createdAt": new Date().toISOString()
             };
-            return comments_repo_1.commentsRepo.createComment(postId, newComment);
+            return comments_repo_1.commentsRepo.createComment(newComment);
         });
     }
 };
