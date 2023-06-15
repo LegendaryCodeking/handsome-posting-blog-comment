@@ -1,4 +1,4 @@
-import {commentsCollection, postsCollection} from "./db";
+import {commentsCollection} from "./db";
 import {
     CommentDbModel, CommentsFilterModel,
     CommentsWithPaginationModel,
@@ -11,7 +11,6 @@ import {Filter, Sort} from "mongodb";
 const getCommentViewModel = (comment: CommentDbModel | CreateCommentModel): CommentViewModel => {
     return {
         id: comment.id,
-        postId: comment.postId,
         content: comment.content,
         commentatorInfo: {
             userId: comment.commentatorInfo.userId,

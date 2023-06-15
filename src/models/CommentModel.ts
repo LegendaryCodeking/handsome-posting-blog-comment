@@ -1,5 +1,4 @@
 import {ObjectId} from "mongodb";
-import {PostViewModel} from "./PostViewModel";
 
 export type CreateCommentModel = {
     id: string
@@ -20,7 +19,6 @@ export type CommentDbModel = {
 
 export type CommentViewModel = {
     id: string
-    postId: string
     content: string
     commentatorInfo: CommentatorInfoType
     createdAt: string
