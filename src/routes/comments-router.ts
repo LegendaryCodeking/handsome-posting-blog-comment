@@ -10,8 +10,6 @@ export const commentsRouter = Router({})
 
 
 commentsRouter.get('/:id',
-    authorizationCheckBearer,
-    inputValidationMw,
     async (req: Request, res: Response) => {
         let foundComment: CommentViewModel | null = await commentService.findCommentById(req.params.id)
         if (!foundComment) {

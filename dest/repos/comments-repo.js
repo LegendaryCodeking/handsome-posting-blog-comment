@@ -14,7 +14,6 @@ const db_1 = require("./db");
 const getCommentViewModel = (comment) => {
     return {
         id: comment.id,
-        postId: comment.postId,
         content: comment.content,
         commentatorInfo: {
             userId: comment.commentatorInfo.userId,
