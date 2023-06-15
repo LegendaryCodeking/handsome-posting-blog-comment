@@ -106,8 +106,6 @@ postsRouter.post('/:postId/comments',
     })
 
 postsRouter.get('/:postId/comments',
-    authorizationCheckBearer,
-    inputValidationMw,
     async (req: Request,
            res: Response<CommentsWithPaginationModel>) => {
 

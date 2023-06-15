@@ -17,7 +17,7 @@ const comment_service_1 = require("../domain/comment-service");
 const comments_validation_mw_1 = require("../middlewares/comments-validation-mw");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 exports.commentsRouter = (0, express_1.Router)({});
-exports.commentsRouter.get('/:id', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.commentsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let foundComment = yield comment_service_1.commentService.findCommentById(req.params.id);
     if (!foundComment) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
