@@ -19,7 +19,7 @@ exports.authRouter.post('/login', (req, res) => __awaiter(void 0, void 0, void 0
     const user = yield user_service_1.userService.checkCredentials(req.body.loginOrEmail, req.body.password);
     if (user) {
         const token = yield jwt_service_1.jwtService.createJWT(user);
-        res.status(200).send(token);
+        res.status(200).json({ "accessToken": token });
         return;
     }
     res.sendStatus(http_statuses_const_1.STATUSES_HTTP.UNAUTHORIZED_401);
