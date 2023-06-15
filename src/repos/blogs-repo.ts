@@ -1,7 +1,7 @@
 import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {blogsCollection} from "./db";
-import {FilterModel} from "../models/FilterModel";
+import {BlogPostFilterModel} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
 
@@ -18,7 +18,7 @@ const getBlogViewModel = (blog: BlogType): BlogViewModel => {
 
 
 export const blogsRepo = {
-    async findBlogs(queryFilter: FilterModel): Promise<BlogsWithPaginationModel> {
+    async findBlogs(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
 
         const filter: Filter<BlogType> = {name: {$regex: queryFilter.searchNameTerm ?? '', $options: 'i'}}
 

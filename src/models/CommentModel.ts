@@ -25,6 +25,15 @@ export type CommentViewModel = {
     createdAt: string
 }
 
+export type CommentsFilterModel = {
+    searchLoginTerm: string | null
+    searchEmailTerm: string | null
+    sortBy: string
+    sortDirection: 'asc' | 'desc'
+    pageNumber: number
+    pageSize: number
+}
+
 
 export type CommentatorInfoType = {
     userId: string

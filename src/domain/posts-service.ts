@@ -1,10 +1,10 @@
 import {PostType} from "../models/PostModel";
 import {postsRepo} from "../repos/posts-repo";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {FilterModel} from "../models/FilterModel";
+import {BlogPostFilterModel} from "../models/FilterModel";
 
 export const postsService = {
-    async findPosts(queryFilter: FilterModel): Promise<PostsWithPaginationModel> {
+    async findPosts(queryFilter: BlogPostFilterModel): Promise<PostsWithPaginationModel> {
         return postsRepo.findPosts(queryFilter)
     },
     async findProductById(id: string): Promise<PostType | null> {

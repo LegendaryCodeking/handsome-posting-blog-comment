@@ -8,7 +8,7 @@ import {RequestWithParams} from "../types/posts-types";
 import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {queryPagination} from "../models/FilterModel";
+import {queryBlogPostPagination} from "../models/FilterModel";
 
 import {commentService} from "../domain/comment-service";
 import {CommentViewModel} from "../models/CommentModel";
@@ -17,7 +17,7 @@ export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request,
                             res: Response<PostsWithPaginationModel>) => {
-    const queryFilter = queryPagination(req)
+    const queryFilter = queryBlogPostPagination(req)
 
     let foundPosts = await postsService.findPosts(queryFilter);
     if (!foundPosts.items.length) {
@@ -105,3 +105,14 @@ postsRouter.post('/:postId/comments',
 
     })
 
+postsRouter.get('/:postId/comments',
+    authorizationCheckBearer,
+    inputValidationMw,
+    async (req: Request,
+           res: Response<CommentViewModel>) => {
+
+        let createComment = await commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
+        res.status(STATUSES_HTTP.CREATED_201)
+            .json(createComment)
+
+    })

@@ -3,7 +3,7 @@ import {PostViewModel} from "../models/PostViewModel";
 import {postsCollection} from "./db";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
-import {FilterModel} from "../models/FilterModel";
+import {BlogPostFilterModel} from "../models/FilterModel";
 
 const getPostViewModel = (post: PostType): PostViewModel => {
     return {
@@ -18,7 +18,7 @@ const getPostViewModel = (post: PostType): PostViewModel => {
 }
 
 export const postsRepo = {
-    async findPosts(queryFilter: FilterModel): Promise<PostsWithPaginationModel> {
+    async findPosts(queryFilter: BlogPostFilterModel): Promise<PostsWithPaginationModel> {
         const findFilter: Filter<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy] : queryFilter.sortDirection} : {[queryFilter.sortBy] : queryFilter.sortDirection, 'createdAt': 1})
 

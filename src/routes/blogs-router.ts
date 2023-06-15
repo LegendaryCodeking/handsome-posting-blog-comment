@@ -8,7 +8,7 @@ import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {BlogType} from "../models/BlogModel";
-import {queryPagination} from "../models/FilterModel";
+import {queryBlogPostPagination} from "../models/FilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
@@ -18,7 +18,7 @@ import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response<BlogsWithPaginationModel>) => {
-    let queryFilter = queryPagination(req)
+    let queryFilter = queryBlogPostPagination(req)
     let foundBlogs: BlogsWithPaginationModel = await blogsService.findBlogs(queryFilter)
 
     if (!foundBlogs.items.length) {
@@ -48,7 +48,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostsWithPagina
         return;
     }
 
-    const queryFilter = queryPagination(req)
+    const queryFilter = queryBlogPostPagination(req)
 
     let foundPosts = await blogsService.findPostsByBlogId(queryFilter);
 
