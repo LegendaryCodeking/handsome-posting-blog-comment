@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 
-export const authorizationCheck = (req: Request, res: Response, next: NextFunction) => {
+export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
         res.sendStatus(401)
     } else {
@@ -13,7 +13,7 @@ import {jwtService} from "../application/jwt-service";
 import {userService} from "../domain/user-service";
 
 
-export const authorizationCheckBearer = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticationCheckBearer = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.sendStatus(401)
         return

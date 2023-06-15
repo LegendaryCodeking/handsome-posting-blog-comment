@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {blogsService} from "../domain/blogs-service";
 import {descriptionValidation, nameValidation, urlValidation} from "../middlewares/blog-validation-mw";
-import {authorizationCheck} from "../middlewares/authorization-mw";
+import {authenticationCheck} from "../middlewares/auth-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {RequestWithParamsBlog} from "../types/blogs-types";
@@ -62,7 +62,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostsWithPagina
 
 })
 
-blogsRouter.delete('/:id', authorizationCheck, async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
+blogsRouter.delete('/:id', authenticationCheck, async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
     let deleteStatus: boolean = await blogsService.deleteBlog(req.params.id)
     if (deleteStatus) {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
@@ -72,7 +72,7 @@ blogsRouter.delete('/:id', authorizationCheck, async (req: RequestWithParamsBlog
 })
 
 blogsRouter.post('/',
-    authorizationCheck,
+    authenticationCheck,
     nameValidation,
     descriptionValidation,
     urlValidation,
@@ -85,7 +85,7 @@ blogsRouter.post('/',
     })
 
 blogsRouter.post('/:id/posts',
-    authorizationCheck,
+    authenticationCheck,
     titleValidation,
     shortDescription,
     content,
@@ -106,7 +106,7 @@ blogsRouter.post('/:id/posts',
 
 
 blogsRouter.put('/:id',
-    authorizationCheck,
+    authenticationCheck,
     nameValidation,
     descriptionValidation,
     urlValidation,

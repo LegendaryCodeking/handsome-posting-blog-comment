@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsRouter = void 0;
 const express_1 = require("express");
-const authorization_mw_1 = require("../middlewares/authorization-mw");
+const auth_mw_1 = require("../middlewares/auth-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 const comment_service_1 = require("../domain/comment-service");
 const comments_validation_mw_1 = require("../middlewares/comments-validation-mw");
@@ -27,7 +27,7 @@ exports.commentsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 
         res.json(foundComment);
     }
 }));
-exports.commentsRouter.put('/:id', authorization_mw_1.authorizationCheckBearer, comments_validation_mw_1.contentValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.commentsRouter.put('/:id', auth_mw_1.authenticationCheckBearer, comments_validation_mw_1.contentValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let updateStatus = yield comment_service_1.commentService.updateComment(req.params.id, req.body.content);
     if (updateStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
@@ -36,7 +36,7 @@ exports.commentsRouter.put('/:id', authorization_mw_1.authorizationCheckBearer, 
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
     }
 }));
-exports.commentsRouter.delete('/:id', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.commentsRouter.delete('/:id', auth_mw_1.authenticationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let deletionStatus = yield comment_service_1.commentService.deleteComment(req.params.id);
     if (deletionStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);

@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {postsService} from "../domain/posts-service";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {authorizationCheck, authorizationCheckBearer} from "../middlewares/authorization-mw";
+import {authenticationCheck, authenticationCheckBearer} from "../middlewares/auth-mw";
 import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {RequestWithParams} from "../types/posts-types";
@@ -43,7 +43,7 @@ postsRouter.get('/:id', async (req: RequestWithParams<URIParamsPostIdModel>,
 })
 
 postsRouter.delete('/:id',
-    authorizationCheck,
+    authenticationCheck,
     async (req: RequestWithParams<URIParamsPostIdModel>,
            res: Response) => {
         const deletionStatus = await postsService.deletePost(req.params.id)
@@ -55,7 +55,7 @@ postsRouter.delete('/:id',
     })
 
 postsRouter.post('/',
-    authorizationCheck,
+    authenticationCheck,
     titleValidation,
     shortDescription,
     content,
@@ -69,7 +69,7 @@ postsRouter.post('/',
     })
 
 postsRouter.put('/:id',
-    authorizationCheck,
+    authenticationCheck,
     titleValidation,
     shortDescription,
     content,
@@ -86,9 +86,11 @@ postsRouter.put('/:id',
     }
 )
 
+////////////////////////////
 // working with comments
+////////////////////////////
 postsRouter.post('/:postId/comments',
-    authorizationCheckBearer,
+    authenticationCheckBearer,
     contentValidation,
     inputValidationMw,
     async (req: Request,

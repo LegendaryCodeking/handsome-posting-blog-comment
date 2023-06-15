@@ -3,14 +3,14 @@ import {queryBlogPostPagination} from "../models/FilterModel";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {userService} from "../domain/user-service";
 import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
-import {authorizationCheck} from "../middlewares/authorization-mw";
+import {authenticationCheck} from "../middlewares/auth-mw";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 
 export const usersRouter = Router({})
 
 usersRouter.get('/',
-    authorizationCheck,
+    authenticationCheck,
     async (req: Request, res: Response<UsersWithPaginationModel>) => {
     let queryFilter = queryBlogPostPagination(req)
     let foundUsers = await userService.findUsers(queryFilter)
@@ -21,7 +21,7 @@ usersRouter.get('/',
 })
 
 usersRouter.post('/',
-    authorizationCheck,
+    authenticationCheck,
     loginValidation,
     passwordValidation,
     emailValidation,
@@ -34,7 +34,7 @@ usersRouter.post('/',
     })
 
 usersRouter.delete('/:id',
-    authorizationCheck,
+    authenticationCheck,
     async (req, res) => {
     let deletionStatus: boolean = await userService.deleteUser(req.params.id)
         if (deletionStatus) {

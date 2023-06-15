@@ -13,7 +13,7 @@ exports.postsRouter = void 0;
 const express_1 = require("express");
 const posts_service_1 = require("../domain/posts-service");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
-const authorization_mw_1 = require("../middlewares/authorization-mw");
+const auth_mw_1 = require("../middlewares/auth-mw");
 const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 const FilterModel_1 = require("../models/FilterModel");
@@ -39,7 +39,7 @@ exports.postsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
     }
     res.json(foundPost);
 }));
-exports.postsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.delete('/:id', auth_mw_1.authenticationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const deletionStatus = yield posts_service_1.postsService.deletePost(req.params.id);
     if (deletionStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
@@ -48,12 +48,12 @@ exports.postsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, 
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
     }
 }));
-exports.postsRouter.post('/', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/', auth_mw_1.authenticationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let createdPost = yield posts_service_1.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 }));
-exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.put('/:id', auth_mw_1.authenticationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, post_validation_mw_1.blogId, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let updateStatus = yield posts_service_1.postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (updateStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
@@ -62,8 +62,10 @@ exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_vali
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
     }
 }));
+////////////////////////////
 // working with comments
-exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheckBearer, comments_validation_mw_1.contentValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+////////////////////////////
+exports.postsRouter.post('/:postId/comments', auth_mw_1.authenticationCheckBearer, comments_validation_mw_1.contentValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Проверяем, что пост существует
     const foundPost = yield posts_service_1.postsService.findProductById(req.params.postId);
     if (!foundPost) {

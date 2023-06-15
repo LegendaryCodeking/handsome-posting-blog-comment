@@ -13,7 +13,7 @@ exports.blogsRouter = void 0;
 const express_1 = require("express");
 const blogs_service_1 = require("../domain/blogs-service");
 const blog_validation_mw_1 = require("../middlewares/blog-validation-mw");
-const authorization_mw_1 = require("../middlewares/authorization-mw");
+const auth_mw_1 = require("../middlewares/auth-mw");
 const inputErrorsCheck_mw_1 = require("../middlewares/inputErrorsCheck-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 const FilterModel_1 = require("../models/FilterModel");
@@ -56,7 +56,7 @@ exports.blogsRouter.get('/:id/posts', (req, res) => __awaiter(void 0, void 0, vo
     res.status(http_statuses_const_1.STATUSES_HTTP.OK_200)
         .json(foundPosts);
 }));
-exports.blogsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.delete('/:id', auth_mw_1.authenticationCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let deleteStatus = yield blogs_service_1.blogsService.deleteBlog(req.params.id);
     if (deleteStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
@@ -65,12 +65,12 @@ exports.blogsRouter.delete('/:id', authorization_mw_1.authorizationCheck, (req, 
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
     }
 }));
-exports.blogsRouter.post('/', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/', auth_mw_1.authenticationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let createdBlog = yield blogs_service_1.blogsService.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdBlog);
 }));
-exports.blogsRouter.post('/:id/posts', authorization_mw_1.authorizationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/:id/posts', auth_mw_1.authenticationCheck, post_validation_mw_1.titleValidation, post_validation_mw_1.shortDescription, post_validation_mw_1.content, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const foundBlog = yield blogs_service_1.blogsService.findBlogById(req.params.id);
     if (!foundBlog) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
@@ -80,7 +80,7 @@ exports.blogsRouter.post('/:id/posts', authorization_mw_1.authorizationCheck, po
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createdPost);
 }));
-exports.blogsRouter.put('/:id', authorization_mw_1.authorizationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.put('/:id', auth_mw_1.authenticationCheck, blog_validation_mw_1.nameValidation, blog_validation_mw_1.descriptionValidation, blog_validation_mw_1.urlValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let updateStatus = yield blogs_service_1.blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
     if (updateStatus) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);

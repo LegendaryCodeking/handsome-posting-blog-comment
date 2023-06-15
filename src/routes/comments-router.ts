@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {authorizationCheckBearer} from "../middlewares/authorization-mw";
+import {authenticationCheckBearer} from "../middlewares/auth-mw";
 import {STATUSES_HTTP} from "./http-statuses-const";
 import {commentService} from "../domain/comment-service";
 import {contentValidation} from "../middlewares/comments-validation-mw";
@@ -22,7 +22,7 @@ commentsRouter.get('/:id',
 )
 
 commentsRouter.put('/:id',
-    authorizationCheckBearer,
+    authenticationCheckBearer,
     contentValidation,
     inputValidationMw,
     async (req: Request, res: Response) => {
@@ -36,7 +36,7 @@ commentsRouter.put('/:id',
 )
 
 commentsRouter.delete('/:id',
-    authorizationCheckBearer,
+    authenticationCheckBearer,
     inputValidationMw,
     async (req: Request, res: Response) => {
         let deletionStatus: boolean = await commentService.deleteComment(req.params.id)
