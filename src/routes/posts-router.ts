@@ -12,6 +12,7 @@ import {queryBlogPostPagination, queryCommentswithPaination} from "../models/Fil
 
 import {commentService} from "../domain/comment-service";
 import {CommentsWithPaginationModel, CommentViewModel} from "../models/CommentModel";
+import {contentValidation} from "../middlewares/comments-validation-mw";
 
 export const postsRouter = Router({})
 
@@ -88,6 +89,7 @@ postsRouter.put('/:id',
 // working with comments
 postsRouter.post('/:postId/comments',
     authorizationCheckBearer,
+    contentValidation,
     inputValidationMw,
     async (req: Request,
            res: Response<CommentViewModel>) => {

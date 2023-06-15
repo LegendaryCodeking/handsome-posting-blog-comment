@@ -18,6 +18,7 @@ const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 const http_statuses_const_1 = require("./http-statuses-const");
 const FilterModel_1 = require("../models/FilterModel");
 const comment_service_1 = require("../domain/comment-service");
+const comments_validation_mw_1 = require("../middlewares/comments-validation-mw");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const queryFilter = (0, FilterModel_1.queryBlogPostPagination)(req);
@@ -62,7 +63,7 @@ exports.postsRouter.put('/:id', authorization_mw_1.authorizationCheck, post_vali
     }
 }));
 // working with comments
-exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCheckBearer, comments_validation_mw_1.contentValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Проверяем, что пост существует
     const foundPost = yield posts_service_1.postsService.findProductById(req.params.postId);
     if (!foundPost) {
@@ -73,7 +74,7 @@ exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCh
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createComment);
 }));
-exports.postsRouter.get('/:postId/comments', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.get('/:postId/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const queryFilter = (0, FilterModel_1.queryCommentswithPaination)(req);
     let foundPosts = yield comment_service_1.commentService.findComments(queryFilter);
     if (!foundPosts.items.length) {
