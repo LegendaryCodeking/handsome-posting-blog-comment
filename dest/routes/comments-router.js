@@ -28,20 +28,28 @@ exports.commentsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 
     }
 }));
 exports.commentsRouter.put('/:id', auth_mw_1.authenticationCheckBearer, comments_validation_mw_1.contentValidation, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let updateStatus = yield comment_service_1.commentService.updateComment(req.params.id, req.body.content);
-    if (updateStatus) {
-        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
-    }
-    else {
+    let foundComment = yield comment_service_1.commentService.findCommentById(req.params.id);
+    if (!foundComment) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+        return;
     }
+    if (foundComment.commentatorInfo.userId !== req.user.id) {
+        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.FORBIDDEN_403);
+        return;
+    }
+    let updateStatus = yield comment_service_1.commentService.updateComment(req.params.id, req.body.content);
+    res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
 }));
 exports.commentsRouter.delete('/:id', auth_mw_1.authenticationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let deletionStatus = yield comment_service_1.commentService.deleteComment(req.params.id);
-    if (deletionStatus) {
-        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
-    }
-    else {
+    let foundComment = yield comment_service_1.commentService.findCommentById(req.params.id);
+    if (!foundComment) {
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
+        return;
     }
+    if (foundComment.commentatorInfo.userId !== req.user.id) {
+        res.sendStatus(http_statuses_const_1.STATUSES_HTTP.FORBIDDEN_403);
+        return;
+    }
+    let deletionStatus = yield comment_service_1.commentService.deleteComment(req.params.id);
+    res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NO_CONTENT_204);
 }));
