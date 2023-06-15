@@ -1,25 +1,10 @@
-import express from 'express'
-import {blogsRouter} from "./routes/blogs-router";
-import {postsRouter} from "./routes/posts-router";
-import {testingRouter} from "./routes/testing-router";
+import dotenv from 'dotenv'
 import {runDb} from "./repos/db";
-import {usersRouter} from "./routes/users-router";
-import {authRouter} from "./routes/auth-router";
-import {commentsRouter} from "./routes/comments-router";
+import {app} from "../app_settings";
 
-export const app = express()
+dotenv.config()
+
 const port = process.env.PORT || 7050
-
-const jsonBodyMW = express.json()
-app.use(jsonBodyMW)
-
-
-app.use('/blogs', blogsRouter)
-app.use('/posts', postsRouter)
-app.use('/users', usersRouter)
-app.use('/auth', authRouter)
-app.use('/testing', testingRouter)
-app.use('/comments', commentsRouter)
 
 const startApp = async () => {
     await runDb()

@@ -1,4 +1,4 @@
-import {UserViewModel} from "../models/UserViewModel";
+import {UserViewModel} from "./models/UserViewModel";
 
 
 declare global {
