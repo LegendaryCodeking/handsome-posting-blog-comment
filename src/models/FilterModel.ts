@@ -29,8 +29,7 @@ export const queryBlogPostPagination = (req: any): BlogPostFilterModel => {
 
 export const queryCommentswithPaination = (req: any) : CommentsFilterModel => {
     return {
-        searchLoginTerm: req.query.searchLoginTerm ?? null,
-        searchEmailTerm: req.query.searchEmailTerm ?? null,
+        postId: req.params.postId,
         sortBy:  req.query.sortBy ?? 'createdAt',
         sortDirection: req.query.sortDirection === 'asc' ? 'asc': 'desc',
         pageNumber: +(req.query.pageNumber ?? 1),

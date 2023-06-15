@@ -1,5 +1,11 @@
-import {commentsCollection} from "./db";
-import {CommentDbModel, CommentViewModel, CreateCommentModel} from "../models/CommentModel";
+import {commentsCollection, postsCollection} from "./db";
+import {
+    CommentDbModel, CommentsFilterModel,
+    CommentsWithPaginationModel,
+    CommentViewModel,
+    CreateCommentModel
+} from "../models/CommentModel";
+import {Filter, Sort} from "mongodb";
 
 
 const getCommentViewModel = (comment: CommentDbModel | CreateCommentModel): CommentViewModel => {
@@ -17,6 +23,29 @@ const getCommentViewModel = (comment: CommentDbModel | CreateCommentModel): Comm
 
 
 export const commentsRepo = {
+
+    async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
+        const findFilter: Filter<CommentDbModel> = {postId: queryFilter.postId};
+        const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy] : queryFilter.sortDirection} : {[queryFilter.sortBy] : queryFilter.sortDirection, 'createdAt': 1});
+
+        let foundComments = await commentsCollection
+            .find(findFilter)
+            .sort(sortFilter)
+            .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
+            .limit(queryFilter.pageSize)
+            .map(value => getCommentViewModel(value)).toArray();
+
+        let totalCount = await commentsCollection.countDocuments(findFilter)
+
+        return {
+            "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
+            "page": queryFilter.pageNumber,
+            "pageSize": queryFilter.pageSize,
+            "totalCount": totalCount,
+            "items": foundComments
+        }
+        
+    },
 
     async findCommentById(id: string): Promise<any> {
         let foundComment = await commentsCollection.findOne({"id": id})

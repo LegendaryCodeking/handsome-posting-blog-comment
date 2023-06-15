@@ -8,10 +8,10 @@ import {RequestWithParams} from "../types/posts-types";
 import {PostViewModel} from "../models/PostViewModel";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {queryBlogPostPagination} from "../models/FilterModel";
+import {queryBlogPostPagination, queryCommentswithPaination} from "../models/FilterModel";
 
 import {commentService} from "../domain/comment-service";
-import {CommentViewModel} from "../models/CommentModel";
+import {CommentsWithPaginationModel, CommentViewModel} from "../models/CommentModel";
 
 export const postsRouter = Router({})
 
@@ -109,10 +109,17 @@ postsRouter.get('/:postId/comments',
     authorizationCheckBearer,
     inputValidationMw,
     async (req: Request,
-           res: Response<CommentViewModel>) => {
+           res: Response<CommentsWithPaginationModel>) => {
 
-        let createComment = await commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
-        res.status(STATUSES_HTTP.CREATED_201)
-            .json(createComment)
+        const queryFilter = queryCommentswithPaination(req)
+
+        let foundPosts = await commentService.findComments(queryFilter);
+        if (!foundPosts.items.length) {
+            res.status(STATUSES_HTTP.NOT_FOUND_404)
+                .json(foundPosts);
+            return;
+        }
+        res.status(STATUSES_HTTP.OK_200)
+            .json(foundPosts)
 
     })

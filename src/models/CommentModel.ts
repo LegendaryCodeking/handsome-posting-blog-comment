@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {PostViewModel} from "./PostViewModel";
 
 export type CreateCommentModel = {
     id: string
@@ -26,16 +27,23 @@ export type CommentViewModel = {
 }
 
 export type CommentsFilterModel = {
-    searchLoginTerm: string | null
-    searchEmailTerm: string | null
-    sortBy: string
-    sortDirection: 'asc' | 'desc'
+    postId: string
     pageNumber: number
     pageSize: number
+    sortBy: string
+    sortDirection: 'asc' | 'desc'
 }
 
 
 export type CommentatorInfoType = {
     userId: string
     userLogin: string
+}
+
+export type CommentsWithPaginationModel = {
+    "pagesCount": number,
+    "page": number,
+    "pageSize": number,
+    "totalCount": number,
+    "items": CommentViewModel[]
 }
