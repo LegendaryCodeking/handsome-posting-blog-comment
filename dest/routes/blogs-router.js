@@ -21,7 +21,7 @@ const posts_service_1 = require("../domain/posts-service");
 const post_validation_mw_1 = require("../middlewares/post-validation-mw");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let queryFilter = (0, FilterModel_1.queryPagination)(req);
+    let queryFilter = (0, FilterModel_1.queryBlogPostPagination)(req);
     let foundBlogs = yield blogs_service_1.blogsService.findBlogs(queryFilter);
     if (!foundBlogs.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
@@ -46,7 +46,7 @@ exports.blogsRouter.get('/:id/posts', (req, res) => __awaiter(void 0, void 0, vo
         res.sendStatus(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404);
         return;
     }
-    const queryFilter = (0, FilterModel_1.queryPagination)(req);
+    const queryFilter = (0, FilterModel_1.queryBlogPostPagination)(req);
     let foundPosts = yield blogs_service_1.blogsService.findPostsByBlogId(queryFilter);
     if (!foundPosts.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)

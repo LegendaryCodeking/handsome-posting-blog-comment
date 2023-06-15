@@ -20,7 +20,7 @@ const FilterModel_1 = require("../models/FilterModel");
 const comment_service_1 = require("../domain/comment-service");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const queryFilter = (0, FilterModel_1.queryPagination)(req);
+    const queryFilter = (0, FilterModel_1.queryBlogPostPagination)(req);
     let foundPosts = yield posts_service_1.postsService.findPosts(queryFilter);
     if (!foundPosts.items.length) {
         res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
@@ -72,4 +72,15 @@ exports.postsRouter.post('/:postId/comments', authorization_mw_1.authorizationCh
     let createComment = yield comment_service_1.commentService.createComment(req.params.postId, req.body.content, req.user.id, req.user.login);
     res.status(http_statuses_const_1.STATUSES_HTTP.CREATED_201)
         .json(createComment);
+}));
+exports.postsRouter.get('/:postId/comments', authorization_mw_1.authorizationCheckBearer, inputErrorsCheck_mw_1.inputValidationMw, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryFilter = (0, FilterModel_1.queryCommentswithPaination)(req);
+    let foundPosts = yield comment_service_1.commentService.findComments(queryFilter);
+    if (!foundPosts.items.length) {
+        res.status(http_statuses_const_1.STATUSES_HTTP.NOT_FOUND_404)
+            .json(foundPosts);
+        return;
+    }
+    res.status(http_statuses_const_1.STATUSES_HTTP.OK_200)
+        .json(foundPosts);
 }));

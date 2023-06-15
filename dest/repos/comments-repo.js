@@ -24,6 +24,26 @@ const getCommentViewModel = (comment) => {
     };
 };
 exports.commentsRepo = {
+    findComments(queryFilter) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const findFilter = { postId: queryFilter.postId };
+            const sortFilter = (queryFilter.sortBy === 'createdAt' ? { [queryFilter.sortBy]: queryFilter.sortDirection } : { [queryFilter.sortBy]: queryFilter.sortDirection, 'createdAt': 1 });
+            let foundComments = yield db_1.commentsCollection
+                .find(findFilter)
+                .sort(sortFilter)
+                .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
+                .limit(queryFilter.pageSize)
+                .map(value => getCommentViewModel(value)).toArray();
+            let totalCount = yield db_1.commentsCollection.countDocuments(findFilter);
+            return {
+                "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
+                "page": queryFilter.pageNumber,
+                "pageSize": queryFilter.pageSize,
+                "totalCount": totalCount,
+                "items": foundComments
+            };
+        });
+    },
     findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let foundComment = yield db_1.commentsCollection.findOne({ "id": id });

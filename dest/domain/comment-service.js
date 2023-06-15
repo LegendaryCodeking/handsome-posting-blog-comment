@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentService = void 0;
 const comments_repo_1 = require("../repos/comments-repo");
 exports.commentService = {
+    findComments(queryFilter) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return comments_repo_1.commentsRepo.findComments(queryFilter);
+        });
+    },
     findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return comments_repo_1.commentsRepo.findCommentById(id);

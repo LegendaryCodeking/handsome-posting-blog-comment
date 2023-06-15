@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryPagination = void 0;
-const queryPagination = (req) => {
+exports.queryCommentswithPaination = exports.queryBlogPostPagination = void 0;
+const queryBlogPostPagination = (req) => {
     var _a, _b, _c, _d, _e, _f, _g;
     return {
         searchNameTerm: (_a = req.query.searchNameTerm) !== null && _a !== void 0 ? _a : '',
@@ -14,4 +14,15 @@ const queryPagination = (req) => {
         searchEmailTerm: (_g = req.query.searchEmailTerm) !== null && _g !== void 0 ? _g : ''
     };
 };
-exports.queryPagination = queryPagination;
+exports.queryBlogPostPagination = queryBlogPostPagination;
+const queryCommentswithPaination = (req) => {
+    var _a, _b, _c;
+    return {
+        postId: req.params.postId,
+        sortBy: (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : 'createdAt',
+        sortDirection: req.query.sortDirection === 'asc' ? 'asc' : 'desc',
+        pageNumber: +((_b = req.query.pageNumber) !== null && _b !== void 0 ? _b : 1),
+        pageSize: +((_c = req.query.pageSize) !== null && _c !== void 0 ? _c : 10)
+    };
+};
+exports.queryCommentswithPaination = queryCommentswithPaination;
