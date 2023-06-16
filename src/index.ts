@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import {runDb} from "./db/db";
-import {app} from "../app_settings";
+import {app} from "./app_settings";
 
 dotenv.config()
 

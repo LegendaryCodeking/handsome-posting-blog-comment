@@ -18,7 +18,7 @@ export const usersQueryRepo = {
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
-            .map(blog => getUserViewModel(blog)).toArray();
+            .map(user => getUserViewModel(user)).toArray();
 
         let totalCount = await usersCollection.countDocuments(findFilter)
 
@@ -39,7 +39,7 @@ export const usersQueryRepo = {
     async findUserById(id: string) {
         let user = await usersCollection.findOne({id: id})
         if (user) {
-            return user
+            return getUserViewModel(user)
         } else {
             return null
         }
