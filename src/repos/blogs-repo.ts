@@ -1,6 +1,6 @@
 import {BlogType} from "../models/BlogModel";
 import {BlogViewModel} from "../models/BlogViewModel";
-import {blogsCollection} from "./db";
+import {blogsCollection} from "../db/db";
 import {BlogPostFilterModel} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 import {Filter, Sort} from "mongodb";

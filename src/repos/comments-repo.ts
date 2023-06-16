@@ -1,4 +1,4 @@
-import {commentsCollection} from "./db";
+import {commentsCollection} from "../db/db";
 import {
     CommentDbModel, CommentsFilterModel,
     CommentsWithPaginationModel,

@@ -2,7 +2,7 @@ import {BlogPostFilterModel} from "../models/FilterModel";
 import {UserType} from "../models/UserModel";
 import {UserViewModel} from "../models/UserViewModel";
 import {Filter, Sort} from "mongodb";
-import {usersCollection} from "./db";
+import {usersCollection} from "../db/db";
 import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
 
 

@@ -1,6 +1,6 @@
 import {PostType} from "../models/PostModel";
 import {PostViewModel} from "../models/PostViewModel";
-import {postsCollection} from "./db";
+import {postsCollection} from "../db/db";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
 import {BlogPostFilterModel} from "../models/FilterModel";

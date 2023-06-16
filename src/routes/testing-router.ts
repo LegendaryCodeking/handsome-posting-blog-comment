@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../repos/db";
+import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../db/db";
 
 export const testingRouter = Router({})
 
