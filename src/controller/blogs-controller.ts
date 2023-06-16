@@ -1,5 +1,4 @@
 import {BlogType} from "../models/BlogModel";
-import {blogsRepo} from "../repos/blogs-repo";
 import {queryBlogPostPagination} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 import {Request, Response} from "express";
