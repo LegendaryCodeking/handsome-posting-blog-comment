@@ -47,7 +47,7 @@ export const blogsController = {
 
         const queryFilter = queryBlogPostPagination(req)
 
-        let foundPosts = await blogsService.findPostsByBlogId(queryFilter);
+        let foundPosts = await blogsQueryRepo.findPostsByBlogId(queryFilter);
 
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)

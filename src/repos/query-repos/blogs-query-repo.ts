@@ -4,6 +4,7 @@ import {Filter, Sort} from "mongodb";
 import {BlogType} from "../../models/BlogModel";
 import {blogsCollection} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
+import {postQueryRepo} from "./post-query-repo";
 
 export const blogsQueryRepo = {
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
@@ -37,4 +38,7 @@ export const blogsQueryRepo = {
             return null
         }
     },
+    async findPostsByBlogId(queryFilter: BlogPostFilterModel) {
+        return postQueryRepo.findPosts(queryFilter)
+    }
 }
