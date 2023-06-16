@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {blogsRepo} from "../repos/blogs-repo";
+import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 
 export const titleValidation = body("title")
     .isString().withMessage("Title should be string")
@@ -21,7 +21,7 @@ export const blogId = body('blogId')
     .isString().withMessage("blogId should be string")
     .trim().isLength({min: 1,max: 100}).withMessage("The length should be > 0")
     .custom(async value => {
-    const foundBlog = await blogsRepo.findBlogById(value);
+    const foundBlog = await blogsQueryRepo.findBlogById(value);
     if (!foundBlog) {
         throw new Error('There is no blog with such ID');
     }
