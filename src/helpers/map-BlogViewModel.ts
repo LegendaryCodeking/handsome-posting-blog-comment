@@ -1,5 +1,5 @@
-import {BlogType} from "../models/BlogModel";
-import {BlogViewModel} from "../models/BlogViewModel";
+import {BlogType} from "../models/BLogs/BlogModel";
+import {BlogViewModel} from "../models/BLogs/BlogViewModel";
 
 export const getBlogViewModel = (blog: BlogType): BlogViewModel => {
     return {

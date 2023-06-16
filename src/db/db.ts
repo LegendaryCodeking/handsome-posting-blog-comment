@@ -1,9 +1,9 @@
 import {MongoClient} from 'mongodb'
-import {PostType} from "../models/PostModel";
-import {BlogType} from "../models/BlogModel";
+import {PostType} from "../models/Posts/PostModel";
+import {BlogType} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
-import {UserType} from "../models/UserModel";
-import {CommentDbModel} from "../models/CommentModel";
+import {UserType} from "../models/Users/UserModel";
+import {CommentDbModel} from "../models/Comments/CommentModel";
 dotenv.config()
 
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";

@@ -1,6 +1,6 @@
 import {usersRepo} from "../repos/users-repo";
-import {UserViewModel} from "../models/UserViewModel";
-import {UserType} from "../models/UserModel";
+import {UserViewModel} from "../models/Users/UserViewModel";
+import {UserType} from "../models/Users/UserModel";
 import bcrypt from 'bcrypt';
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 

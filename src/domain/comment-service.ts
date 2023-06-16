@@ -3,7 +3,7 @@ import {commentsRepo} from "../repos/comments-repo";
 import {
     CommentViewModel,
     CreateCommentModel
-} from "../models/CommentModel";
+} from "../models/Comments/CommentModel";
 
 
 export const commentService = {

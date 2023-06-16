@@ -1,6 +1,6 @@
 import {
     CommentViewModel,
-} from "../models/CommentModel";
+} from "../models/Comments/CommentModel";
 import {Request, Response} from "express";
 import {commentService} from "../domain/comment-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";

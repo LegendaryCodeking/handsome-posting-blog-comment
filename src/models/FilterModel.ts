@@ -1,4 +1,4 @@
-import {CommentsFilterModel} from "./CommentModel";
+import {CommentsFilterModel} from "./Comments/CommentModel";
 
 export type BlogPostFilterModel = {
     searchNameTerm: string

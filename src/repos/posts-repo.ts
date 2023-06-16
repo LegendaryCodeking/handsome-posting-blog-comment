@@ -1,4 +1,4 @@
-import {PostType} from "../models/PostModel";
+import {PostType} from "../models/Posts/PostModel";
 import {postsCollection} from "../db/db";
 import {getPostViewModel} from "../helpers/map-PostViewModel";
 

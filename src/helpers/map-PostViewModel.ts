@@ -1,5 +1,5 @@
-import {PostType} from "../models/PostModel";
-import {PostViewModel} from "../models/PostViewModel";
+import {PostType} from "../models/Posts/PostModel";
+import {PostViewModel} from "../models/Posts/PostViewModel";
 
 export const getPostViewModel = (post: PostType): PostViewModel => {
     return {

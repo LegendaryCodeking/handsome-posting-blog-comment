@@ -1,7 +1,7 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
-import {PostsWithPaginationModel} from "../../models/PostsWithPaginationModel";
+import {PostsWithPaginationModel} from "../../models/Posts/PostsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
-import {PostType} from "../../models/PostModel";
+import {PostType} from "../../models/Posts/PostModel";
 import {postsCollection} from "../../db/db";
 import {getPostViewModel} from "../../helpers/map-PostViewModel";
 

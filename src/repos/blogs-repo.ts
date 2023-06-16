@@ -1,4 +1,4 @@
-import {BlogType} from "../models/BlogModel";
+import {BlogType} from "../models/BLogs/BlogModel";
 import {blogsCollection} from "../db/db";
 import {getBlogViewModel} from "../helpers/map-BlogViewModel";
 

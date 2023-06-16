@@ -1,5 +1,5 @@
 import {queryBlogPostPagination} from "../models/FilterModel";
-import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
+import {UsersWithPaginationModel} from "../models/Users/UsersWithPaginationModel";
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {userService} from "../domain/user-service";

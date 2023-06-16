@@ -1,4 +1,4 @@
-import {CommentDbModel, CommentsFilterModel, CommentsWithPaginationModel} from "../../models/CommentModel";
+import {CommentDbModel, CommentsFilterModel, CommentsWithPaginationModel} from "../../models/Comments/CommentModel";
 import {Filter, Sort} from "mongodb";
 import {commentsCollection} from "../../db/db";
 import {getCommentViewModel} from "../../helpers/map-CommentViewModel";

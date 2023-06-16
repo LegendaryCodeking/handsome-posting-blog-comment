@@ -1,5 +1,5 @@
-import {UserType} from "../models/UserModel";
-import {UserViewModel} from "../models/UserViewModel";
+import {UserType} from "../models/Users/UserModel";
+import {UserViewModel} from "../models/Users/UserViewModel";
 
 export const getUserViewModel = (user: UserType): UserViewModel => {
     return {

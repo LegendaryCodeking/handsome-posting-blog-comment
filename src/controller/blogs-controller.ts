@@ -1,14 +1,14 @@
-import {BlogType} from "../models/BlogModel";
+import {BlogType} from "../models/BLogs/BlogModel";
 import {queryBlogPostPagination} from "../models/FilterModel";
-import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
+import {BlogsWithPaginationModel} from "../models/BLogs/BlogsWithPaginationModel";
 import {Request, Response} from "express";
 import {blogsService} from "../domain/blogs-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {RequestWithParamsBlog} from "../types/blogs-types";
-import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
-import {BlogViewModel} from "../models/BlogViewModel";
-import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {PostViewModel} from "../models/PostViewModel";
+import {URIParamsBlogIdModel} from "../models/BLogs/URIParamsBlogIdModel";
+import {BlogViewModel} from "../models/BLogs/BlogViewModel";
+import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel";
+import {PostViewModel} from "../models/Posts/PostViewModel";
 import {postsService} from "../domain/posts-service";
 import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 

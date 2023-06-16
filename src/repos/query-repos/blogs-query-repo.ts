@@ -1,7 +1,7 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
-import {BlogsWithPaginationModel} from "../../models/BlogsWithPaginationModel";
+import {BlogsWithPaginationModel} from "../../models/BLogs/BlogsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
-import {BlogType} from "../../models/BlogModel";
+import {BlogType} from "../../models/BLogs/BlogModel";
 import {blogsCollection} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {postQueryRepo} from "./post-query-repo";

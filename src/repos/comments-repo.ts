@@ -2,7 +2,7 @@ import {commentsCollection} from "../db/db";
 import {
     CommentViewModel,
     CreateCommentModel
-} from "../models/CommentModel";
+} from "../models/Comments/CommentModel";
 import {getCommentViewModel} from "../helpers/map-CommentViewModel";
 
 

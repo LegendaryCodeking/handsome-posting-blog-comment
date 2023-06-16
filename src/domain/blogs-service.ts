@@ -1,4 +1,4 @@
-import {BlogType} from "../models/BlogModel";
+import {BlogType} from "../models/BLogs/BlogModel";
 import {blogsRepo} from "../repos/blogs-repo";
 
 

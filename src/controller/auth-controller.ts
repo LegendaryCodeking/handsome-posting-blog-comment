@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {UserViewModel} from "../models/UserViewModel";
+import {UserViewModel} from "../models/Users/UserViewModel";
 import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
