@@ -8,6 +8,7 @@ import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
 import {PostViewModel} from "../models/PostViewModel";
 import {CommentsWithPaginationModel, CommentViewModel} from "../models/CommentModel";
 import {commentService} from "../domain/comment-service";
+import {postQueryRepo} from "../repos/query-repos/post-query-repo";
 
 export const postsController = {
 
@@ -15,7 +16,7 @@ export const postsController = {
                        res: Response<PostsWithPaginationModel>) {
         const queryFilter = queryBlogPostPagination(req)
 
-        let foundPosts = await postsService.findPosts(queryFilter);
+        let foundPosts = await postQueryRepo.findPosts(queryFilter);
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundPosts);
@@ -27,7 +28,7 @@ export const postsController = {
 
     async findPostById(req: RequestWithParams<URIParamsPostIdModel>,
                        res: Response) {
-        const foundPost = await postsService.findProductById(req.params.id);
+        const foundPost = await postQueryRepo.findPostsById(req.params.id);
 
         if (!foundPost) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -72,7 +73,7 @@ export const postsController = {
     async createCommentForPost(req: Request,
                                res: Response<CommentViewModel>) {
         // Проверяем, что пост существует
-        const foundPost = await postsService.findProductById(req.params.postId);
+        const foundPost = await postQueryRepo.findPostsById(req.params.postId);
 
         if (!foundPost) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)

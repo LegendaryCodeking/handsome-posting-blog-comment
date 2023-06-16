@@ -1,15 +1,7 @@
 import {PostType} from "../models/PostModel";
 import {postsRepo} from "../repos/posts-repo";
-import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {BlogPostFilterModel} from "../models/FilterModel";
 
 export const postsService = {
-    async findPosts(queryFilter: BlogPostFilterModel): Promise<PostsWithPaginationModel> {
-        return postsRepo.findPosts(queryFilter)
-    },
-    async findProductById(id: string): Promise<PostType | null> {
-        return postsRepo.findPostsById(id)
-    },
     async deletePost(id: string): Promise<boolean> {
         return postsRepo.deletePost(id)
     },

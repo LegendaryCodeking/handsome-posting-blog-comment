@@ -1,7 +1,7 @@
 import {BlogType} from "../models/BlogModel";
 import {blogsRepo} from "../repos/blogs-repo";
 import {BlogPostFilterModel} from "../models/FilterModel";
-import {postsRepo} from "../repos/posts-repo";
+import {postQueryRepo} from "../repos/query-repos/post-query-repo";
 
 
 export const blogsService = {
@@ -25,6 +25,6 @@ export const blogsService = {
         return blogsRepo.updateBlog(id, name, description, websiteUrl)
     },
     async findPostsByBlogId(queryFilter: BlogPostFilterModel) {
-        return postsRepo.findPosts(queryFilter)
+        return postQueryRepo.findPosts(queryFilter)
     }
 }
