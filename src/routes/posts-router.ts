@@ -1,58 +1,19 @@
-import {Request, Response, Router} from 'express'
-import {postsService} from "../domain/posts-service";
+import {Router} from 'express'
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {authenticationCheck, authenticationCheckBearer} from "../middlewares/auth-mw";
 import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
-import {STATUSES_HTTP} from "./http-statuses-const";
-import {RequestWithParams} from "../types/posts-types";
-import {PostViewModel} from "../models/PostViewModel";
-import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
-import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {queryBlogPostPagination, queryCommentswithPaination} from "../models/FilterModel";
-
-import {commentService} from "../domain/comment-service";
-import {CommentsWithPaginationModel, CommentViewModel} from "../models/CommentModel";
 import {contentValidation} from "../middlewares/comments-validation-mw";
+import {postsController} from "../controller/posts-controller";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', async (req: Request,
-                            res: Response<PostsWithPaginationModel>) => {
-    const queryFilter = queryBlogPostPagination(req)
+postsRouter.get('/', postsController.findAllPosts)
 
-    let foundPosts = await postsService.findPosts(queryFilter);
-    if (!foundPosts.items.length) {
-        res.status(STATUSES_HTTP.NOT_FOUND_404)
-            .json(foundPosts);
-        return;
-    }
-    res.status(STATUSES_HTTP.OK_200)
-        .json(foundPosts)
-})
-
-postsRouter.get('/:id', async (req: RequestWithParams<URIParamsPostIdModel>,
-                               res: Response) => {
-    const foundPost = await postsService.findProductById(req.params.id);
-
-    if (!foundPost) {
-        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        return;
-    }
-
-    res.json(foundPost)
-})
+postsRouter.get('/:id', postsController.findPostById)
 
 postsRouter.delete('/:id',
     authenticationCheck,
-    async (req: RequestWithParams<URIParamsPostIdModel>,
-           res: Response) => {
-        const deletionStatus = await postsService.deletePost(req.params.id)
-        if (deletionStatus) {
-            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-        } else {
-            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        }
-    })
+    postsController.deletePost)
 
 postsRouter.post('/',
     authenticationCheck,
@@ -61,12 +22,8 @@ postsRouter.post('/',
     content,
     blogId,
     inputValidationMw,
-    async (req: Request,
-           res: Response<PostViewModel>) => {
-        let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
-        res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdPost)
-    })
+    postsController.createPost
+    )
 
 postsRouter.put('/:id',
     authenticationCheck,
@@ -75,15 +32,7 @@ postsRouter.put('/:id',
     content,
     blogId,
     inputValidationMw,
-    async (req: RequestWithParams<URIParamsPostIdModel>,
-           res: Response) => {
-        let updateStatus = await postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
-        if (updateStatus) {
-            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-        } else {
-            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        }
-    }
+    postsController.updatePost
 )
 
 ////////////////////////////
@@ -93,35 +42,7 @@ postsRouter.post('/:postId/comments',
     authenticationCheckBearer,
     contentValidation,
     inputValidationMw,
-    async (req: Request,
-           res: Response<CommentViewModel>) => {
-        // Проверяем, что пост существует
-        const foundPost = await postsService.findProductById(req.params.postId);
-
-        if (!foundPost) {
-            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-            return;
-        }
-
-        let createComment = await commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
-        res.status(STATUSES_HTTP.CREATED_201)
-            .json(createComment)
-
-    })
+    postsController.createCommentForPost )
 
 postsRouter.get('/:postId/comments',
-    async (req: Request,
-           res: Response<CommentsWithPaginationModel>) => {
-
-        const queryFilter = queryCommentswithPaination(req)
-
-        let foundPosts = await commentService.findComments(queryFilter);
-        if (!foundPosts.items.length) {
-            res.status(STATUSES_HTTP.NOT_FOUND_404)
-                .json(foundPosts);
-            return;
-        }
-        res.status(STATUSES_HTTP.OK_200)
-            .json(foundPosts)
-
-    })
+    postsController.getCommentsForPost)
