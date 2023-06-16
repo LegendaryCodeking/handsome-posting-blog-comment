@@ -8,68 +8,22 @@ import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";
 import {BlogType} from "../models/BlogModel";
-import {queryBlogPostPagination} from "../models/FilterModel";
 import {postsService} from "../domain/posts-service";
 import {PostViewModel} from "../models/PostViewModel";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
-import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
-import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
+import {blogsController} from "../controller/blogs-controller";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: Request, res: Response<BlogsWithPaginationModel>) => {
-    let queryFilter = queryBlogPostPagination(req)
-    let foundBlogs: BlogsWithPaginationModel = await blogsService.findBlogs(queryFilter)
+blogsRouter.get('/', blogsController.FindAllBlog)
 
-    if (!foundBlogs.items.length) {
-        res.status(STATUSES_HTTP.NOT_FOUND_404)
-            .json(foundBlogs);
-        return;
-    }
-    res.status(STATUSES_HTTP.OK_200)
-        .json(foundBlogs)
-})
+blogsRouter.get('/:id', blogsController.findBlogById)
 
-blogsRouter.get('/:id', async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response<BlogViewModel>) => {
-    const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
-    if (!foundBlog) {
-        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        return;
-    }
+blogsRouter.get('/:id/posts', blogsController.findPostsForBlog)
 
-    res.json(foundBlog)
-})
-
-blogsRouter.get('/:id/posts', async (req: Request, res: Response<PostsWithPaginationModel>) => {
-    const blogId = req.params.id
-    const foundBlog: BlogType | null = await blogsService.findBlogById(blogId)
-    if (!foundBlog) {
-        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        return;
-    }
-
-    const queryFilter = queryBlogPostPagination(req)
-
-    let foundPosts = await blogsService.findPostsByBlogId(queryFilter);
-
-    if (!foundPosts.items.length) {
-        res.status(STATUSES_HTTP.NOT_FOUND_404)
-            .json(foundPosts);
-        return;
-    }
-    res.status(STATUSES_HTTP.OK_200)
-        .json(foundPosts)
-
-})
-
-blogsRouter.delete('/:id', authenticationCheck, async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
-    let deleteStatus: boolean = await blogsService.deleteBlog(req.params.id)
-    if (deleteStatus) {
-        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-    } else {
-        res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-    }
-})
+blogsRouter.delete('/:id',
+    authenticationCheck,
+    blogsController.deleteBlog)
 
 blogsRouter.post('/',
     authenticationCheck,
@@ -77,12 +31,7 @@ blogsRouter.post('/',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    async (req: Request, res: Response<BlogViewModel>) => {
-        let createdBlog: BlogType = await blogsService.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
-
-        res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdBlog)
-    })
+    blogsController.createBlog)
 
 blogsRouter.post('/:id/posts',
     authenticationCheck,
@@ -90,19 +39,7 @@ blogsRouter.post('/:id/posts',
     shortDescription,
     content,
     inputValidationMw,
-    async (req: Request,
-           res: Response<PostViewModel>) => {
-
-        const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
-        if (!foundBlog) {
-            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-            return;
-        }
-
-        let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
-        res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdPost)
-    })
+    blogsController.createPostsForBlog)
 
 
 blogsRouter.put('/:id',
@@ -111,12 +48,5 @@ blogsRouter.put('/:id',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    async (req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) => {
-        let updateStatus: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
-        if (updateStatus) {
-            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-        } else {
-            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
-        }
-    }
+    blogsController.updateBlog
 )

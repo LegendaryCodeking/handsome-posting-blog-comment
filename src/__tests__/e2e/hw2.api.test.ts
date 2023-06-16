@@ -1,7 +1,8 @@
 import request from 'supertest'
-import {app} from "../../index";
+
 import {STATUSES_HTTP} from "../../routes/http-statuses-const";
 import {BlogType} from "../../models/BlogModel";
+import {app} from "../../../app_settings";
 
 describe('/blogs', () => {
     beforeAll(async () => {
