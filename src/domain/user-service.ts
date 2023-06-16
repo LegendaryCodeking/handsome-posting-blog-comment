@@ -1,14 +1,10 @@
-import {BlogPostFilterModel} from "../models/FilterModel";
 import {usersRepo} from "../repos/users-repo";
-import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
 import {UserViewModel} from "../models/UserViewModel";
 import {UserType} from "../models/UserModel";
 import bcrypt from 'bcrypt';
+import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 
 export const userService = {
-    async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
-        return usersRepo.findUsers(queryFilter)
-    },
     async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
 
         const passwordSalt = await bcrypt.genSalt(14)
@@ -30,7 +26,7 @@ export const userService = {
         return await bcrypt.hash(password, salt)
     },
     async checkCredentials(loginOrEmail: string,password: string): Promise<UserViewModel | null> {
-        const user = await usersRepo.findByLoginOrEmail(loginOrEmail)
+        const user = await usersQueryRepo.findByLoginOrEmail(loginOrEmail)
         if(!user) return null
         //@ts-ignore
         const passArray = user.password.split("$")
@@ -42,8 +38,5 @@ export const userService = {
             return null
         }
 
-    },
-    async findUserById(id: string): Promise<UserViewModel | null> {
-        return usersRepo.findUserById(id)
-    },
+    }
 }

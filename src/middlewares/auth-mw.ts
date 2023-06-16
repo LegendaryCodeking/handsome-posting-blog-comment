@@ -1,4 +1,6 @@
 import {NextFunction, Request, Response} from "express";
+import {jwtService} from "../application/jwt-service";
+import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
@@ -9,8 +11,7 @@ export const authenticationCheck = (req: Request, res: Response, next: NextFunct
 }
 
 
-import {jwtService} from "../application/jwt-service";
-import {userService} from "../domain/user-service";
+
 
 
 export const authenticationCheckBearer = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +24,7 @@ export const authenticationCheckBearer = async (req: Request, res: Response, nex
 
     const userID = await jwtService.getUserIdByToken(token)
     if(userID) {
-        req.user = await userService.findUserById(userID)
+        req.user = await usersQueryRepo.findUserById(userID)
         next()
         return;
     }

@@ -3,11 +3,12 @@ import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {userService} from "../domain/user-service";
+import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 
 export const usersController = {
     async findAllUsers(req: Request, res: Response<UsersWithPaginationModel>) {
         let queryFilter = queryBlogPostPagination(req)
-        let foundUsers = await userService.findUsers(queryFilter)
+        let foundUsers = await usersQueryRepo.findUsers(queryFilter)
 
         res.status(STATUSES_HTTP.OK_200)
             .json(foundUsers)
