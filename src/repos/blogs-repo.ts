@@ -1,54 +1,8 @@
 import {BlogType} from "../models/BlogModel";
-import {BlogViewModel} from "../models/BlogViewModel";
 import {blogsCollection} from "../db/db";
-import {BlogPostFilterModel} from "../models/FilterModel";
-import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
-import {Filter, Sort} from "mongodb";
-
-const getBlogViewModel = (blog: BlogType): BlogViewModel => {
-    return {
-        "id": blog.id,
-        "name": blog.name,
-        "description": blog.description,
-        "websiteUrl": blog.websiteUrl,
-        "createdAt": blog.createdAt,
-        "isMembership": blog.isMembership
-    }
-}
-
+import {getBlogViewModel} from "../helpers/map-BlogViewModel";
 
 export const blogsRepo = {
-    async findBlogs(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
-
-        const filter: Filter<BlogType> = {name: {$regex: queryFilter.searchNameTerm ?? '', $options: 'i'}}
-
-        const sortFilter: Sort = {[queryFilter.sortBy] : queryFilter.sortDirection}
-
-        let foundBlogs =  await blogsCollection
-            .find(filter)
-            .sort(sortFilter)
-            .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
-            .limit(queryFilter.pageSize)
-            .map(blog => getBlogViewModel(blog)).toArray();
-
-        let totalCount = await blogsCollection.countDocuments(filter)
-
-        return {
-            "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
-            "page": queryFilter.pageNumber,
-            "pageSize": queryFilter.pageSize,
-            "totalCount": totalCount,
-            "items": foundBlogs
-        }
-    },
-    async findBlogById(id: string): Promise<BlogType | null> {
-        let foundBlog: BlogType | null = await blogsCollection.findOne({"id": id})
-        if (foundBlog) {
-            return getBlogViewModel(foundBlog)
-        } else {
-            return null
-        }
-    },
     async deleteBlog(id: string): Promise<boolean> {
         const result = await blogsCollection.deleteOne({"id": id});
         return result.deletedCount === 1

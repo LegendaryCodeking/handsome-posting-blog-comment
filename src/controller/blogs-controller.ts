@@ -10,13 +10,14 @@ import {BlogViewModel} from "../models/BlogViewModel";
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {PostViewModel} from "../models/PostViewModel";
 import {postsService} from "../domain/posts-service";
+import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 
 
 export const blogsController = {
 
     async FindAllBlog(req: Request, res: Response<BlogsWithPaginationModel>) {
         let queryFilter = queryBlogPostPagination(req)
-        let foundBlogs: BlogsWithPaginationModel = await blogsService.findBlogs(queryFilter)
+        let foundBlogs: BlogsWithPaginationModel = await blogsQueryRepo.FindAllBlog(queryFilter)
 
         if (!foundBlogs.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
@@ -28,7 +29,7 @@ export const blogsController = {
     },
 
     async findBlogById(req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response<BlogViewModel>) {
-        const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
+        const foundBlog: BlogType | null = await blogsQueryRepo.findBlogById(req.params.id)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -38,7 +39,7 @@ export const blogsController = {
 
     async findPostsForBlog(req: Request, res: Response<PostsWithPaginationModel>) {
         const blogId = req.params.id
-        const foundBlog: BlogType | null = await blogsService.findBlogById(blogId)
+        const foundBlog: BlogType | null = await blogsQueryRepo.findBlogById(blogId)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -77,7 +78,7 @@ export const blogsController = {
 
     async createPostsForBlog(req: Request, res: Response<PostViewModel>) {
 
-        const foundBlog: BlogType | null = await blogsService.findBlogById(req.params.id)
+        const foundBlog: BlogType | null = await blogsQueryRepo.findBlogById(req.params.id)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
