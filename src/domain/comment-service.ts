@@ -1,21 +1,12 @@
 
 import {commentsRepo} from "../repos/comments-repo";
 import {
-    CommentsFilterModel,
-    CommentsWithPaginationModel,
     CommentViewModel,
     CreateCommentModel
 } from "../models/CommentModel";
 
 
 export const commentService = {
-    async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
-        return commentsRepo.findComments(queryFilter)
-
-    },
-    async findCommentById(id: string): Promise<CommentViewModel | null> {
-        return commentsRepo.findCommentById(id)
-    },
     async updateComment(id: string, content: string): Promise<boolean> {
         return commentsRepo.updateComment(id, content)
     },

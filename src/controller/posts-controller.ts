@@ -9,6 +9,7 @@ import {PostViewModel} from "../models/PostViewModel";
 import {CommentsWithPaginationModel, CommentViewModel} from "../models/CommentModel";
 import {commentService} from "../domain/comment-service";
 import {postQueryRepo} from "../repos/query-repos/post-query-repo";
+import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 
 export const postsController = {
 
@@ -59,7 +60,8 @@ export const postsController = {
 
     async updatePost(req: RequestWithParams<URIParamsPostIdModel>,
                      res: Response) {
-        let updateStatus = await postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        let updateStatus = await postsService
+            .updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {
@@ -91,7 +93,7 @@ export const postsController = {
 
         const queryFilter = queryCommentswithPaination(req)
 
-        let foundPosts = await commentService.findComments(queryFilter);
+        let foundPosts = await commentsQueryRepo.findComments(queryFilter);
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundPosts);

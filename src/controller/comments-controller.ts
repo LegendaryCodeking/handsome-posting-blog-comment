@@ -4,11 +4,12 @@ import {
 import {Request, Response} from "express";
 import {commentService} from "../domain/comment-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
+import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 
 
 export const commentsController = {
     async findCommentById(req: Request, res: Response) {
-        let foundComment: CommentViewModel | null = await commentService.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -18,7 +19,7 @@ export const commentsController = {
     },
 
     async updateComment(req: Request, res: Response) {
-        let foundComment: CommentViewModel | null = await commentService.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -35,7 +36,7 @@ export const commentsController = {
 
     async deleteComment(req: Request, res: Response) {
 
-        let foundComment: CommentViewModel | null = await commentService.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
