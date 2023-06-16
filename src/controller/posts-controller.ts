@@ -1,7 +1,7 @@
 import {PostsWithPaginationModel} from "../models/PostsWithPaginationModel";
 import {queryBlogPostPagination, queryCommentswithPaination} from "../models/FilterModel";
 import {Request, Response} from "express";
-import {STATUSES_HTTP} from "../routes/http-statuses-const";
+import {STATUSES_HTTP} from "../enum/http-statuses";
 import {postsService} from "../domain/posts-service";
 import {RequestWithParams} from "../types/posts-types";
 import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";

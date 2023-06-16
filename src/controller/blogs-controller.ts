@@ -3,7 +3,7 @@ import {queryBlogPostPagination} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BlogsWithPaginationModel";
 import {Request, Response} from "express";
 import {blogsService} from "../domain/blogs-service";
-import {STATUSES_HTTP} from "../routes/http-statuses-const";
+import {STATUSES_HTTP} from "../enum/http-statuses";
 import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BlogViewModel";

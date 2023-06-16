@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {UserViewModel} from "../models/UserViewModel";
 import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
-import {STATUSES_HTTP} from "../routes/http-statuses-const";
+import {STATUSES_HTTP} from "../enum/http-statuses";
 
 export const authController = {
     async loginUser(req: Request, res: Response) {

@@ -3,7 +3,7 @@ import {
 } from "../models/CommentModel";
 import {Request, Response} from "express";
 import {commentService} from "../domain/comment-service";
-import {STATUSES_HTTP} from "../routes/http-statuses-const";
+import {STATUSES_HTTP} from "../enum/http-statuses";
 
 
 export const commentsController = {

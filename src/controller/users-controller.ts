@@ -1,7 +1,7 @@
 import {queryBlogPostPagination} from "../models/FilterModel";
 import {UsersWithPaginationModel} from "../models/UsersWithPaginationModel";
 import {Request, Response} from "express";
-import {STATUSES_HTTP} from "../routes/http-statuses-const";
+import {STATUSES_HTTP} from "../enum/http-statuses";
 import {userService} from "../domain/user-service";
 
 export const usersController = {
