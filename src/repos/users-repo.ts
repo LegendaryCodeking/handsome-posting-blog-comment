@@ -54,10 +54,6 @@ export const usersRepo = {
         const user = await usersCollection.findOne({$or: [{email: loginOrEmail},{ login:loginOrEmail }]})
         return user
     },
-    async deleteAll() {
-        await usersCollection.deleteMany({});
-    },
-
 
     async findUserById(id: string) {
         let user = await usersCollection.findOne({id: id})

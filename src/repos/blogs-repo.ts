@@ -69,8 +69,5 @@ export const blogsRepo = {
         })
         return result.matchedCount === 1
     },
-    async deleteAll() {
-        await blogsCollection.deleteMany({});
 
-    }
 }

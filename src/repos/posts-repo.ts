@@ -67,8 +67,5 @@ export const postsRepo = {
             }
         })
         return result.matchedCount === 1
-    },
-    async deleteAll() {
-        await postsCollection.deleteMany({})
     }
 }
