@@ -43,10 +43,6 @@ export const userService = {
         }
 
     },
-    async deleteAll() {
-        await usersRepo.deleteAll()
-    },
-
     async findUserById(id: string): Promise<UserViewModel | null> {
         return usersRepo.findUserById(id)
     },

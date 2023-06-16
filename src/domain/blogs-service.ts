@@ -31,10 +31,6 @@ export const blogsService = {
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
         return blogsRepo.updateBlog(id, name, description, websiteUrl)
     },
-    async deleteAll() {
-        await blogsRepo.deleteAll();
-
-    },
     async findPostsByBlogId(queryFilter: BlogPostFilterModel) {
         return postsRepo.findPosts(queryFilter)
     }

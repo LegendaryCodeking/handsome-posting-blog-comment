@@ -30,8 +30,5 @@ export const postsService = {
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         return postsRepo.updatePost(id,title,shortDescription,content,blogId)
-    },
-    async deleteAll() {
-        await postsRepo.deleteAll()
     }
 }
