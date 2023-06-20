@@ -1,14 +1,14 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
 import {Filter, Sort} from "mongodb";
-import {UsersWithPaginationModel, UserType} from "../../models/Users/UserModel";
+import {UserDBModel, UsersWithPaginationModel} from "../../models/Users/UserModel";
 import {usersCollection} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
 
 export const usersQueryRepo = {
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
-        const findFilter: Filter<UserType> = {
-            $or: [{login: {$regex: queryFilter.searchLoginTerm ?? '', $options: 'i'}},
-                {email: {$regex: queryFilter.searchEmailTerm ?? '', $options: 'i'}}]
+        const findFilter: Filter<UserDBModel> = {
+            $or: [{"accountData.login": {$regex: queryFilter.searchLoginTerm ?? '', $options: 'i'}},
+                {"accountData.email": {$regex: queryFilter.searchEmailTerm ?? '', $options: 'i'}}]
         }
         const sortFilter: Sort = {[queryFilter.sortBy]: queryFilter.sortDirection}
 
