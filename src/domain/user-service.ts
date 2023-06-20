@@ -5,7 +5,7 @@ import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
-import {emailManager} from "../managers/emailManager";
+import {emailManager} from "../managers/email-manager";
 
 export const userService = {
     async createUser(login: string, password: string, email: string): Promise<UserViewModel | null> {
