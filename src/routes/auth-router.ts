@@ -6,11 +6,11 @@ export const authRouter = Router({})
 
 authRouter.post('/login', authController.loginUser)
 
-authRouter.post('/registration-confirmation', authController.loginUser)
+authRouter.post('/registration-confirmation', authController.registrationConfirmation)
 
-authRouter.post('/registration', authController.loginUser)
+authRouter.post('/registration', authController.registration)
 
-authRouter.post('/registration-email-resending', authController.loginUser)
+authRouter.post('/registration-email-resending', authController.registrationEmailResending)
 
 
 authRouter.get('/me',
