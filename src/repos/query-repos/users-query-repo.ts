@@ -45,5 +45,8 @@ export const usersQueryRepo = {
         } else {
             return null
         }
+    },
+    async findUserByConfirmationCode(code: string) {
+        return await usersCollection.findOne({"emailConfirmation.confirmationCode": code})
     }
 }

@@ -3,6 +3,7 @@ import {UserViewModel} from "../models/Users/UserModel";
 import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
+import {authService} from "../domain/auth-service";
 
 export const authController = {
     async loginUser(req: Request, res: Response) {
@@ -32,5 +33,15 @@ export const authController = {
         } else {
             res.status(400).send()
         }
+    },
+    async registrationConfirmation(req: Request, res: Response) {
+
+        const result = await authService.confirmEmail(req.body.code)
+        if (result) {
+            res.status(201).send()
+        } else {
+            res.status(400).send()
+        }
+
     }
 }
