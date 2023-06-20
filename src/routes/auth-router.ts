@@ -4,7 +4,7 @@ import {authenticationCheckBearer} from "../middlewares/auth-mw";
 
 export const authRouter = Router({})
 
-authRouter.post('/login2', authController.loginUser)
+authRouter.post('/login', authController.loginUser)
 
 authRouter.get('/me',
     authenticationCheckBearer,
