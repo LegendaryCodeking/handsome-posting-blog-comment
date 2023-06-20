@@ -16,7 +16,7 @@ export const usersController = {
     },
 
     async createUser(req: Request, res: Response) {
-        let createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email)
+        let createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email, true)
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdUser)

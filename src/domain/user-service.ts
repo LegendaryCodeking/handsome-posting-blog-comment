@@ -8,7 +8,7 @@ import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
 
 export const userService = {
-    async createUser(login: string, password: string, email: string): Promise<UserViewModel | null> {
+    async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<UserViewModel | null> {
 
         const passwordSalt = await bcrypt.genSalt(14)
         const passwordHash = await this._generateHash(password, passwordSalt)
@@ -31,16 +31,23 @@ export const userService = {
             }
         }
 
-        const createResult = usersRepo.createUser(createdUser)
-        try {
-            await emailManager.sendEmailConfirmationMessage(createdUser)
-        } catch (e) {
-            console.log(e)
-            await usersRepo.deleteUser(createdUser.id)
-            return null;
+        if (isAuthorSuper) {
+            createdUser.emailConfirmation.isConfirmed = true
+            return await usersRepo.createUser(createdUser)
+        } else {
+
+            let resultUser = await usersRepo.createUser(createdUser)
+            try {
+                await emailManager.sendEmailConfirmationMessage(createdUser)
+            } catch (e) {
+                console.log(e)
+                await usersRepo.deleteUser(createdUser.id)
+                return null;
+            }
+            return resultUser
+
         }
 
-        return createResult
 
     },
     async deleteUser(id: string): Promise<boolean> {
