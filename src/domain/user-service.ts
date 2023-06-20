@@ -41,7 +41,6 @@ export const userService = {
                 await emailManager.sendEmailConfirmationMessage(createdUser)
             } catch (e) {
                 console.log(e)
-                await usersRepo.deleteUser(createdUser.id)
                 return null;
             }
             return resultUser

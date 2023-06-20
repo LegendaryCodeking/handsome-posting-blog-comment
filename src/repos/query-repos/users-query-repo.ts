@@ -30,7 +30,7 @@ export const usersQueryRepo = {
         }
     },
 
-    async findByLoginOrEmail(loginOrEmail: string) {
+    async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
         const user = await usersCollection.findOne({$or: [{"accountData.email": loginOrEmail},{ "accountData.login":loginOrEmail }]})
         if (user) {
             return user
