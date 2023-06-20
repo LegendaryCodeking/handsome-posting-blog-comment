@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {UserViewModel} from "../models/Users/UserViewModel";
+import {UserViewModel} from "../models/Users/UserModel";
 import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
@@ -24,5 +24,8 @@ export const authController = {
         }
 
         res.status(200).json(myInfo)
+    },
+    async registration(req: Request, res: Response) {
+
     }
 }

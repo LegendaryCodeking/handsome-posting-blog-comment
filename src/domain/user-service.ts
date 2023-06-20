@@ -1,8 +1,8 @@
 import {usersRepo} from "../repos/users-repo";
-import {UserViewModel} from "../models/Users/UserViewModel";
-import {UserType} from "../models/Users/UserModel";
+import {UserDBModel, UserViewModel} from "../models/Users/UserModel";
 import bcrypt from 'bcrypt';
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
+import {getUserViewModel} from "../helpers/map-UserViewModel";
 
 export const userService = {
     async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
@@ -10,12 +10,19 @@ export const userService = {
         const passwordSalt = await bcrypt.genSalt(14)
         const passwordHash = await this._generateHash(password,passwordSalt)
 
-        const createdUser: UserType = {
+        const createdUser: UserDBModel = {
             id: (+(new Date())).toString(),
-            login: login,
-            email: email,
-            password: passwordHash,
-            createdAt: new Date().toISOString()
+            accountData: {
+                login: login,
+                email: email,
+                password: passwordHash,
+                createdAt: new Date().toISOString()
+            },
+            emailConfirmation: {
+                confirmationCode: "",
+                expirationDate: "",
+                isConfirmed: false
+            }
         }
         return await usersRepo.createUser(createdUser)
     },
@@ -32,8 +39,8 @@ export const userService = {
         const passArray = user.password.split("$")
         const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0,22)}`
         const passwordHash = await this._generateHash(password,salt)
-        if(user.password === passwordHash) {
-            return user;
+        if(user.accountData.password === passwordHash) {
+            return getUserViewModel(user);
         } else {
             return null
         }

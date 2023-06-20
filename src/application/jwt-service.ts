@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import {UserViewModel} from "../models/Users/UserViewModel";
+import {UserViewModel} from "../models/Users/UserModel";
 dotenv.config()
 
 

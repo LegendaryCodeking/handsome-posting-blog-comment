@@ -1,7 +1,6 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
-import {UsersWithPaginationModel} from "../../models/Users/UsersWithPaginationModel";
 import {Filter, Sort} from "mongodb";
-import {UserType} from "../../models/Users/UserModel";
+import {UsersWithPaginationModel, UserType} from "../../models/Users/UserModel";
 import {usersCollection} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
 

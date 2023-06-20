@@ -1,9 +1,9 @@
 import {queryBlogPostPagination} from "../models/FilterModel";
-import {UsersWithPaginationModel} from "../models/Users/UsersWithPaginationModel";
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {userService} from "../domain/user-service";
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
+import {UsersWithPaginationModel} from "../models/Users/UserModel";
 
 export const usersController = {
     async findAllUsers(req: Request, res: Response<UsersWithPaginationModel>) {
