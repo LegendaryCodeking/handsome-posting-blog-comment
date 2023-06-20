@@ -3,12 +3,15 @@ import {UserDBModel, UserViewModel} from "../models/Users/UserModel";
 import bcrypt from 'bcrypt';
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
+import {v4 as uuidv4} from 'uuid';
+import add from 'date-fns/add'
+import {emailManager} from "../managers/emailManager";
 
 export const userService = {
-    async createUser(login: string, password: string, email: string): Promise<UserViewModel> {
+    async createUser(login: string, password: string, email: string): Promise<UserViewModel | null> {
 
         const passwordSalt = await bcrypt.genSalt(14)
-        const passwordHash = await this._generateHash(password,passwordSalt)
+        const passwordHash = await this._generateHash(password, passwordSalt)
 
         const createdUser: UserDBModel = {
             id: (+(new Date())).toString(),
@@ -19,12 +22,26 @@ export const userService = {
                 createdAt: new Date().toISOString()
             },
             emailConfirmation: {
-                confirmationCode: "",
-                expirationDate: "",
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date(), {
+                    hours: 1,
+                    minutes: 3
+                }).toISOString(),
                 isConfirmed: false
             }
         }
-        return await usersRepo.createUser(createdUser)
+
+        const createResult = usersRepo.createUser(createdUser)
+        try {
+            await emailManager.sendEmailConfirmationMessage(createdUser)
+        } catch (e) {
+            console.log(e)
+            await usersRepo.deleteUser(createdUser.id)
+            return null;
+        }
+
+        return createResult
+
     },
     async deleteUser(id: string): Promise<boolean> {
         return usersRepo.deleteUser(id)
@@ -32,14 +49,14 @@ export const userService = {
     async _generateHash(password: string, salt: string) {
         return await bcrypt.hash(password, salt)
     },
-    async checkCredentials(loginOrEmail: string,password: string): Promise<UserViewModel | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
         const user = await usersQueryRepo.findByLoginOrEmail(loginOrEmail)
-        if(!user) return null
+        if (!user) return null
         //@ts-ignore
         const passArray = user.password.split("$")
-        const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0,22)}`
-        const passwordHash = await this._generateHash(password,salt)
-        if(user.accountData.password === passwordHash) {
+        const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0, 22)}`
+        const passwordHash = await this._generateHash(password, salt)
+        if (user.accountData.password === passwordHash) {
             return getUserViewModel(user);
         } else {
             return null
