@@ -27,3 +27,4 @@ export type UserViewModel = {
     email: string
     createdAt: string
 }
+
