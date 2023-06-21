@@ -27,9 +27,12 @@ export const authController = {
         res.status(200).json(myInfo)
     },
     async registration(req: Request, res: Response) {
+
+
+
         const user = await userService.createUser(req.body.login,req.body.password, req.body.email, false)
         if (user) {
-            res.status(201).send()
+            res.status(204).send()
         } else {
             res.status(400).send()
         }

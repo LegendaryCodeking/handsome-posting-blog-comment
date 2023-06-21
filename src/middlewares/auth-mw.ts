@@ -10,10 +10,6 @@ export const authenticationCheck = (req: Request, res: Response, next: NextFunct
     }
 }
 
-
-
-
-
 export const authenticationCheckBearer = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.sendStatus(401)
@@ -29,4 +25,19 @@ export const authenticationCheckBearer = async (req: Request, res: Response, nex
         return;
     }
     res.sendStatus(401)
+}
+
+export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, next: NextFunction) => {
+    const loginExists = await usersQueryRepo.findByLoginOrEmail(req.body.login)
+    const emailExists = await usersQueryRepo.findByLoginOrEmail(req.body.email)
+
+
+    if(loginExists || emailExists) {
+        next()
+        return;
+    }
+    res.status(401)
+        .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "email" }] }
+        )
+
 }
