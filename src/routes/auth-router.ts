@@ -5,6 +5,8 @@ import {
     doesLoginEmailAlreadyExist,
     isAlreadyConfirmedCode, isAlreadyConfirmedEmail
 } from "../middlewares/auth-mw";
+import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
+import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 
 export const authRouter = Router({})
 
@@ -15,6 +17,10 @@ authRouter.post('/registration-confirmation',
     authController.registrationConfirmation)
 
 authRouter.post('/registration',
+    loginValidation,
+    passwordValidation,
+    emailValidation,
+    inputValidationMw,
     doesLoginEmailAlreadyExist,
     authController.registration)
 
