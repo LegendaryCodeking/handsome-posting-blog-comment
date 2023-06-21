@@ -1,12 +1,14 @@
 import {Router} from "express";
 import {authController} from "../controller/auth-controller";
-import {authenticationCheckBearer, doesLoginEmailAlreadyExist} from "../middlewares/auth-mw";
+import {authenticationCheckBearer, doesLoginEmailAlreadyExist, isAlreadyConfirmed} from "../middlewares/auth-mw";
 
 export const authRouter = Router({})
 
 authRouter.post('/login', authController.loginUser)
 
-authRouter.post('/registration-confirmation', authController.registrationConfirmation)
+authRouter.post('/registration-confirmation',
+    isAlreadyConfirmed,
+    authController.registrationConfirmation)
 
 authRouter.post('/registration',
     doesLoginEmailAlreadyExist,
