@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {authController} from "../controller/auth-controller";
 import {
-    authenticationCheckBearer,
+    authenticationCheckBearer, doesEmailExist,
     doesLoginEmailAlreadyExist,
     isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect
 } from "../middlewares/auth-mw";
@@ -26,6 +26,7 @@ authRouter.post('/registration',
     authController.registration)
 
 authRouter.post('/registration-email-resending',
+    doesEmailExist,
     isAlreadyConfirmedEmail,
     authController.registrationEmailResending)
 

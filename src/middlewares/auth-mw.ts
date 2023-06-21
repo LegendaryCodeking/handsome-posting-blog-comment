@@ -95,3 +95,18 @@ export const isAlreadyConfirmedEmail = async (req: Request, res: Response, next:
     next()
 
 }
+
+export const doesEmailExist = async (req: Request, res: Response, next: NextFunction) => {
+    const existence = await usersQueryRepo.findByLoginOrEmail(req.body.email)
+
+
+    if(!existence) {
+        res.status(400)
+            .json( { errorsMessages: [{ message: "The email is incorrect", field: "email" }] }
+            )
+        return
+    }
+
+    next()
+
+}
