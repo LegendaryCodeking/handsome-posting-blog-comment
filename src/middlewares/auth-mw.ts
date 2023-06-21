@@ -32,7 +32,7 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
     const emailExists = await usersQueryRepo.findByLoginOrEmail(req.body.email)
 
 
-    if(loginExists || emailExists) {
+    if(!loginExists && !emailExists) {
         next()
         return;
     }
