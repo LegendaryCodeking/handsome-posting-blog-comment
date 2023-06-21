@@ -36,7 +36,7 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
         next()
         return;
     }
-    res.status(401)
+    res.status(400)
         .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "email" }] }
         )
 
