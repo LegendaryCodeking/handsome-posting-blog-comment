@@ -41,7 +41,7 @@ export const authController = {
 
         const result = await authService.confirmEmail(req.body.code)
         if (result) {
-            res.status(201).send()
+            res.status(204).send()
         } else {
             res.status(400).send()
         }
@@ -50,7 +50,7 @@ export const authController = {
     async registrationEmailResending(req: Request, res: Response) {
         const result = await authService.resendEmail(req.body.email)
         if (result) {
-            res.status(201).send()
+            res.status(204).send()
         } else {
             res.status(400).send()
         }
