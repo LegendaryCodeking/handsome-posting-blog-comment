@@ -55,7 +55,7 @@ export const isAlreadyConfirmed = async (req: Request, res: Response, next: Next
     const confirmed = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
 
 
-    if(confirmed) {
+    if(confirmed?.emailConfirmation.isConfirmed === true) {
         res.status(400)
             .json( { errorsMessages: [{ message: "The email is already confirmed", field: "code" }] }
             )
