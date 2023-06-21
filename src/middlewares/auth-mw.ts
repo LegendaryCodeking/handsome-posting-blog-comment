@@ -57,7 +57,7 @@ export const isAlreadyConfirmed = async (req: Request, res: Response, next: Next
 
     if(confirmed?.emailConfirmation.isConfirmed === true) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "The email is already confirmed", field: "code" }] }
+            .json( { errorsMessages: [{ message: "The email is already confirmed", field: "email" }] }
             )
         return
     }
