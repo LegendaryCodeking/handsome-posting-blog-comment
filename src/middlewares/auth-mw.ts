@@ -51,11 +51,26 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
 
 }
 
+export const isCodeCorrect = async (req: Request, res: Response, next: NextFunction) => {
+    const correct = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
+
+
+    if(!correct) {
+        res.status(400)
+            .json( { errorsMessages: [{ message: "Confirmation code is incorrect", field: "code" }] }
+            )
+        return
+    }
+
+    next()
+
+}
+
 export const isAlreadyConfirmedCode = async (req: Request, res: Response, next: NextFunction) => {
     const confirmed = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
 
 
-    if(confirmed?.emailConfirmation.isConfirmed === true) {
+    if(confirmed!.emailConfirmation.isConfirmed) {
         res.status(400)
             .json( { errorsMessages: [{ message: "The email is already confirmed", field: "code" }] }
             )
