@@ -32,12 +32,21 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
     const emailExists = await usersQueryRepo.findByLoginOrEmail(req.body.email)
 
 
-    if(!loginExists && !emailExists) {
-        next()
-        return;
+    if(loginExists) {
+        res.status(400)
+            .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "login" }] }
+            )
+        return
     }
-    res.status(400)
-        .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "email" }] }
-        )
+
+
+    if(emailExists) {
+        res.status(400)
+            .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "email" }] }
+            )
+        return
+    }
+
+    next()
 
 }
