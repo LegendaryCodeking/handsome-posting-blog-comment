@@ -10,8 +10,10 @@ export const authController = {
         const user: UserViewModel | null = await userService
             .checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {
-            const token = await jwtService.createJWT(user)
-            res.status(200).json({"accessToken": token})
+            const accessToken = await jwtService.createJWT(user)
+            const refreshToken = await jwtService.createJWTRefresh(user)
+            res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
+            res.status(200).json({"accessToken": accessToken})
             return;
         }
         res.sendStatus(STATUSES_HTTP.UNAUTHORIZED_401);
