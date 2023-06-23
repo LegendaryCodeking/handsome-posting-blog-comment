@@ -20,5 +20,10 @@ export const usersRepo = {
     async updateConfirmation(id: string): Promise<boolean>  {
         const result = await usersCollection.updateOne({"id": id},{$set: {"emailConfirmation.isConfirmed": true}});
         return result.matchedCount === 1
+    },
+    async updateUserEmailConfirmationInfo(id: string, user: UserDBModel): Promise<boolean>  {
+        const result = await usersCollection.replaceOne({"id":id}, user)
+        return result.modifiedCount === 1
     }
+
 }
