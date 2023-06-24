@@ -35,6 +35,7 @@ export const authController = {
 
         res.status(200).json(myInfo)
     },
+
     async registration(req: Request, res: Response) {
 
         const user = await userService.createUser(req.body.login, req.body.password, req.body.email, false)
@@ -44,6 +45,7 @@ export const authController = {
             res.status(400).send()
         }
     },
+
     async registrationConfirmation(req: Request, res: Response) {
 
         const result = await authService.confirmEmail(req.body.code)
@@ -54,6 +56,7 @@ export const authController = {
         }
 
     },
+
     async registrationEmailResending(req: Request, res: Response) {
         const result = await authService.resendEmail(req.body.email)
         if (result) {
@@ -62,20 +65,21 @@ export const authController = {
             res.status(STATUSES_HTTP.BAD_REQUEST_400).send()
         }
     },
+
     async refreshToken(req: Request, res: Response) {
         const refreshToken = await usersQueryRepo.findRefreshToken(req.cookies.refreshToken)
-        if(!refreshToken) {
+        if (!refreshToken) {
             res.status(STATUSES_HTTP.NOT_FOUND_404).send()
             return
         }
         if (!refreshToken.isAlive) {
-            res.status(401).send({ message: "Unauthorized! refreshToken was expired!" });
+            res.status(401).send({message: "Unauthorized! refreshToken was expired!"});
             return
         }
 
         const deactivateRefreshToken = usersRepo.deactivateRefreshToken(refreshToken)
         if (!deactivateRefreshToken) {
-            res.status(500).send({ message: "Не удалось деактивировать предудущий RefreshToken" });
+            res.status(500).send({message: "Не удалось деактивировать предудущий RefreshToken"});
             return
         }
 
@@ -89,5 +93,14 @@ export const authController = {
         res.cookie('refreshToken', refreshTokenNew.refreshToken, {httpOnly: true, secure: true,})
         res.status(200).json({"accessToken": accessTokenNew})
 
+    },
+
+    async logoutUser(req: Request, res: Response) {
+        const deactivateRefreshToken = usersRepo.deactivateRefreshToken(req.cookies.refreshToken)
+        if (!deactivateRefreshToken) {
+            res.status(STATUSES_HTTP.SERVER_ERROR_500).send({message: "Не удалось деактивировать предудущий RefreshToken"});
+            return
+        }
+        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 }

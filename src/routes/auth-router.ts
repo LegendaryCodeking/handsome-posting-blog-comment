@@ -12,6 +12,10 @@ export const authRouter = Router({})
 
 authRouter.post('/login', authController.loginUser)
 
+authRouter.post('/logout',
+    verifyRefreshToken,
+    authController.logoutUser)
+
 authRouter.post('/refresh-token',
     verifyRefreshToken,
     authController.refreshToken)
