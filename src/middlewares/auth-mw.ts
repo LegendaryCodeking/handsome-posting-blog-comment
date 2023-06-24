@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
-import {TokenExpiredError} from "jsonwebtoken";
+import jwt, {TokenExpiredError} from "jsonwebtoken";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 
 
@@ -134,8 +134,8 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
     }
 
         try {
-            const userID = await jwtService.getUserIdByToken(refreshToken)
-            req.user = await usersQueryRepo.findUserById(userID)
+            const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
+            req.user = await usersQueryRepo.findUserById(result.userId)
             next()
         } catch (e) {
             return catchTokenError(e, res)
