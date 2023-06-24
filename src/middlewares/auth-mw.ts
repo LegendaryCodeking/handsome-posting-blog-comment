@@ -133,20 +133,13 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
         return
     }
 
-    if (!refreshToken.isAlive) {
-        res.status(STATUSES_HTTP.UNAUTHORIZED_401)
-            .json({errorsMessages: [{message: "Unauthorized! refreshToken was expired!", field: "refreshToken"}]});
-        return
-    }
-
-
-    try {
-        const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
-        req.user = await usersQueryRepo.findUserById(result.userId)
-        next()
-    } catch (e) {
-        return catchTokenError(e, res)
-    }
+        try {
+            const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
+            req.user = await usersQueryRepo.findUserById(result.userId)
+            next()
+        } catch (e) {
+            return catchTokenError(e, res)
+        }
 
 
 }

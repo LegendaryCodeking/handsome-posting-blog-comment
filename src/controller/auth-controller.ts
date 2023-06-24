@@ -72,6 +72,10 @@ export const authController = {
             res.status(STATUSES_HTTP.NOT_FOUND_404).send()
             return
         }
+        if (!refreshToken.isAlive) {
+            res.status(401).send({message: "Unauthorized! refreshToken was expired!"});
+            return
+        }
 
         const deactivateRefreshToken = usersRepo.deactivateRefreshToken(req.cookies.refreshToken)
         if (!deactivateRefreshToken) {
