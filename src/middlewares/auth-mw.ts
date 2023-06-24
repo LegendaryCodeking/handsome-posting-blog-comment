@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {TokenExpiredError} from "jsonwebtoken";
+import {STATUSES_HTTP} from "../enum/http-statuses";
 
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
@@ -115,10 +116,10 @@ export const doesEmailExist = async (req: Request, res: Response, next: NextFunc
 
 const catchTokenError = (err: any, res: Response) => {
     if (err instanceof TokenExpiredError) {
-        return res.status(401).send({message: "Unauthorized! was expired!"});
+        return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized! was expired!"});
     }
 
-    return res.sendStatus(401).send({message: "Unauthorized!"});
+    return res.sendStatus(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized!"});
 }
 
 export const verifyRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
@@ -126,7 +127,7 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
     const refreshToken = req.cookies.refreshToken
 
     if (!refreshToken) {
-        res.status(400)
+        res.status(STATUSES_HTTP.UNAUTHORIZED_401)
             .json({errorsMessages: [{message: "No token provided!", field: "refreshToken"}]}
             )
         return

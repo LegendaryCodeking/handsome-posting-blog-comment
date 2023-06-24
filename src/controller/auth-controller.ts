@@ -16,7 +16,7 @@ export const authController = {
             const refreshToken = await jwtService.createJWTRefresh(user)
             // Проверяем что рефреш токен успешно записался в базу
             if (!refreshToken) {
-                res.status(500).json({"Error": "Произошла ошибка при записи рефреш токена в базу данных"})
+                res.status(STATUSES_HTTP.SERVER_ERROR_500).json({"Error": "Произошла ошибка при записи рефреш токена в базу данных"})
                 return
             }
             res.cookie('refreshToken', refreshToken.refreshToken, {httpOnly: true, secure: true,})
