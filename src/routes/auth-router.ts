@@ -12,6 +12,8 @@ export const authRouter = Router({})
 
 authRouter.post('/login', authController.loginUser)
 
+authRouter.post('/refresh-token', authController.refreshToken)
+
 authRouter.post('/registration-confirmation',
     isCodeCorrect,
     isAlreadyConfirmedCode,

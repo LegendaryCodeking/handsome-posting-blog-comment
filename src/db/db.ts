@@ -4,6 +4,7 @@ import {BlogType} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {UserDBModel} from "../models/Users/UserModel";
 import {CommentDbModel} from "../models/Comments/CommentModel";
+import {RefreshTokenDbModel} from "../models/Tokens/refreshToken-model";
 dotenv.config()
 
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
@@ -14,6 +15,7 @@ export const postsCollection = db.collection<PostType>("posts")
 export const blogsCollection = db.collection<BlogType>("blogs")
 export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
+export const refreshTokenCollection = db.collection<RefreshTokenDbModel>("refreshTokens")
 
 export async function runDb() {
     try {

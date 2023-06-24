@@ -1,7 +1,8 @@
 import {UserDBModel} from "../models/Users/UserModel";
 import {UserViewModel} from "../models/Users/UserModel";
-import {usersCollection} from "../db/db";
+import {refreshTokenCollection, usersCollection} from "../db/db";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
+import {RefreshTokenDbModel} from "../models/Tokens/refreshToken-model";
 
 
 export const usersRepo = {
@@ -21,9 +22,14 @@ export const usersRepo = {
         const result = await usersCollection.updateOne({"id": id},{$set: {"emailConfirmation.isConfirmed": true}});
         return result.matchedCount === 1
     },
+
     async updateUserEmailConfirmationInfo(id: string, user: UserDBModel): Promise<boolean>  {
         const result = await usersCollection.replaceOne({"id":id}, user)
         return result.modifiedCount === 1
-    }
+    },
 
+    async addRefreshToken(refrToken: RefreshTokenDbModel): Promise<boolean> {
+        let result = await refreshTokenCollection.insertOne(refrToken)
+        return result.insertedId !== undefined
+    }
 }

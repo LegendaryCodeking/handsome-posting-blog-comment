@@ -12,6 +12,11 @@ export const authController = {
         if (user) {
             const accessToken = await jwtService.createJWT(user)
             const refreshToken = await jwtService.createJWTRefresh(user)
+            // Проверяем что рефреш токен успешно записался в базу
+            if (!refreshToken) {
+                res.status(500).json({"Error": "Произошла ошибка при записи рефреш токена в базу данных"})
+                return
+            }
             res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
             res.status(200).json({"accessToken": accessToken})
             return;
@@ -54,5 +59,8 @@ export const authController = {
         } else {
             res.status(400).send()
         }
+    },
+    async refreshToken(req: Request, res: Response) {
+
     }
 }
