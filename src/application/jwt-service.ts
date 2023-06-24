@@ -11,6 +11,7 @@ export const jwtService = {
     async createJWT(user: UserViewModel) {
         return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '10s'})
     },
+
     async createJWTRefresh(user: UserViewModel): Promise<RefreshTokenDbModel | null> {
         let refrToken = {
             _id: new ObjectId(),
@@ -22,6 +23,7 @@ export const jwtService = {
         if (!result) return null
         return refrToken
     },
+
     async getUserIdByToken(token: string) {
         try {
             const result: any = jwt.verify(token, process.env.JWT_SECRET!)

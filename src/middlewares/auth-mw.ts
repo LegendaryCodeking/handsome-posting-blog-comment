@@ -1,6 +1,8 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
+import {TokenExpiredError} from "jsonwebtoken";
+
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
     if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
@@ -19,7 +21,7 @@ export const authenticationCheckBearer = async (req: Request, res: Response, nex
     const token = req.headers.authorization.split(' ')[1]
 
     const userID = await jwtService.getUserIdByToken(token)
-    if(userID) {
+    if (userID) {
         req.user = await usersQueryRepo.findUserById(userID)
         next()
         return;
@@ -32,17 +34,17 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
     const emailExists = await usersQueryRepo.findByLoginOrEmail(req.body.email)
 
 
-    if(loginExists) {
+    if (loginExists) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "login" }] }
+            .json({errorsMessages: [{message: "Login or email is already used on the website", field: "login"}]}
             )
         return
     }
 
 
-    if(emailExists) {
+    if (emailExists) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "Login or email is already used on the website", field: "email" }] }
+            .json({errorsMessages: [{message: "Login or email is already used on the website", field: "email"}]}
             )
         return
     }
@@ -55,9 +57,9 @@ export const isCodeCorrect = async (req: Request, res: Response, next: NextFunct
     const correct = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
 
 
-    if(!correct) {
+    if (!correct) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "Confirmation code is incorrect", field: "code" }] }
+            .json({errorsMessages: [{message: "Confirmation code is incorrect", field: "code"}]}
             )
         return
     }
@@ -70,9 +72,9 @@ export const isAlreadyConfirmedCode = async (req: Request, res: Response, next: 
     const confirmed = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
 
 
-    if(confirmed!.emailConfirmation.isConfirmed) {
+    if (confirmed!.emailConfirmation.isConfirmed) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "The email is already confirmed", field: "code" }] }
+            .json({errorsMessages: [{message: "The email is already confirmed", field: "code"}]}
             )
         return
     }
@@ -85,9 +87,9 @@ export const isAlreadyConfirmedEmail = async (req: Request, res: Response, next:
     const confirmed = await usersQueryRepo.findByLoginOrEmail(req.body.email)
 
 
-    if(confirmed?.emailConfirmation.isConfirmed === true) {
+    if (confirmed?.emailConfirmation.isConfirmed === true) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "The email is already confirmed", field: "email" }] }
+            .json({errorsMessages: [{message: "The email is already confirmed", field: "email"}]}
             )
         return
     }
@@ -100,13 +102,43 @@ export const doesEmailExist = async (req: Request, res: Response, next: NextFunc
     const existence = await usersQueryRepo.findByLoginOrEmail(req.body.email)
 
 
-    if(!existence) {
+    if (!existence) {
         res.status(400)
-            .json( { errorsMessages: [{ message: "The email is incorrect", field: "email" }] }
+            .json({errorsMessages: [{message: "The email is incorrect", field: "email"}]}
             )
         return
     }
 
     next()
+
+}
+
+const catchTokenError = (err: any, res: Response) => {
+    if (err instanceof TokenExpiredError) {
+        return res.status(401).send({message: "Unauthorized! was expired!"});
+    }
+
+    return res.sendStatus(401).send({message: "Unauthorized!"});
+}
+
+export const verifyRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+
+    const refreshToken = req.cookies.refreshToken
+
+    if (!refreshToken) {
+        res.status(400)
+            .json({errorsMessages: [{message: "No token provided!", field: "refreshToken"}]}
+            )
+        return
+    }
+
+        try {
+            const userID = await jwtService.getUserIdByToken(refreshToken)
+            req.user = await usersQueryRepo.findUserById(userID)
+            next()
+        } catch (e) {
+            return catchTokenError(e, res)
+        }
+
 
 }

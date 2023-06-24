@@ -3,7 +3,7 @@ import {authController} from "../controller/auth-controller";
 import {
     authenticationCheckBearer, doesEmailExist,
     doesLoginEmailAlreadyExist,
-    isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect
+    isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect, verifyRefreshToken
 } from "../middlewares/auth-mw";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
@@ -12,7 +12,9 @@ export const authRouter = Router({})
 
 authRouter.post('/login', authController.loginUser)
 
-authRouter.post('/refresh-token', authController.refreshToken)
+authRouter.post('/refresh-token',
+    verifyRefreshToken,
+    authController.refreshToken)
 
 authRouter.post('/registration-confirmation',
     isCodeCorrect,

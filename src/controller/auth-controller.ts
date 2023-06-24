@@ -4,6 +4,8 @@ import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {authService} from "../domain/auth-service";
+import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
+import {usersRepo} from "../repos/users-repo";
 
 export const authController = {
     async loginUser(req: Request, res: Response) {
@@ -17,7 +19,7 @@ export const authController = {
                 res.status(500).json({"Error": "Произошла ошибка при записи рефреш токена в базу данных"})
                 return
             }
-            res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
+            res.cookie('refreshToken', refreshToken.refreshToken, {httpOnly: true, secure: true,})
             res.status(200).json({"accessToken": accessToken})
             return;
         }
@@ -35,7 +37,7 @@ export const authController = {
     },
     async registration(req: Request, res: Response) {
 
-        const user = await userService.createUser(req.body.login,req.body.password, req.body.email, false)
+        const user = await userService.createUser(req.body.login, req.body.password, req.body.email, false)
         if (user) {
             res.status(204).send()
         } else {
@@ -55,12 +57,37 @@ export const authController = {
     async registrationEmailResending(req: Request, res: Response) {
         const result = await authService.resendEmail(req.body.email)
         if (result) {
-            res.status(204).send()
+            res.status(STATUSES_HTTP.NO_CONTENT_204).send()
         } else {
-            res.status(400).send()
+            res.status(STATUSES_HTTP.BAD_REQUEST_400).send()
         }
     },
     async refreshToken(req: Request, res: Response) {
+        const refreshToken = await usersQueryRepo.findRefreshToken(req.cookies.refreshToken)
+        if(!refreshToken) {
+            res.status(STATUSES_HTTP.NOT_FOUND_404).send()
+            return
+        }
+        if (!refreshToken.isAlive) {
+            res.status(401).send({ message: "Unauthorized! refreshToken was expired!" });
+            return
+        }
+
+        const deactivateRefreshToken = usersRepo.deactivateRefreshToken(refreshToken)
+        if (!deactivateRefreshToken) {
+            res.status(500).send({ message: "Не удалось деактивировать предудущий RefreshToken" });
+            return
+        }
+
+        const accessTokenNew = await jwtService.createJWT(req.user!)
+        const refreshTokenNew = await jwtService.createJWTRefresh(req.user!)
+        // Проверяем что рефреш токен успешно записался в базу
+        if (!refreshTokenNew) {
+            res.status(500).json({"Error": "Произошла ошибка при записи рефреш токена в базу данных"})
+            return
+        }
+        res.cookie('refreshToken', refreshTokenNew.refreshToken, {httpOnly: true, secure: true,})
+        res.status(200).json({"accessToken": accessTokenNew})
 
     }
 }

@@ -2,7 +2,7 @@ import {UserDBModel} from "../models/Users/UserModel";
 import {UserViewModel} from "../models/Users/UserModel";
 import {refreshTokenCollection, usersCollection} from "../db/db";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
-import {RefreshTokenDbModel} from "../models/Tokens/refreshToken-model";
+import {RefreshTokenDbModel, RefreshTokenViewModel} from "../models/Tokens/refreshToken-model";
 
 
 export const usersRepo = {
@@ -31,5 +31,10 @@ export const usersRepo = {
     async addRefreshToken(refrToken: RefreshTokenDbModel): Promise<boolean> {
         let result = await refreshTokenCollection.insertOne(refrToken)
         return result.insertedId !== undefined
+    },
+    async deactivateRefreshToken(refreshToken: RefreshTokenViewModel): Promise<boolean>  {
+        const result = await refreshTokenCollection.updateOne({"refreshToken": refreshToken.refreshToken},{$set: {isAlive: false}});
+        return result.matchedCount === 1
+
     }
 }
