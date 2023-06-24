@@ -4,7 +4,6 @@ import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {authService} from "../domain/auth-service";
-import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {usersRepo} from "../repos/users-repo";
 
 export const authController = {
@@ -67,15 +66,6 @@ export const authController = {
     },
 
     async refreshToken(req: Request, res: Response) {
-        const refreshToken = await usersQueryRepo.findRefreshToken(req.cookies.refreshToken)
-        if (!refreshToken) {
-            res.status(STATUSES_HTTP.NOT_FOUND_404).send()
-            return
-        }
-        if (!refreshToken.isAlive) {
-            res.status(401).send({message: "Unauthorized! refreshToken was expired!"});
-            return
-        }
 
         const deactivateRefreshToken = usersRepo.deactivateRefreshToken(req.cookies.refreshToken)
         if (!deactivateRefreshToken) {

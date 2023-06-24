@@ -124,22 +124,34 @@ const catchTokenError = (err: any, res: Response) => {
 
 export const verifyRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
 
-    const refreshToken = req.cookies.refreshToken
+    const refreshTokenCookie = req.cookies.refreshToken
 
-    if (!refreshToken) {
+    if (!refreshTokenCookie) {
         res.status(STATUSES_HTTP.UNAUTHORIZED_401)
             .json({errorsMessages: [{message: "No token provided!", field: "refreshToken"}]}
             )
         return
     }
 
-        try {
-            const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
-            req.user = await usersQueryRepo.findUserById(result.userId)
-            next()
-        } catch (e) {
-            return catchTokenError(e, res)
-        }
+    const refreshToken = await usersQueryRepo.findRefreshToken(req.cookies.refreshToken)
+    if (!refreshToken) {
+        res.status(STATUSES_HTTP.NOT_FOUND_404)
+            .json({errorsMessages: [{message: "There is no such token in DB!", field: "refreshToken"}]})
+        return
+    }
+    if (!refreshToken.isAlive) {
+        res.status(401)
+            .json({errorsMessages: [{message: "Unauthorized! refreshToken was expired!", field: "refreshToken"}]})
+        return
+    }
+
+    try {
+        const result: any = jwt.verify(refreshTokenCookie, process.env.JWT_SECRET!)
+        req.user = await usersQueryRepo.findUserById(result.userId)
+        next()
+    } catch (e) {
+        return catchTokenError(e, res)
+    }
 
 
 }
