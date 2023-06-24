@@ -77,7 +77,7 @@ export const authController = {
             return
         }
 
-        const deactivateRefreshToken = usersRepo.deactivateRefreshToken(refreshToken)
+        const deactivateRefreshToken = usersRepo.deactivateRefreshToken(req.cookies.refreshToken)
         if (!deactivateRefreshToken) {
             res.status(500).send({message: "Не удалось деактивировать предудущий RefreshToken"});
             return
