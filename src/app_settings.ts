@@ -6,6 +6,7 @@ import {testingRouter} from "./routes/testing-router";
 import {commentsRouter} from "./routes/comments-router";
 import express from "express";
 import cookieParser from 'cookie-parser'
+import {securityRouter} from "./routes/security-router";
 
 
 export const app = express()
@@ -18,5 +19,6 @@ app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
+app.use('/security', securityRouter)
 app.use('/testing', testingRouter)
 app.use('/comments', commentsRouter)
