@@ -1,3 +1,3 @@
-export const ad = {
+export const securityController = {
 
 }
