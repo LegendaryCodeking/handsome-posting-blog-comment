@@ -1,4 +1,5 @@
 import {Router} from "express";
+import {securityController} from "../controller/security-controller";
 
 
 export const securityRouter = Router({})
