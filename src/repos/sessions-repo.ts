@@ -10,5 +10,9 @@ export const sessionsRepo = {
             return false
         }
         return true
+    },
+    async deleteDeviceSessions(deviceId: string): Promise<boolean>  {
+        const result = await sessionsCollection.deleteOne({"deviceId": deviceId});
+        return result.deletedCount === 1
     }
 }

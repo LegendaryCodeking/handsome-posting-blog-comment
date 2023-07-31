@@ -3,6 +3,8 @@ import {BlogsWithPaginationModel} from "../models/BLogs/BlogsWithPaginationModel
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {sessionsService} from "../domain/sessions-service";
+import {RequestWithParamsSessions} from "../types/sessions-types";
+import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSessionDeviceIdModel";
 
 export const securityController = {
 
@@ -25,7 +27,12 @@ export const securityController = {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
     },
-    async terminateDeviceSessions(req: Request, res: Response){
-
+    async terminateDeviceSessions(req: RequestWithParamsSessions<URIParamsSessionDeviceIdModel>, res: Response){
+        let deleteStatus: boolean = await sessionsService.deleteDeviceSessions(req.params.deviceId)
+        if (deleteStatus) {
+            res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
+        } else {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+        }
     }
 }
