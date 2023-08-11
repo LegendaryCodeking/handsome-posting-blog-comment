@@ -6,6 +6,7 @@ import {UserDBModel} from "../models/Users/UserModel";
 import {CommentDbModel} from "../models/Comments/CommentModel";
 import {RefreshTokenDbModel} from "../models/Tokens/refreshToken-model";
 import {SessionDBModel} from "../models/Sessions/SessionModel";
+import {rateLimitDBModel} from "../models/rateLimiting/rateLimitingModel";
 dotenv.config()
 
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
@@ -17,7 +18,10 @@ export const blogsCollection = db.collection<BlogType>("blogs")
 export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
 export const refreshTokenCollection = db.collection<RefreshTokenDbModel>("refreshTokens")
-export const sessionsCollection = db.collection<SessionDBModel>("rsessions")
+export const sessionsCollection = db.collection<SessionDBModel>("sessions")
+export const rateLimitingCollection = db.collection<rateLimitDBModel>("rateLimit")
+
+
 
 export async function runDb() {
     try {
