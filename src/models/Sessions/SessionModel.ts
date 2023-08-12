@@ -17,3 +17,16 @@ export type SessionViewModel = {
     "lastActiveDate": string
     "deviceId": string
 }
+
+export type SessionUpdateFilterModel = {
+    "RFTokenIAT": number
+    "deviceId": string
+    "userId": string
+}
+
+export type SessionUpdateContentModel = {
+    "ip": string | string[]
+    "lastActiveDate": string
+    "RFTokenIAT": Date
+    "deviceName": string | string[]
+}

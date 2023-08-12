@@ -1,5 +1,10 @@
 import {sessionsCollection} from "../db/db";
-import {SessionDBModel, SessionViewModel} from "../models/Sessions/SessionModel";
+import {
+    SessionDBModel,
+    SessionUpdateContentModel,
+    SessionUpdateFilterModel,
+    SessionViewModel
+} from "../models/Sessions/SessionModel";
 import {getSessionViewModel} from "../helpers/map-SessionViewModel";
 
 
@@ -24,5 +29,15 @@ export const sessionsRepo = {
         } catch (e) {
             return null
         }
+    },
+    async updateSessionInfo(filter: SessionUpdateFilterModel, updateSessionContent: SessionUpdateContentModel) {
+        let result = await sessionsCollection.updateOne({filter}, {
+            $set: updateSessionContent
+        })
+        return result.matchedCount === 1
+    },
+    async deleteSession(currentRFTokenIAT: number, userId: string) {
+        let result = await sessionsCollection.deleteOne({"RFTokenIAT": new Date(currentRFTokenIAT), "userId": userId})
+        return result.deletedCount === 1
     }
 }

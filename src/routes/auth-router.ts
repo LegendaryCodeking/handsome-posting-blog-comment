@@ -18,7 +18,7 @@ authRouter.post('/logout',
 
 authRouter.post('/refresh-token',
     verifyRefreshToken,
-    authController.refreshToken)
+    authController.updateTokens)
 
 authRouter.post('/registration-confirmation',
     isCodeCorrect,

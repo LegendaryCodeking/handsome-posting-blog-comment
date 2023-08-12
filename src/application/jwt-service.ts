@@ -11,10 +11,10 @@ export const jwtService = {
         return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '10s'})
     },
 
-    async createJWTRefresh(user: UserViewModel): Promise<RefreshTokenDbModel | null> {
+    async createJWTRefresh(user: UserViewModel, deviceId: string): Promise<RefreshTokenDbModel> {
         let refrToken = {
             _id: new ObjectId(),
-            refreshToken: jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '20s'}),
+            refreshToken: jwt.sign({userId: user.id, deviceId: deviceId}, process.env.JWT_SECRET!, {expiresIn: '20s'}),
             isAlive: true
         }
 
@@ -34,6 +34,14 @@ export const jwtService = {
         try {
             const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
             return result.iat
+        } catch (e) {
+            return null
+        }
+    },
+    async getDeviceId(refreshToken: string) {
+        try {
+            const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
+            return result.deviceId.toString()
         } catch (e) {
             return null
         }
