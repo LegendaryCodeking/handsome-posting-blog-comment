@@ -4,7 +4,6 @@ import {userService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {authService} from "../domain/auth-service";
-import {usersRepo} from "../repos/users-repo";
 import {sessionsService} from "../domain/sessions-service";
 
 export const authController = {
@@ -75,12 +74,6 @@ export const authController = {
 
     async refreshToken(req: Request, res: Response) {
 
-        const deactivateRefreshToken = usersRepo.deactivateRefreshToken(req.cookies.refreshToken)
-        if (!deactivateRefreshToken) {
-            res.status(500).send({message: "Не удалось деактивировать предудущий RefreshToken"});
-            return
-        }
-
         const accessTokenNew = await jwtService.createJWT(req.user!)
         const refreshTokenNew = await jwtService.createJWTRefresh(req.user!)
         // Проверяем что рефреш токен успешно записался в базу
@@ -94,11 +87,7 @@ export const authController = {
     },
 
     async logoutUser(req: Request, res: Response) {
-        const deactivateRefreshToken = usersRepo.deactivateRefreshToken(req.cookies.refreshToken)
-        if (!deactivateRefreshToken) {
-            res.status(STATUSES_HTTP.SERVER_ERROR_500).send({message: "Не удалось деактивировать предудущий RefreshToken"});
-            return
-        }
+
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 }
