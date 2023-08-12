@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import {UserViewModel} from "../models/Users/UserModel";
-import {usersRepo} from "../repos/users-repo";
 import {ObjectId} from "mongodb";
 import {RefreshTokenDbModel} from "../models/Tokens/refreshToken-model";
 dotenv.config()
@@ -19,8 +18,6 @@ export const jwtService = {
             isAlive: true
         }
 
-        let result = await usersRepo.addRefreshToken(refrToken)
-        if (!result) return null
         return refrToken
     },
 
@@ -31,6 +28,14 @@ export const jwtService = {
         } catch (e) {
             return null
         }
-    }
+    },
 
+    async getIAT(refreshToken: string) {
+        try {
+            const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
+            return result.iat
+        } catch (e) {
+            return null
+        }
+    }
 }

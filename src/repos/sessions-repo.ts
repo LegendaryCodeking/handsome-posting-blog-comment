@@ -1,4 +1,6 @@
 import {sessionsCollection} from "../db/db";
+import {SessionDBModel, SessionViewModel} from "../models/Sessions/SessionModel";
+import {getSessionViewModel} from "../helpers/map-SessionViewModel";
 
 
 export const sessionsRepo = {
@@ -14,5 +16,13 @@ export const sessionsRepo = {
     async deleteDeviceSessions(deviceId: string): Promise<boolean>  {
         const result = await sessionsCollection.deleteOne({"deviceId": deviceId});
         return result.deletedCount === 1
+    },
+    async registerSession(createdSession: SessionDBModel): Promise<SessionViewModel | null> {
+        try {
+            const result = await sessionsCollection.insertOne(createdSession);
+            return getSessionViewModel(createdSession)
+        } catch (e) {
+            return null
+        }
     }
 }

@@ -5,6 +5,7 @@ import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {authService} from "../domain/auth-service";
 import {usersRepo} from "../repos/users-repo";
+import {sessionsService} from "../domain/sessions-service";
 
 export const authController = {
     async loginUser(req: Request, res: Response) {
@@ -13,12 +14,19 @@ export const authController = {
         if (user) {
             const accessToken = await jwtService.createJWT(user)
             const refreshToken = await jwtService.createJWTRefresh(user)
-            // Проверяем что рефреш токен успешно записался в базу
-            if (!refreshToken) {
-                res.status(STATUSES_HTTP.SERVER_ERROR_500).json({"Error": "Произошла ошибка при записи рефреш токена в базу данных"})
-                return
+
+            // Подготавливаем данные для записис в таблицу сессий
+            const RefreshTokenIssuedAt = await jwtService.getIAT(refreshToken!.refreshToken)
+            const loginIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || "IP undefined"
+            const deviceName = req.headers['User-Agent'] || "deviceName undefined"
+
+            // Фиксируем сессию
+            const sessionRegInfo = await sessionsService.registerSession(loginIp,RefreshTokenIssuedAt,deviceName,user.id)
+            if (sessionRegInfo === null) {
+                res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             }
-            res.cookie('refreshToken', refreshToken.refreshToken, {httpOnly: true, secure: true,})
+
+            res.cookie('refreshToken', refreshToken!.refreshToken, {httpOnly: true, secure: true,})
             res.status(200).json({"accessToken": accessToken})
             return;
         }
