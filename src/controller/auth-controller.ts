@@ -17,8 +17,12 @@ export const authController = {
 
             // Подготавливаем данные для записис в таблицу сессий
             const RefreshTokenIssuedAt = await jwtService.getIAT(refreshToken!.refreshToken)
+            if (RefreshTokenIssuedAt === null) {
+                res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
+                return;
+            }
             const loginIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || "IP undefined"
-            const deviceName = req.headers['User-Agent'] || "deviceName undefined"
+            const deviceName = req.headers['user-agent'] || "deviceName undefined"
 
             // Фиксируем сессию
             const sessionRegInfo = await sessionsService.registerSession(loginIp,RefreshTokenIssuedAt,deviceName,user.id, deviceId)

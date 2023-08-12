@@ -33,7 +33,7 @@ export const jwtService = {
     async getIAT(refreshToken: string) {
         try {
             const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
-            return result.iat
+            return result.iat * 1000
         } catch (e) {
             return null
         }
