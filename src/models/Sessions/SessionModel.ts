@@ -9,6 +9,7 @@ export type SessionDBModel = {
     "deviceName": string | string[]
     "userId": string
     "RFTokenIAT": Date
+    "RFTokenObsoleteDate": Date
 }
 
 export type SessionViewModel = {

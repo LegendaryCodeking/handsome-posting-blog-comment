@@ -1,6 +1,7 @@
 import {sessionsRepo} from "../repos/sessions-repo";
 import {SessionDBModel, SessionViewModel} from "../models/Sessions/SessionModel";
 import {ObjectId} from "mongodb";
+import add from "date-fns/add";
 
 export const sessionsService = {
 
@@ -21,7 +22,10 @@ export const sessionsService = {
             "deviceId": deviceId,
             "deviceName": deviceName,
             "userId": UserId,
-            "RFTokenIAT": new Date(RefreshTokenIssuedAt)
+            "RFTokenIAT": new Date(RefreshTokenIssuedAt),
+            "RFTokenObsoleteDate": add(new Date(RefreshTokenIssuedAt), {
+                seconds: 20
+            })
         }
 
         return await sessionsRepo.registerSession(createdSession)
@@ -39,7 +43,10 @@ export const sessionsService = {
             "ip": loginIp,
             "lastActiveDate": new Date().toISOString(),
             "deviceName": deviceName,
-            "RFTokenIAT": new Date(RefreshTokenIssuedAt)
+            "RFTokenIAT": new Date(RefreshTokenIssuedAt),
+            "RFTokenObsoleteDate": add(new Date(RefreshTokenIssuedAt), {
+                seconds: 20
+            })
         }
 
         return await sessionsRepo.updateSessionInfo(filter,updateSessionContent)
