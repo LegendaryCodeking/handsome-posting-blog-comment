@@ -6,7 +6,7 @@ export const sessionsQueryRepo = {
     async FindAllSessions(): Promise<any> {
 
         return await sessionsCollection
-            .find()
+            .find({})
             .map(session => getSessionViewModel(session)).toArray();
 
     },

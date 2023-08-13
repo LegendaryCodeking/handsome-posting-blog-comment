@@ -1,5 +1,4 @@
 import {Request, Response} from "express";
-import {BlogsWithPaginationModel} from "../models/BLogs/BlogsWithPaginationModel";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {sessionsService} from "../domain/sessions-service";
@@ -9,7 +8,7 @@ import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSession
 export const securityController = {
 
     async findAllSessions(req: Request, res: Response) {
-        let foundSessions: BlogsWithPaginationModel = await sessionsQueryRepo.FindAllSessions()
+        let foundSessions = await sessionsQueryRepo.FindAllSessions()
 
         if (!foundSessions.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
