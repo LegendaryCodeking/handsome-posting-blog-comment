@@ -3,6 +3,7 @@ import {jwtService} from "../application/jwt-service";
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import jwt, {TokenExpiredError} from "jsonwebtoken";
 import {STATUSES_HTTP} from "../enum/http-statuses";
+import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
@@ -129,6 +130,17 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
     if (!refreshTokenCookie) {
         res.status(STATUSES_HTTP.UNAUTHORIZED_401)
             .json({errorsMessages: [{message: "No token provided!", field: "refreshToken"}]}
+            )
+        return
+    }
+
+    // Проверяем наличие RFToken в базе активных сессий
+    const deviceId: string = await jwtService.getDeviceId(req.cookies.refreshToken)
+    const isActive = await sessionsQueryRepo.findSessionWithRFToken(refreshTokenCookie,deviceId)
+
+    if (!isActive) {
+        res.status(STATUSES_HTTP.UNAUTHORIZED_401)
+            .json({errorsMessages: [{message: "Unauthorized!", field: "refreshToken"}]}
             )
         return
     }
