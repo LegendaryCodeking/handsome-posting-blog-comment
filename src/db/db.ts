@@ -4,7 +4,6 @@ import {BlogType} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {UserDBModel} from "../models/Users/UserModel";
 import {CommentDbModel} from "../models/Comments/CommentModel";
-import {RefreshTokenDbModel} from "../models/Tokens/refreshToken-model";
 import {SessionDBModel} from "../models/Sessions/SessionModel";
 import {rateLimitDBModel} from "../models/rateLimiting/rateLimitingModel";
 dotenv.config()
@@ -17,7 +16,6 @@ export const postsCollection = db.collection<PostType>("posts")
 export const blogsCollection = db.collection<BlogType>("blogs")
 export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
-export const refreshTokenCollection = db.collection<RefreshTokenDbModel>("refreshTokens")
 export const sessionsCollection = db.collection<SessionDBModel>("sessions")
 export const rateLimitingCollection = db.collection<rateLimitDBModel>("rateLimit")
 

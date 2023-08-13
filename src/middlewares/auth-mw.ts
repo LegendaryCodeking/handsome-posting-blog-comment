@@ -133,18 +133,6 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
         return
     }
 
-    const refreshToken = await usersQueryRepo.findRefreshToken(req.cookies.refreshToken)
-    if (!refreshToken) {
-        res.status(STATUSES_HTTP.NOT_FOUND_404)
-            .json({errorsMessages: [{message: "There is no such token in DB!", field: "refreshToken"}]})
-        return
-    }
-    if (!refreshToken.isAlive) {
-        res.status(401)
-            .json({errorsMessages: [{message: "Unauthorized! refreshToken was expired!", field: "refreshToken"}]})
-        return
-    }
-
     try {
         const result: any = jwt.verify(refreshTokenCookie, process.env.JWT_SECRET!)
         req.user = await usersQueryRepo.findUserById(result.userId)

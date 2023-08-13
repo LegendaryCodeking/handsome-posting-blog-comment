@@ -1,10 +1,8 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
 import {Filter, Sort} from "mongodb";
 import {UserDBModel, UsersWithPaginationModel} from "../../models/Users/UserModel";
-import {refreshTokenCollection, usersCollection} from "../../db/db";
+import {usersCollection} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
-import {RefreshTokenViewModel} from "../../models/Tokens/refreshToken-model";
-import {getRefreshTokenViewModel} from "../../helpers/map-RefreshToken";
 
 export const usersQueryRepo = {
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
@@ -50,14 +48,5 @@ export const usersQueryRepo = {
     },
     async findUserByConfirmationCode(code: string) {
         return await usersCollection.findOne({"emailConfirmation.confirmationCode": code})
-    },
-
-    async findRefreshToken(token: string): Promise<RefreshTokenViewModel | null>  {
-        const RFtoken = await refreshTokenCollection.findOne({refreshToken:token})
-        if (RFtoken) {
-            return getRefreshTokenViewModel(RFtoken)
-        }
-        return null
-
     }
 }
