@@ -1,6 +1,13 @@
 import {Request, Response, Router} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../db/db";
+import {
+    blogsCollection,
+    commentsCollection,
+    postsCollection,
+    rateLimitingCollection,
+    sessionsCollection,
+    usersCollection
+} from "../db/db";
 
 export const testingRouter = Router({})
 
@@ -11,6 +18,8 @@ testingRouter.delete('/all-data', async (req: Request, res: Response) => {
         postsCollection.deleteMany({}),
         commentsCollection.deleteMany({}),
         usersCollection.deleteMany({}),
+        sessionsCollection.deleteMany({}),
+        rateLimitingCollection.deleteMany({})
     ]).catch((e) => {
         console.log(e)
         return res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
