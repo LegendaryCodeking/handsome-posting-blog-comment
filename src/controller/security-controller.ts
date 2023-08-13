@@ -10,7 +10,7 @@ export const securityController = {
     async findAllSessions(req: Request, res: Response) {
         let foundSessions = await sessionsQueryRepo.FindAllSessions()
 
-        if (!foundSessions.items.length) {
+        if (!foundSessions.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundSessions);
             return;

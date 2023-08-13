@@ -4,10 +4,9 @@ import {jwtService} from "../../application/jwt-service";
 
 export const sessionsQueryRepo = {
     async FindAllSessions(): Promise<any> {
-
-        return await sessionsCollection
-            .find({})
-            .map(session => getSessionViewModel(session)).toArray();
+        const foundSessions = await sessionsCollection.find({}).toArray()
+        return foundSessions
+            .map(session => getSessionViewModel(session));
 
     },
 
