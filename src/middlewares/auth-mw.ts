@@ -22,9 +22,9 @@ export const authenticationCheckBearer = async (req: Request, res: Response, nex
 
     const token = req.headers.authorization.split(' ')[1]
 
-    const userID = await jwtService.getUserIdByToken(token)
-    if (userID) {
-        req.user = await usersQueryRepo.findUserById(userID)
+    const RFTokenInfo = await jwtService.getInfoFromRFToken(token)
+    if (RFTokenInfo) {
+        req.user = await usersQueryRepo.findUserById(RFTokenInfo.userId)
         next()
         return;
     }

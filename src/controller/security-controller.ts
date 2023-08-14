@@ -20,7 +20,14 @@ export const securityController = {
             .json(foundSessions)
     },
     async terminateAllSessions(req: Request, res: Response) {
-        let deleteStatus: boolean = await sessionsService.deleteAllSessions()
+
+        const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        if (RFTokenInfo === null) {
+            res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
+            return
+        }
+
+        let deleteStatus: boolean = await sessionsService.deleteAllSessions(RFTokenInfo.iat,RFTokenInfo.deviceId)
         if (deleteStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {
@@ -28,8 +35,8 @@ export const securityController = {
         }
     },
     async terminateDeviceSessions(req: RequestWithParamsSessions<URIParamsSessionDeviceIdModel>, res: Response){
-        const currentUserID = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        if (currentUserID === null) {
+        const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        if (RFTokenInfo === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return
         }
@@ -39,7 +46,7 @@ export const securityController = {
             return
         }
 
-        if (currentUserID !== ownerOfDeletedSession ) {
+        if (RFTokenInfo.userId !== ownerOfDeletedSession ) {
             res.sendStatus(STATUSES_HTTP.FORBIDDEN_403)
             return;
         }

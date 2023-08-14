@@ -16,8 +16,8 @@ export const authController = {
             const refreshToken = await jwtService.createJWTRefresh(user,deviceId)
 
             // Подготавливаем данные для записис в таблицу сессий
-            const RefreshTokenIssuedAt = await jwtService.getIAT(refreshToken)
-            if (RefreshTokenIssuedAt === null) {
+            const RFTokenInfo = await jwtService.getInfoFromRFToken(refreshToken)
+            if (RFTokenInfo === null) {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
                 return;
             }
@@ -25,7 +25,7 @@ export const authController = {
             const deviceName: string = req.headers['user-agent'] || "deviceName undefined"
 
             // Фиксируем сессию
-            const sessionRegInfo = await sessionsService.registerSession(loginIp,RefreshTokenIssuedAt,deviceName,user.id, deviceId)
+            const sessionRegInfo = await sessionsService.registerSession(loginIp,RFTokenInfo.iat,deviceName,user.id, deviceId)
             if (sessionRegInfo === null) {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             }
@@ -83,19 +83,18 @@ export const authController = {
         const accessTokenNew = await jwtService.createJWT(req.user!)
 
         // Получаем данные о текущем токене
-        const deviceId: string = await jwtService.getDeviceId(req.cookies.refreshToken)
-        const currentRFTokenIAT = await  jwtService.getIAT(req.cookies.refreshToken)
-        if (deviceId === null || currentRFTokenIAT === null) {
+        const CurrentRFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        if (!CurrentRFTokenInfo) {
             res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
         }
 
         // Генерируем новый RT
-        const refreshTokenNew = await jwtService.createJWTRefresh(req.user!,deviceId)
+        const refreshTokenNew = await jwtService.createJWTRefresh(req.user!,CurrentRFTokenInfo.deviceId)
 
         // Подготавливаем данные для записи в таблицу сессий
-        const RefreshTokenIssuedAt = await jwtService.getIAT(refreshTokenNew)
-        if (RefreshTokenIssuedAt === null) {
+        const FRTokenInfo = await jwtService.getInfoFromRFToken(refreshTokenNew)
+        if (FRTokenInfo === null) {
             res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
         }
@@ -103,7 +102,7 @@ export const authController = {
         const deviceName = req.headers['User-Agent'] || "deviceName undefined"
 
         // Обновляем запись в списке сессий
-        const sessionRegInfoNew = await sessionsService.updateSession(currentRFTokenIAT,deviceId, loginIp,RefreshTokenIssuedAt,deviceName,req.user!.id)
+        const sessionRegInfoNew = await sessionsService.updateSession(CurrentRFTokenInfo.iat,CurrentRFTokenInfo.deviceId, loginIp,FRTokenInfo.iat,deviceName,req.user!.id)
         if (!sessionRegInfoNew) {
             res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
@@ -115,14 +114,14 @@ export const authController = {
     },
 
     async logoutUser(req: Request, res: Response) {
-        const currentRFTokenIAT = await  jwtService.getIAT(req.cookies.refreshToken)
-        if (currentRFTokenIAT === null) {
+        const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        if (RFTokenInfo === null) {
             res.status(500).json("Не удалось вылогиниться. Попроубуйте позднее")
             return;
         }
 
         // Удаляем запись с текущей сессией из БД
-        const deletionStatus = await sessionsService.deleteSession(currentRFTokenIAT, req.user!.id)
+        const deletionStatus = await sessionsService.deleteSession(RFTokenInfo.iat, req.user!.id)
 
         if (deletionStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)

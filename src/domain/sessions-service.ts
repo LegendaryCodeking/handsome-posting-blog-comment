@@ -5,8 +5,8 @@ import add from "date-fns/add";
 
 export const sessionsService = {
 
-    async deleteAllSessions(): Promise<boolean> {
-        return sessionsRepo.deleteAllSessions()
+    async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
+        return sessionsRepo.deleteAllSessions(currentRFTokenIAT,deviceId)
     },
     async deleteDeviceSessions(deviceId: string): Promise<boolean> {
         return sessionsRepo.deleteDeviceSessions(deviceId)
@@ -31,10 +31,10 @@ export const sessionsService = {
         return await sessionsRepo.registerSession(createdSession)
     },
     async updateSession(currentRFTokenIAT: number, deviceId: string, loginIp: string | string[],
-                  RefreshTokenIssuedAt: number, deviceName: string | string[], UserId: string) {
+                        RefreshTokenIssuedAt: number, deviceName: string | string[], UserId: string) {
 
         const filter: Filter<SessionDBModel> = {
-            "deviceId" : deviceId,
+            "deviceId": deviceId,
             "RFTokenIAT": new Date(currentRFTokenIAT),
             "userId": UserId
         }
@@ -49,10 +49,10 @@ export const sessionsService = {
             })
         }
 
-        return await sessionsRepo.updateSessionInfo(filter,updateSessionContent)
+        return await sessionsRepo.updateSessionInfo(filter, updateSessionContent)
 
     },
     async deleteSession(currentRFTokenIAT: number, userId: string) {
-        return await sessionsRepo.deleteSession(currentRFTokenIAT,userId)
+        return await sessionsRepo.deleteSession(currentRFTokenIAT, userId)
     }
 }

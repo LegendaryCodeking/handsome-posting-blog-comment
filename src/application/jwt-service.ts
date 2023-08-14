@@ -13,28 +13,14 @@ export const jwtService = {
     async createJWTRefresh(user: UserViewModel, deviceId: string): Promise<string> {
         return jwt.sign({userId: user.id, deviceId: deviceId}, process.env.JWT_SECRET!, {expiresIn: '2000s'})
     },
-
-    async getUserIdByToken(token: string) {
-        try {
-            const result: any = jwt.verify(token, process.env.JWT_SECRET!)
-            return result.userId
-        } catch (e) {
-            return null
-        }
-    },
-
-    async getIAT(refreshToken: string) {
+    async getInfoFromRFToken(refreshToken: string) {
         try {
             const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
-            return result.iat * 1000
-        } catch (e) {
-            return null
-        }
-    },
-    async getDeviceId(refreshToken: string) {
-        try {
-            const result: any = jwt.verify(refreshToken, process.env.JWT_SECRET!)
-            return result.deviceId.toString()
+            return {
+                "deviceId": result.deviceId,
+                "iat": result.iat * 1000,
+                "userId": result.userId
+            }
         } catch (e) {
             return null
         }
