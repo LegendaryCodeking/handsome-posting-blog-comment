@@ -34,7 +34,10 @@ export const securityController = {
             return
         }
         const ownerOfDeletedSession = await sessionsQueryRepo.findUserIdByDeviceId(req.params.deviceId)
-
+        if (ownerOfDeletedSession === null) {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+            return
+        }
 
         if (currentUserID !== ownerOfDeletedSession ) {
             res.sendStatus(STATUSES_HTTP.FORBIDDEN_403)
