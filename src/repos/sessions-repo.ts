@@ -9,16 +9,19 @@ import {Filter} from "mongodb";
 
 
 export const sessionsRepo = {
-    async deleteAllSessions(): Promise<boolean> {
+    async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
         try {
-            await sessionsCollection.deleteMany({});
+            await sessionsCollection.deleteMany({
+                "RFTokenIAT": {$ne: new Date(currentRFTokenIAT)},
+                "deviceId": {$ne: deviceId}
+            });
         } catch (e) {
             console.log(e)
             return false
         }
         return true
     },
-    async deleteDeviceSessions(deviceId: string): Promise<boolean>  {
+    async deleteDeviceSessions(deviceId: string): Promise<boolean> {
         const result = await sessionsCollection.deleteOne({"deviceId": deviceId});
         return result.deletedCount === 1
     },
