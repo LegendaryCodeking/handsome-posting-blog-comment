@@ -29,11 +29,12 @@ export const securityController = {
     },
     async terminateDeviceSessions(req: RequestWithParamsSessions<URIParamsSessionDeviceIdModel>, res: Response){
         const currentUserID = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        const ownerOfDeletedSession = await sessionsQueryRepo.findUserIdByDeviceId(req.params.deviceId)
-        if (currentUserID === null || ownerOfDeletedSession === null) {
+        if (currentUserID === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return
         }
+        const ownerOfDeletedSession = await sessionsQueryRepo.findUserIdByDeviceId(req.params.deviceId)
+
 
         if (currentUserID !== ownerOfDeletedSession ) {
             res.sendStatus(STATUSES_HTTP.FORBIDDEN_403)
