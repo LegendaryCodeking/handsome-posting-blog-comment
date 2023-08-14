@@ -79,13 +79,18 @@ export const authController = {
 
     async updateTokens(req: Request, res: Response) {
 
+
         const accessTokenNew = await jwtService.createJWT(req.user!)
+
+        // Получаем данные о текущем токене
         const deviceId: string = await jwtService.getDeviceId(req.cookies.refreshToken)
         const currentRFTokenIAT = await  jwtService.getIAT(req.cookies.refreshToken)
         if (deviceId === null || currentRFTokenIAT === null) {
             res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
         }
+
+        // Генерируем новый RT
         const refreshTokenNew = await jwtService.createJWTRefresh(req.user!,deviceId)
 
         // Подготавливаем данные для записи в таблицу сессий
@@ -99,7 +104,7 @@ export const authController = {
 
         // Обновляем запись в списке сессий
         const sessionRegInfoNew = await sessionsService.updateSession(currentRFTokenIAT,deviceId, loginIp,RefreshTokenIssuedAt,deviceName,req.user!.id)
-        if (sessionRegInfoNew === null) {
+        if (!sessionRegInfoNew) {
             res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
         }

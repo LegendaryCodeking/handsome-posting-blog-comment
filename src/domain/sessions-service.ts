@@ -1,6 +1,6 @@
 import {sessionsRepo} from "../repos/sessions-repo";
 import {SessionDBModel, SessionViewModel} from "../models/Sessions/SessionModel";
-import {ObjectId} from "mongodb";
+import {Filter, ObjectId} from "mongodb";
 import add from "date-fns/add";
 
 export const sessionsService = {
@@ -33,9 +33,9 @@ export const sessionsService = {
     async updateSession(currentRFTokenIAT: number, deviceId: string, loginIp: string | string[],
                   RefreshTokenIssuedAt: number, deviceName: string | string[], UserId: string) {
 
-        const filter = {
+        const filter: Filter<SessionDBModel> = {
             "deviceId" : deviceId,
-            "RFTokenIAT": currentRFTokenIAT,
+            "RFTokenIAT": new Date(currentRFTokenIAT),
             "userId": UserId
         }
 
