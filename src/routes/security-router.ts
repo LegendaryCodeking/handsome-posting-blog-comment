@@ -6,6 +6,7 @@ import {verifyRefreshToken} from "../middlewares/auth-mw";
 export const securityRouter = Router({})
 
 securityRouter.get('/',
+    verifyRefreshToken,
     securityController.findAllSessions
 )
 
