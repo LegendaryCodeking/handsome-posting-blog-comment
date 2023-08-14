@@ -117,7 +117,7 @@ export const doesEmailExist = async (req: Request, res: Response, next: NextFunc
 
 const catchTokenError = (err: any, res: Response) => {
     if (err instanceof TokenExpiredError) {
-        return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized! was expired!"});
+        return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized! Token has expired!"});
     }
 
     return res.sendStatus(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized!"});
@@ -133,20 +133,20 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
             )
         return
     }
-
-    // Проверяем наличие RFToken в базе активных сессий
-    const deviceId: string = await jwtService.getDeviceId(req.cookies.refreshToken)
-    const isActive = await sessionsQueryRepo.findSessionWithRFToken(refreshTokenCookie,deviceId)
-
-    if (!isActive) {
-        res.status(STATUSES_HTTP.UNAUTHORIZED_401)
-            .json({errorsMessages: [{message: "Unauthorized!", field: "refreshToken"}]}
-            )
-        return
-    }
-
     try {
         const result: any = jwt.verify(refreshTokenCookie, process.env.JWT_SECRET!)
+
+        // Проверяем наличие RFToken в базе активных сессий
+        const deviceId: string = result.deviceId.toString()
+        const RFTIAT = result.iat * 1000
+        const isActive = await sessionsQueryRepo.findSessionWithRFToken(RFTIAT, deviceId)
+        if (!isActive) {
+            res.status(STATUSES_HTTP.UNAUTHORIZED_401)
+                .json({errorsMessages: [{message: "Unauthorized! В БД с сессиями нет такой записи", field: "refreshToken"}]}
+                )
+            return
+        }
+
         req.user = await usersQueryRepo.findUserById(result.userId)
         next()
     } catch (e) {

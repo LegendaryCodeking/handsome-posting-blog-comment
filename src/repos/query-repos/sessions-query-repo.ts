@@ -1,6 +1,5 @@
 import {sessionsCollection} from "../../db/db";
 import {getSessionViewModel} from "../../helpers/map-SessionViewModel";
-import {jwtService} from "../../application/jwt-service";
 
 export const sessionsQueryRepo = {
     async FindAllSessions(): Promise<any> {
@@ -11,9 +10,7 @@ export const sessionsQueryRepo = {
     },
 
 
-    async findSessionWithRFToken(refreshTokenCookie: string, deviceId: string) {
-
-        const RFTIAT = await jwtService.getIAT(refreshTokenCookie)
+    async findSessionWithRFToken(RFTIAT: number | null, deviceId: string) {
         if (RFTIAT === null) return null
         let foundSession = await sessionsCollection.findOne({"RFTokenIAT": new Date(RFTIAT), "deviceId": deviceId})
         if (foundSession) {
