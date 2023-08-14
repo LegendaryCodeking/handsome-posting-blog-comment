@@ -1,9 +1,10 @@
 import {sessionsCollection} from "../../db/db";
 import {getSessionViewModel} from "../../helpers/map-SessionViewModel";
+import {SessionViewModel} from "../../models/Sessions/SessionModel";
 
 export const sessionsQueryRepo = {
-    async FindAllSessions(): Promise<any> {
-        const foundSessions = await sessionsCollection.find({}).toArray()
+    async FindAllSessions(userId: string): Promise<Array<SessionViewModel>> {
+        const foundSessions = await sessionsCollection.find({"userId": userId}).toArray()
         return foundSessions
             .map(session => getSessionViewModel(session));
 

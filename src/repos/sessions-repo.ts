@@ -1,11 +1,10 @@
 import {sessionsCollection} from "../db/db";
 import {
     SessionDBModel,
-    SessionUpdateContentModel,
+    SessionUpdateContentModel, SessionUpdateFilterModel,
     SessionViewModel
 } from "../models/Sessions/SessionModel";
 import {getSessionViewModel} from "../helpers/map-SessionViewModel";
-import {Filter} from "mongodb";
 
 
 export const sessionsRepo = {
@@ -33,7 +32,7 @@ export const sessionsRepo = {
             return null
         }
     },
-    async updateSessionInfo(filter: Filter<SessionDBModel>, updateSessionContent: SessionUpdateContentModel) {
+    async updateSessionInfo(filter: SessionUpdateFilterModel, updateSessionContent: SessionUpdateContentModel) {
         let result = await sessionsCollection.updateOne(filter, {
             $set: updateSessionContent
         })

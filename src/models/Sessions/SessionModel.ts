@@ -20,7 +20,7 @@ export type SessionViewModel = {
 }
 
 export type SessionUpdateFilterModel = {
-    "RFTokenIAT": number
+    "RFTokenIAT": Date
     "deviceId": string
     "userId": string
 }

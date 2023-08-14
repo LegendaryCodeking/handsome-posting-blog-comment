@@ -9,7 +9,12 @@ import {jwtService} from "../application/jwt-service";
 export const securityController = {
 
     async findAllSessions(req: Request, res: Response) {
-        let foundSessions = await sessionsQueryRepo.FindAllSessions()
+        let RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        if (RFTokenInfo === null) {
+            res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
+            return
+        }
+        let foundSessions = await sessionsQueryRepo.FindAllSessions(RFTokenInfo.userId)
 
         if (!foundSessions.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
