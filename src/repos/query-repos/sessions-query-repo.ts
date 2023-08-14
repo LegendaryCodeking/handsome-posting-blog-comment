@@ -23,5 +23,14 @@ export const sessionsQueryRepo = {
         }
 
 
+    },
+
+    async findUserIdByDeviceId(deviceId: string) {
+        let foundSession = await sessionsCollection.findOne({"deviceId": deviceId})
+        if (foundSession) {
+            return foundSession.userId
+        } else {
+            return null
+        }
     }
 }

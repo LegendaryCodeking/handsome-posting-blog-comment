@@ -4,6 +4,7 @@ import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {sessionsService} from "../domain/sessions-service";
 import {RequestWithParamsSessions} from "../types/sessions-types";
 import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSessionDeviceIdModel";
+import {jwtService} from "../application/jwt-service";
 
 export const securityController = {
 
@@ -27,6 +28,18 @@ export const securityController = {
         }
     },
     async terminateDeviceSessions(req: RequestWithParamsSessions<URIParamsSessionDeviceIdModel>, res: Response){
+        const currentUserID = await jwtService.getUserIdByToken(req.cookies.refreshToken)
+        const ownerOfDeletedSession = await sessionsQueryRepo.findUserIdByDeviceId(req.params.deviceId)
+        if (currentUserID === null || ownerOfDeletedSession === null) {
+            res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
+            return
+        }
+
+        if (currentUserID !== ownerOfDeletedSession ) {
+            res.sendStatus(STATUSES_HTTP.FORBIDDEN_403)
+            return;
+        }
+
         let deleteStatus: boolean = await sessionsService.deleteDeviceSessions(req.params.deviceId)
         if (deleteStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
