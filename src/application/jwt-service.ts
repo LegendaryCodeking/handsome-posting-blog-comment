@@ -14,7 +14,7 @@ export const jwtService = {
     async createJWTRefresh(user: UserViewModel, deviceId: string): Promise<RefreshTokenDbModel> {
         let refrToken = {
             _id: new ObjectId(),
-            refreshToken: jwt.sign({userId: user.id, deviceId: deviceId}, process.env.JWT_SECRET!, {expiresIn: '20s'}),
+            refreshToken: jwt.sign({userId: user.id, deviceId: deviceId}, process.env.JWT_SECRET!, {expiresIn: '20000s'}),
             isAlive: true
         }
 
