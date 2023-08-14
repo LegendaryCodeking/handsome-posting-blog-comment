@@ -10,8 +10,7 @@ export const sessionsQueryRepo = {
     },
 
 
-    async findSessionWithRFToken(RFTIAT: number | null, deviceId: string) {
-        if (RFTIAT === null) return null
+    async findSessionWithRFToken(RFTIAT: number, deviceId: string) {
         let foundSession = await sessionsCollection.findOne({"RFTokenIAT": new Date(RFTIAT), "deviceId": deviceId})
         if (foundSession) {
             return getSessionViewModel(foundSession)

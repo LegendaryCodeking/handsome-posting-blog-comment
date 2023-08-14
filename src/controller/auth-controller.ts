@@ -16,13 +16,13 @@ export const authController = {
             const refreshToken = await jwtService.createJWTRefresh(user,deviceId)
 
             // Подготавливаем данные для записис в таблицу сессий
-            const RefreshTokenIssuedAt = await jwtService.getIAT(refreshToken!.refreshToken)
+            const RefreshTokenIssuedAt = await jwtService.getIAT(refreshToken)
             if (RefreshTokenIssuedAt === null) {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
                 return;
             }
             const loginIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || "IP undefined"
-            const deviceName = req.headers['user-agent'] || "deviceName undefined"
+            const deviceName: string = req.headers['user-agent'] || "deviceName undefined"
 
             // Фиксируем сессию
             const sessionRegInfo = await sessionsService.registerSession(loginIp,RefreshTokenIssuedAt,deviceName,user.id, deviceId)
@@ -30,7 +30,7 @@ export const authController = {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             }
 
-            res.cookie('refreshToken', refreshToken!.refreshToken, {httpOnly: true, secure: true,})
+            res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
             res.status(200).json({"accessToken": accessToken})
             return;
         }
@@ -89,7 +89,7 @@ export const authController = {
         const refreshTokenNew = await jwtService.createJWTRefresh(req.user!,deviceId)
 
         // Подготавливаем данные для записи в таблицу сессий
-        const RefreshTokenIssuedAt = await jwtService.getIAT(refreshTokenNew!.refreshToken)
+        const RefreshTokenIssuedAt = await jwtService.getIAT(refreshTokenNew)
         if (RefreshTokenIssuedAt === null) {
             res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
@@ -104,7 +104,7 @@ export const authController = {
             return;
         }
 
-        res.cookie('refreshToken', refreshTokenNew.refreshToken, {httpOnly: true, secure: true,})
+        res.cookie('refreshToken', refreshTokenNew, {httpOnly: true, secure: true,})
         res.status(200).json({"accessToken": accessTokenNew})
 
     },

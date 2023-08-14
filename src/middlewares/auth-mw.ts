@@ -137,7 +137,7 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
         const result: any = jwt.verify(refreshTokenCookie, process.env.JWT_SECRET!)
 
         // Проверяем наличие RFToken в базе активных сессий
-        const deviceId: string = result.deviceId.toString()
+        const deviceId: string = result.deviceId
         const RFTIAT = result.iat * 1000
         const isActive = await sessionsQueryRepo.findSessionWithRFToken(RFTIAT, deviceId)
         if (!isActive) {
