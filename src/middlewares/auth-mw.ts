@@ -120,7 +120,7 @@ const catchTokenError = (err: any, res: Response) => {
         return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized! Token has expired!"});
     }
 
-    return res.sendStatus(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized!"});
+    return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Unauthorized!"});
 }
 
 export const verifyRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
