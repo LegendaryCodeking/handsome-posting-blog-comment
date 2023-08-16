@@ -43,7 +43,7 @@ export const usersQueryRepo = {
         if (user) {
             return getUserViewModel(user)
         } else {
-            return null
+            return throw new notHoundError()
         }
     },
     async findUserByConfirmationCode(code: string) {

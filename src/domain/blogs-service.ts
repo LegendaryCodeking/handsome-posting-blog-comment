@@ -20,6 +20,12 @@ export const blogsService = {
 
     },
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
+        //if(limitExeded) throw Error()
+        //
+        const blog = await blogsRepo.getBlogById() //DomainModel
+        //if(blog.countUpdates > 5) throw error
+        //blog.name = name
+        //blog.repo.save(blog)
         return blogsRepo.updateBlog(id, name, description, websiteUrl)
     }
 }

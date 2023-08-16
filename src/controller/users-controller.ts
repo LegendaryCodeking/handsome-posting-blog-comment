@@ -17,9 +17,15 @@ export const usersController = {
 
     async createUser(req: Request, res: Response) {
         let createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email, true)
+        if (createdUser.data === null) {
+            //hande error()
+          res.status(createdUser.resultCode).send(createdUser.errorMessage)
+            return
+        }
+        const user = await usersQueryRepo.findUserById(createdUser.data)
 
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdUser)
+            .json(user)
     },
 
     async deleteUser(req: Request, res: Response) {

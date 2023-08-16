@@ -7,11 +7,32 @@ import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
 
+enum ResultCode {
+    success,
+    internalServerError,
+    badRequest,
+    incorrectEmail
+}
+
+type Result<T> = {
+    resultCode: ResultCode,
+    data: T | null,
+    errorMessage?: string
+}
+
 export const userService = {
-    async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<UserViewModel | null> {
+    async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<Result<string>> {
 
         const passwordSalt = await bcrypt.genSalt(14)
         const passwordHash = await this._generateHash(password, passwordSalt)
+
+        if(email.startsWith('x')) {
+            return {
+                resultCode: ResultCode.incorrectEmail,
+                data: null,
+                errorMessage: 'incorrect email'
+            }
+        }
 
         const createdUser: UserDBModel = {
             id: (+(new Date())).toString(),
@@ -27,27 +48,19 @@ export const userService = {
                     hours: 1,
                     minutes: 3
                 }).toISOString(),
-                isConfirmed: false
+                isConfirmed: isAuthorSuper
             }
         }
-
-        if (isAuthorSuper) {
-            createdUser.emailConfirmation.isConfirmed = true
-            return await usersRepo.createUser(createdUser)
-        } else {
 
             let resultUser = await usersRepo.createUser(createdUser)
-            try {
-                await emailManager.sendEmailConfirmationMessage(createdUser)
-            } catch (e) {
-                console.log(e)
-                return null;
+            if(!isAuthorSuper) {
+                emailManager.sendEmailConfirmationMessage(createdUser).catch((error) =>console.log(error))
             }
-            return resultUser
 
-        }
-
-
+            return {
+                data: resultUser.id,
+                resultCode: ResultCode.success
+            }
     },
     async deleteUser(id: string): Promise<boolean> {
         return usersRepo.deleteUser(id)
@@ -57,6 +70,7 @@ export const userService = {
     },
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
         const user = await usersQueryRepo.findByLoginOrEmail(loginOrEmail)
+
         if (!user) return null
         //@ts-ignore
         const passArray = user.accountData.password.split("$")
