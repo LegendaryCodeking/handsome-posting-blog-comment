@@ -11,7 +11,9 @@ import {IpRateLimitMW} from "../middlewares/security-mw";
 
 export const authRouter = Router({})
 
-authRouter.post('/login', authController.loginUser)
+authRouter.post('/login',
+    IpRateLimitMW,
+    authController.loginUser)
 
 authRouter.post('/logout',
     verifyRefreshToken,
@@ -22,6 +24,7 @@ authRouter.post('/refresh-token',
     authController.updateTokens)
 
 authRouter.post('/registration-confirmation',
+    IpRateLimitMW,
     isCodeCorrect,
     isAlreadyConfirmedCode,
     authController.registrationConfirmation)
@@ -36,6 +39,7 @@ authRouter.post('/registration',
     authController.registration)
 
 authRouter.post('/registration-email-resending',
+    IpRateLimitMW,
     doesEmailExist,
     isAlreadyConfirmedEmail,
     authController.registrationEmailResending)
