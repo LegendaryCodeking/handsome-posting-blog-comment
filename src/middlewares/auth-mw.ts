@@ -50,7 +50,7 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
             )
         return
     }
-
+    console.log("Отработали doesLoginEmailAlreadyExist - " + (Date.now() - req.TimeStamp))
     next()
 
 }

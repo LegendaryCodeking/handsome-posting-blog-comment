@@ -7,6 +7,9 @@ import subSeconds from "date-fns/subSeconds";
 
 
 export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunction) => {
+
+    req.TimeStamp = Date.now()
+
     const newAPIUsage: rateLimitDBModel  = {
         _id: new ObjectId(),
         IP: req.headers['x-forwarded-for'] || req.socket.remoteAddress || "undefined",
@@ -27,6 +30,8 @@ export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunct
             )
         return
     }
+
+    console.log("Отработал MW IpRateLimitMW - " + (Date.now() - req.TimeStamp))
 
     next();
 }

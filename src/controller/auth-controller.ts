@@ -52,6 +52,7 @@ export const authController = {
         const user = await userService.createUser(req.body.login, req.body.password, req.body.email, false)
         if (user) {
             res.status(204).send()
+            console.log("Создали юзера - " + (Date.now() - req.TimeStamp))
         } else {
             res.status(400).send()
         }
