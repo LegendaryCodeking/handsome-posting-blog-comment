@@ -7,7 +7,7 @@ import {
 } from "../middlewares/auth-mw";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {IpRateLimitMW, IpRateLimitMWTricky30} from "../middlewares/security-mw";
+import {IpRateLimitMW} from "../middlewares/security-mw";
 
 export const authRouter = Router({})
 
@@ -30,7 +30,7 @@ authRouter.post('/registration-confirmation',
     authController.registrationConfirmation)
 
 authRouter.post('/registration',
-    IpRateLimitMWTricky30,
+    IpRateLimitMW,
     loginValidation,
     passwordValidation,
     emailValidation,
