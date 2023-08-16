@@ -17,7 +17,7 @@ export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunct
     await rateLimitingCollection.insertOne(newAPIUsage)
 
 
-    const filter: Filter<rateLimitViewModel>  = {IP: newAPIUsage.IP, URL: newAPIUsage.URL, date: {$gt: subSeconds(newAPIUsage.date, 10) }}
+    const filter: Filter<rateLimitViewModel>  = {IP: newAPIUsage.IP, URL: newAPIUsage.URL, date: {$gte: subSeconds(newAPIUsage.date, 10) }}
 
     const APIUsageByIP = await rateLimitingCollection.countDocuments(filter)
 
