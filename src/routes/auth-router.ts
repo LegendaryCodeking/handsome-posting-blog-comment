@@ -11,9 +11,7 @@ import {IpRateLimitMW} from "../middlewares/security-mw";
 
 export const authRouter = Router({})
 
-authRouter.post('/login',
-    IpRateLimitMW,
-    authController.loginUser)
+authRouter.post('/login', authController.loginUser)
 
 authRouter.post('/logout',
     verifyRefreshToken,

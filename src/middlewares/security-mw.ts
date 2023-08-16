@@ -7,7 +7,6 @@ import subSeconds from "date-fns/subSeconds";
 
 
 export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunction) => {
-
     const newAPIUsage: rateLimitDBModel  = {
         _id: new ObjectId(),
         IP: req.headers['x-forwarded-for'] || req.socket.remoteAddress || "undefined",
@@ -18,7 +17,7 @@ export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunct
     await rateLimitingCollection.insertOne(newAPIUsage)
 
 
-    const filter: Filter<rateLimitViewModel> = {IP: newAPIUsage.IP, URL: newAPIUsage.URL, date: {$gte: subSeconds(new Date(), 10) }}
+    const filter: Filter<rateLimitViewModel>  = {IP: newAPIUsage.IP, URL: newAPIUsage.URL, date: {$gte: subSeconds(new Date(), 10) }}
 
     const APIUsageByIP = await rateLimitingCollection.countDocuments(filter)
 
