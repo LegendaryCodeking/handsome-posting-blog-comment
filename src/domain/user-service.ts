@@ -10,8 +10,7 @@ import {emailManager} from "../managers/email-manager";
 export const userService = {
     async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<UserViewModel | null> {
 
-        const passwordSalt = await bcrypt.genSalt(14)
-        const passwordHash = await this._generateHash(password, passwordSalt)
+        const passwordHash = await bcrypt.hash(password, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
 
         const createdUser: UserDBModel = {
             id: (+(new Date())).toString(),
@@ -52,21 +51,22 @@ export const userService = {
     async deleteUser(id: string): Promise<boolean> {
         return usersRepo.deleteUser(id)
     },
-    async _generateHash(password: string, salt: string) {
-        return await bcrypt.hash(password, salt)
-    },
+
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
         const user = await usersQueryRepo.findByLoginOrEmail(loginOrEmail)
         if (!user) return null
-        //@ts-ignore
-        const passArray = user.accountData.password.split("$")
-        const salt = `$${passArray[1]}$${passArray[2]}$${passArray[3].substr(0, 22)}`
-        const passwordHash = await this._generateHash(password, salt)
-        if (user.accountData.password === passwordHash) {
+
+
+        const passHash = user.accountData.password
+
+       const result = await bcrypt.compare(password, passHash).then(function (result) {
+            return result
+        });
+
+        if (result) {
             return getUserViewModel(user);
-        } else {
-            return null
         }
+        return null
 
     }
 }
