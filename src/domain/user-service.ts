@@ -37,8 +37,12 @@ export const userService = {
         } else {
 
             let resultUser = await usersRepo.createUser(createdUser)
-                emailManager.sendEmailConfirmationMessage(createdUser).catch((error) =>console.log(error))
-
+            try {
+                await emailManager.sendEmailConfirmationMessage(createdUser)
+            } catch (e) {
+                console.log(e)
+                return null;
+            }
             return resultUser
 
         }
