@@ -3,7 +3,6 @@ import {validationResult} from "express-validator";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 
 export const inputValidationMw = (req: Request, res: Response, next: NextFunction) => {
-    console.log("Отработали loginValidation passwordValidation emailValidation - " + (Date.now() - req.TimeStamp))
     const result = validationResult(req);
     if (!result.isEmpty()) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
@@ -15,7 +14,6 @@ export const inputValidationMw = (req: Request, res: Response, next: NextFunctio
                 }))
             });
     } else {
-        console.log("Отработали inputValidationMw - " + (req.TimeStamp - Date.now()))
         next();
     }
 }

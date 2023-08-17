@@ -31,7 +31,5 @@ export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunct
         return
     }
 
-    console.log("Отработал MW IpRateLimitMW - " + (Date.now() - req.TimeStamp))
-
     next();
 }
