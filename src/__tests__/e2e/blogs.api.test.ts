@@ -3,28 +3,29 @@ import request from 'supertest'
 import {STATUSES_HTTP} from "../../enum/http-statuses";
 import {BlogType} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
+import {RouterPaths} from "../../helpers/RouterPaths";
 
-describe('/blogs', () => {
+describe('/Testing blogs', () => {
     beforeAll(async () => {
-        await request(app).delete('/testing/all-data')
+        await request(app).delete(`${RouterPaths.testing}/all-data`)
     })
 
 
     it('should return 404 and empty array', async () => {
         await request(app)
-            .get('/blogs')
+            .get(RouterPaths.blogs)
             .expect(STATUSES_HTTP.NOT_FOUND_404, [])
     })
 
     it('should return 404 for not existing blog', async () => {
         await request(app)
-            .get('/blogs/22222222220')
+            .get(`${RouterPaths.blogs}/22222222220`)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
     })
 
     it('should not create blog without AUTH', async () => {
         await request(app)
-            .post('/blogs')
+            .post(RouterPaths.blogs)
             .send({
                 "name": "Richard Feynman",
                 "description": "Bingo article about Richard Feynman",
@@ -35,7 +36,7 @@ describe('/blogs', () => {
             .expect(STATUSES_HTTP.UNAUTHORIZED_401)
 
         await request(app)
-            .get('/blogs')
+            .get(RouterPaths.blogs)
             .expect(STATUSES_HTTP.NOT_FOUND_404, [])
     })
 
@@ -54,7 +55,7 @@ describe('/blogs', () => {
 
     it('should create blog with AUTH and correct input data', async () => {
         let readyResponse = await request(app)
-            .post('/blogs')
+            .post(RouterPaths.blogs)
             .set({Authorization: "Basic YWRtaW46cXdlcnR5"})
             .send({
                 "name": "Richard Feynman",
@@ -76,7 +77,7 @@ describe('/blogs', () => {
         })
 
         await request(app)
-            .get('/blogs')
+            .get(RouterPaths.blogs)
             .expect(STATUSES_HTTP.OK_200, [{
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
@@ -98,7 +99,7 @@ describe('/blogs', () => {
 
     it('should create one more blog with AUTH and correct input data', async () => {
         let readyResponse = await request(app)
-            .post('/blogs')
+            .post(RouterPaths.blogs)
             .set({Authorization: "Basic YWRtaW46cXdlcnR5"})
             .send({
                 "name": "Red Fox",
@@ -119,7 +120,7 @@ describe('/blogs', () => {
         })
 
         await request(app)
-            .get('/blogs')
+            .get(RouterPaths.blogs)
             .expect(STATUSES_HTTP.OK_200, [{
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
@@ -139,7 +140,7 @@ describe('/blogs', () => {
 
     it('should not update blog with AUTH and incorrect input data', async () => {
         await request(app)
-            .put(`/blogs/${createdBlog1.id}`)
+            .put(`${RouterPaths.blogs}/${createdBlog1.id}`)
             .set({Authorization: "Basic YWRtaW46cXdlcnR5"})
             .send({
                 "name": "",
@@ -150,7 +151,7 @@ describe('/blogs', () => {
 
 
         await request(app)
-            .get(`/blogs/${createdBlog1.id}`)
+            .get(`${RouterPaths.blogs}/${createdBlog1.id}`)
             .expect(STATUSES_HTTP.OK_200, {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
@@ -163,7 +164,7 @@ describe('/blogs', () => {
 
     it('should update blog with AUTH and correct input data', async () => {
         await request(app)
-            .put(`/blogs/${createdBlog1.id}`)
+            .put(`${RouterPaths.blogs}/${createdBlog1.id}`)
             .set({Authorization: "Basic YWRtaW46cXdlcnR5"})
             .send({
                 "name": "Richard Feynman",
@@ -174,7 +175,7 @@ describe('/blogs', () => {
 
 
         await request(app)
-            .get(`/blogs/${createdBlog1.id}`)
+            .get(`${RouterPaths.blogs}/${createdBlog1.id}`)
             .expect(STATUSES_HTTP.OK_200, {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
@@ -187,7 +188,7 @@ describe('/blogs', () => {
 
     it('should not update blog without AUTH and correct input data', async () => {
         await request(app)
-            .put(`/blogs/${createdBlog1.id}`)
+            .put(`${RouterPaths.blogs}/${createdBlog1.id}`)
             .send({
                 "name": "Richard Feynman",
                 "description": "Bingo article about Richard Feynman 33333",
@@ -197,7 +198,7 @@ describe('/blogs', () => {
 
 
         await request(app)
-            .get(`/blogs/${createdBlog1.id}`)
+            .get(`${RouterPaths.blogs}/${createdBlog1.id}`)
             .expect(STATUSES_HTTP.OK_200, {
                 "id": createdBlog1.id,
                 "name": createdBlog1.name,
@@ -210,7 +211,7 @@ describe('/blogs', () => {
 
     it('should not update blog with AUTH and nonexistent шв ', async () => {
         await request(app)
-            .put(`/blogs/404`)
+            .put(`${RouterPaths.blogs}/404`)
             .set({Authorization: "Basic YWRtaW46cXdlcnR5"})
             .send({
                 "name": "Richard Feynman",
