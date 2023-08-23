@@ -1,4 +1,4 @@
-import {BlogDbModel} from "../models/BLogs/BlogModel";
+import {BlogCreateModel, BlogDbModel} from "../models/BLogs/BlogModel";
 import {queryBlogPostPagination} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BLogs/BlogsWithPaginationModel";
 import {Request, Response} from "express";
@@ -10,7 +10,7 @@ import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel
 import {PostViewModel} from "../models/Posts/PostViewModel";
 import {postsService} from "../domain/posts-service";
 import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
-import {RequestsWithParams} from "../models/requestModels";
+import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 
 
 export const blogsController = {
@@ -68,7 +68,7 @@ export const blogsController = {
         }
     },
 
-    async createBlog(req: Request, res: Response<BlogViewModel>) {
+    async createBlog(req: RequestsWithBody<BlogCreateModel>, res: Response<BlogViewModel>) {
         let createdBlog: BlogDbModel = await blogsService
             .createBlog(req.body.name, req.body.description, req.body.websiteUrl)
 
