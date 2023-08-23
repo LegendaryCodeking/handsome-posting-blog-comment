@@ -7,6 +7,7 @@ import {commentsRouter} from "./routes/comments-router";
 import express from "express";
 import cookieParser from 'cookie-parser'
 import {securityRouter} from "./routes/security-router";
+import {RouterPaths} from "./helpers/RouterPaths";
 
 
 export const app = express()
@@ -15,10 +16,10 @@ const jsonBodyMW = express.json()
 app.use(jsonBodyMW)
 app.use(cookieParser())
 
-app.use('/blogs', blogsRouter)
-app.use('/posts', postsRouter)
-app.use('/users', usersRouter)
-app.use('/auth', authRouter)
-app.use('/security/devices', securityRouter)
-app.use('/testing', testingRouter)
-app.use('/comments', commentsRouter)
+app.use(RouterPaths.blogs, blogsRouter)
+app.use(RouterPaths.posts, postsRouter)
+app.use(RouterPaths.comments, commentsRouter)
+app.use(RouterPaths.users, usersRouter)
+app.use(RouterPaths.auth, authRouter)
+app.use(RouterPaths.securityDevices, securityRouter)
+app.use(RouterPaths.testing, testingRouter)
