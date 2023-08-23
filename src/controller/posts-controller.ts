@@ -3,13 +3,13 @@ import {queryBlogPostPagination, queryCommentswithPaination} from "../models/Fil
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {postsService} from "../domain/posts-service";
-import {RequestWithParams} from "../types/posts-types";
 import {URIParamsPostIdModel} from "../models/Posts/URIParamsPostIdModel";
 import {PostViewModel} from "../models/Posts/PostViewModel";
 import {CommentsWithPaginationModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {commentService} from "../domain/comment-service";
 import {postQueryRepo} from "../repos/query-repos/post-query-repo";
 import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
+import {RequestsWithParams} from "../models/requestModels";
 
 export const postsController = {
 
@@ -27,7 +27,7 @@ export const postsController = {
             .json(foundPosts)
     },
 
-    async findPostById(req: RequestWithParams<URIParamsPostIdModel>,
+    async findPostById(req: RequestsWithParams<URIParamsPostIdModel>,
                        res: Response) {
         const foundPost = await postQueryRepo.findPostsById(req.params.id);
 
@@ -39,7 +39,7 @@ export const postsController = {
         res.json(foundPost)
     },
 
-    async deletePost(req: RequestWithParams<URIParamsPostIdModel>,
+    async deletePost(req: RequestsWithParams<URIParamsPostIdModel>,
                      res: Response) {
         const deletionStatus = await postsService.deletePost(req.params.id)
         if (deletionStatus) {
@@ -58,7 +58,7 @@ export const postsController = {
             .json(createdPost)
     },
 
-    async updatePost(req: RequestWithParams<URIParamsPostIdModel>,
+    async updatePost(req: RequestsWithParams<URIParamsPostIdModel>,
                      res: Response) {
         let updateStatus = await postsService
             .updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)

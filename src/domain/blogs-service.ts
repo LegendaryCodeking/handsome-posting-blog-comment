@@ -1,4 +1,4 @@
-import {BlogType} from "../models/BLogs/BlogModel";
+import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {blogsRepo} from "../repos/blogs-repo";
 
 
@@ -6,7 +6,7 @@ export const blogsService = {
     async deleteBlog(id: string): Promise<boolean> {
         return blogsRepo.deleteBlog(id)
     },
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogType> {
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogDbModel> {
         const createdBlog = {
             "id": (+(new Date())).toString(),
             "name": name,

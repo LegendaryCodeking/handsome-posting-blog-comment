@@ -2,9 +2,9 @@ import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {sessionsService} from "../domain/sessions-service";
-import {RequestWithParamsSessions} from "../types/sessions-types";
 import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSessionDeviceIdModel";
 import {jwtService} from "../application/jwt-service";
+import {RequestsWithParams} from "../models/requestModels";
 
 export const securityController = {
 
@@ -39,7 +39,7 @@ export const securityController = {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
     },
-    async terminateDeviceSessions(req: RequestWithParamsSessions<URIParamsSessionDeviceIdModel>, res: Response){
+    async terminateDeviceSessions(req: RequestsWithParams<URIParamsSessionDeviceIdModel>, res: Response){
         const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)

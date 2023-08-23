@@ -1,7 +1,7 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
 import {BlogsWithPaginationModel} from "../../models/BLogs/BlogsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
-import {BlogType} from "../../models/BLogs/BlogModel";
+import {BlogDbModel} from "../../models/BLogs/BlogModel";
 import {blogsCollection} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {postQueryRepo} from "./post-query-repo";
@@ -9,7 +9,7 @@ import {postQueryRepo} from "./post-query-repo";
 export const blogsQueryRepo = {
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
 
-        const filter: Filter<BlogType> = {name: {$regex: queryFilter.searchNameTerm ?? '', $options: 'i'}}
+        const filter: Filter<BlogDbModel> = {name: {$regex: queryFilter.searchNameTerm ?? '', $options: 'i'}}
 
         const sortFilter: Sort = {[queryFilter.sortBy] : queryFilter.sortDirection}
 
@@ -30,8 +30,8 @@ export const blogsQueryRepo = {
             "items": foundBlogs
         }
     },
-    async findBlogById(id: string): Promise<BlogType | null> {
-        let foundBlog: BlogType | null = await blogsCollection.findOne({"id": id})
+    async findBlogById(id: string): Promise<BlogDbModel | null> {
+        let foundBlog: BlogDbModel | null = await blogsCollection.findOne({"id": id})
         if (foundBlog) {
             return getBlogViewModel(foundBlog)
         } else {

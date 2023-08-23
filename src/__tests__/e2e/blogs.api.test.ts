@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import {STATUSES_HTTP} from "../../enum/http-statuses";
-import {BlogType} from "../../models/BLogs/BlogModel";
+import {BlogDbModel} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 
@@ -19,7 +19,7 @@ describe('/Testing blogs', () => {
 
     it('should return 404 for not existing blog', async () => {
         await request(app)
-            .get(`${RouterPaths.blogs}/22222222220`)
+            .get(`${RouterPaths.blogs}/-22222222220`)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
     })
 
@@ -44,7 +44,7 @@ describe('/Testing blogs', () => {
     * Created variable outside the next test to have option use
     * id of created blog in the further put test
     * */
-    let createdBlog1: BlogType = {
+    let createdBlog1: BlogDbModel = {
         "id": "",
         "name": "",
         "description": "",
@@ -90,7 +90,7 @@ describe('/Testing blogs', () => {
             })
     })
 
-    let createdBlog2: BlogType = {
+    let createdBlog2: BlogDbModel = {
         "id": "",
         "name": "",
         "description": "",

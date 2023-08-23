@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb'
 import {PostType} from "../models/Posts/PostModel";
-import {BlogType} from "../models/BLogs/BlogModel";
+import {BlogDbModel} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {UserDBModel} from "../models/Users/UserModel";
 import {CommentDbModel} from "../models/Comments/CommentModel";
@@ -13,7 +13,7 @@ const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
 const client = new MongoClient(mongoUri);
 const db = client.db("forum")
 export const postsCollection = db.collection<PostType>("posts")
-export const blogsCollection = db.collection<BlogType>("blogs")
+export const blogsCollection = db.collection<BlogDbModel>("blogs")
 export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
 export const sessionsCollection = db.collection<SessionDBModel>("sessions")

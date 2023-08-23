@@ -1,16 +1,16 @@
-import {BlogType} from "../models/BLogs/BlogModel";
+import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {queryBlogPostPagination} from "../models/FilterModel";
 import {BlogsWithPaginationModel} from "../models/BLogs/BlogsWithPaginationModel";
 import {Request, Response} from "express";
 import {blogsService} from "../domain/blogs-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {RequestWithParamsBlog} from "../types/blogs-types";
 import {URIParamsBlogIdModel} from "../models/BLogs/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BLogs/BlogViewModel";
 import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel";
 import {PostViewModel} from "../models/Posts/PostViewModel";
 import {postsService} from "../domain/posts-service";
 import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
+import {RequestsWithParams} from "../models/requestModels";
 
 
 export const blogsController = {
@@ -28,8 +28,8 @@ export const blogsController = {
             .json(foundBlogs)
     },
 
-    async findBlogById(req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response<BlogViewModel>) {
-        const foundBlog: BlogType | null = await blogsQueryRepo.findBlogById(req.params.id)
+    async findBlogById(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel>) {
+        const foundBlog: BlogDbModel | null = await blogsQueryRepo.findBlogById(req.params.id)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -39,7 +39,7 @@ export const blogsController = {
 
     async findPostsForBlog(req: Request, res: Response<PostsWithPaginationModel>) {
         const blogId = req.params.id
-        const foundBlog: BlogType | null = await blogsQueryRepo.findBlogById(blogId)
+        const foundBlog: BlogDbModel | null = await blogsQueryRepo.findBlogById(blogId)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -59,7 +59,7 @@ export const blogsController = {
 
     },
 
-    async deleteBlog(req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) {
+    async deleteBlog(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response) {
         let deleteStatus: boolean = await blogsService.deleteBlog(req.params.id)
         if (deleteStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
@@ -69,7 +69,7 @@ export const blogsController = {
     },
 
     async createBlog(req: Request, res: Response<BlogViewModel>) {
-        let createdBlog: BlogType = await blogsService
+        let createdBlog: BlogDbModel = await blogsService
             .createBlog(req.body.name, req.body.description, req.body.websiteUrl)
 
         res.status(STATUSES_HTTP.CREATED_201)
@@ -78,7 +78,7 @@ export const blogsController = {
 
     async createPostsForBlog(req: Request, res: Response<PostViewModel>) {
 
-        const foundBlog: BlogType | null = await blogsQueryRepo.findBlogById(req.params.id)
+        const foundBlog: BlogDbModel | null = await blogsQueryRepo.findBlogById(req.params.id)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -89,7 +89,7 @@ export const blogsController = {
             .json(createdPost)
     },
 
-    async updateBlog(req: RequestWithParamsBlog<URIParamsBlogIdModel>, res: Response) {
+    async updateBlog(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response) {
         let updateStatus: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
         if (updateStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)

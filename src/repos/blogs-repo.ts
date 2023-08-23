@@ -1,4 +1,4 @@
-import {BlogType} from "../models/BLogs/BlogModel";
+import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {blogsCollection} from "../db/db";
 import {getBlogViewModel} from "../helpers/map-BlogViewModel";
 
@@ -7,7 +7,7 @@ export const blogsRepo = {
         const result = await blogsCollection.deleteOne({"id": id});
         return result.deletedCount === 1
     },
-    async createBlog(createdBlog: BlogType): Promise<BlogType> {
+    async createBlog(createdBlog: BlogDbModel): Promise<BlogDbModel> {
         await blogsCollection.insertOne(createdBlog)
 
         //return createdBlog;
