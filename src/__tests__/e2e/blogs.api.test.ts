@@ -4,6 +4,7 @@ import {STATUSES_HTTP} from "../../enum/http-statuses";
 import {BlogCreateModel, BlogDbModel, BlogUpdateModel} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
+import {blogsTestManager} from "../utils/blogsTestManager";
 
 describe('/Testing blogs', () => {
     beforeAll(async () => {
@@ -33,10 +34,7 @@ describe('/Testing blogs', () => {
             "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
         }
 
-        await request(app)
-            .post(RouterPaths.blogs)
-            .send(data)
-            .expect(STATUSES_HTTP.UNAUTHORIZED_401)
+        await blogsTestManager.createBlog(data, STATUSES_HTTP.UNAUTHORIZED_401)
 
         await request(app)
             .get(RouterPaths.blogs)
@@ -64,23 +62,9 @@ describe('/Testing blogs', () => {
             "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
         }
 
-        let readyResponse = await request(app)
-            .post(RouterPaths.blogs)
-            .set(authBasicHeader)
-            .send(data)
-            .expect(STATUSES_HTTP.CREATED_201)
+        const {createdBlog} = await blogsTestManager.createBlog(data,STATUSES_HTTP.CREATED_201,authBasicHeader)
 
-        createdBlog1 = readyResponse.body
-
-        expect(createdBlog1).toEqual({
-            "id": expect.any(String),
-            "name": data.name,
-            "description": data.description,
-            "websiteUrl": data.websiteUrl,
-            "createdAt": expect.any(String),
-            "isMembership": false
-
-        })
+        createdBlog1 = createdBlog!
 
         await request(app)
             .get(RouterPaths.blogs)
@@ -113,22 +97,9 @@ describe('/Testing blogs', () => {
             "websiteUrl": "https://telegra.ph/Red-Fox-03-33"
         }
 
-        let readyResponse = await request(app)
-            .post(RouterPaths.blogs)
-            .set(authBasicHeader)
-            .send(data)
-            .expect(STATUSES_HTTP.CREATED_201)
+        const {createdBlog} = await blogsTestManager.createBlog(data,STATUSES_HTTP.CREATED_201,authBasicHeader)
 
-        createdBlog2 = readyResponse.body
-
-        expect(createdBlog2).toEqual({
-            "id": expect.any(String),
-            "name": data.name,
-            "description": data.description,
-            "websiteUrl": data.websiteUrl,
-            "createdAt": expect.any(String),
-            "isMembership": false
-        })
+        createdBlog2 = createdBlog!
 
         await request(app)
             .get(RouterPaths.blogs)

@@ -11,3 +11,6 @@ export enum STATUSES_HTTP  {
 
     SERVER_ERROR_500= 500
 }
+
+type HttpStatusKeys = keyof typeof STATUSES_HTTP
+export type HttpStatusType = (typeof STATUSES_HTTP)[HttpStatusKeys]
