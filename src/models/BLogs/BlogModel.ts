@@ -12,3 +12,9 @@ export type BlogCreateModel = {
     "description": string,
     "websiteUrl": string,
 }
+
+export type BlogUpdateModel = {
+    "name": string,
+    "description": string,
+    "websiteUrl": string,
+}
