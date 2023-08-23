@@ -8,8 +8,6 @@ import subSeconds from "date-fns/subSeconds";
 
 export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunction) => {
 
-    req.TimeStamp = Date.now()
-
     const newAPIUsage: rateLimitDBModel  = {
         _id: new ObjectId(),
         IP: req.headers['x-forwarded-for'] || req.socket.remoteAddress || "undefined",
