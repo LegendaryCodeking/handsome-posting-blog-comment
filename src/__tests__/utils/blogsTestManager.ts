@@ -15,6 +15,9 @@ export const blogsTestManager = {
         let createdBlog = null
 
         if(expectedStatusCode === STATUSES_HTTP.CREATED_201) {
+
+            createdBlog = response.body
+
             expect(createdBlog).toEqual({
                 "id": expect.any(String),
                 "name": data.name,
