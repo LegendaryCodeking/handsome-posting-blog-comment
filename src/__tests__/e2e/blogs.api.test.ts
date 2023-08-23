@@ -14,7 +14,7 @@ describe('/Testing blogs', () => {
     it('should return 404 and empty array', async () => {
         await request(app)
             .get(RouterPaths.blogs)
-            .expect(STATUSES_HTTP.NOT_FOUND_404, [])
+            .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
     })
 
     it('should return 404 for not existing blog', async () => {
@@ -37,7 +37,7 @@ describe('/Testing blogs', () => {
 
         await request(app)
             .get(RouterPaths.blogs)
-            .expect(STATUSES_HTTP.NOT_FOUND_404, [])
+            .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
     })
 
     /*
@@ -78,14 +78,16 @@ describe('/Testing blogs', () => {
 
         await request(app)
             .get(RouterPaths.blogs)
-            .expect(STATUSES_HTTP.OK_200, [{
-                "id": createdBlog1.id,
-                "name": createdBlog1.name,
-                "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl,
-                "createdAt": createdBlog1.createdAt,
-                "isMembership": createdBlog1.isMembership
-            }])
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 1, items: [{
+                    "id": createdBlog1.id,
+                    "name": createdBlog1.name,
+                    "description": createdBlog1.description,
+                    "websiteUrl": createdBlog1.websiteUrl,
+                    "createdAt": createdBlog1.createdAt,
+                    "isMembership": createdBlog1.isMembership
+                }]
+            })
     })
 
     let createdBlog2: BlogType = {
@@ -121,21 +123,23 @@ describe('/Testing blogs', () => {
 
         await request(app)
             .get(RouterPaths.blogs)
-            .expect(STATUSES_HTTP.OK_200, [{
-                "id": createdBlog1.id,
-                "name": createdBlog1.name,
-                "description": createdBlog1.description,
-                "websiteUrl": createdBlog1.websiteUrl,
-                "createdAt": createdBlog1.createdAt,
-                "isMembership": createdBlog1.isMembership
-            }, {
-                "id": createdBlog2.id,
-                "name": createdBlog2.name,
-                "description": createdBlog2.description,
-                "websiteUrl": createdBlog2.websiteUrl,
-                "createdAt": createdBlog2.createdAt,
-                "isMembership": createdBlog2.isMembership
-            }])
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 2, items: [{
+                    "id": createdBlog2.id,
+                    "name": createdBlog2.name,
+                    "description": createdBlog2.description,
+                    "websiteUrl": createdBlog2.websiteUrl,
+                    "createdAt": createdBlog2.createdAt,
+                    "isMembership": createdBlog2.isMembership
+                }, {
+                    "id": createdBlog1.id,
+                    "name": createdBlog1.name,
+                    "description": createdBlog1.description,
+                    "websiteUrl": createdBlog1.websiteUrl,
+                    "createdAt": createdBlog1.createdAt,
+                    "isMembership": createdBlog1.isMembership
+                }]
+            })
     })
 
     it('should not update blog with AUTH and incorrect input data', async () => {
