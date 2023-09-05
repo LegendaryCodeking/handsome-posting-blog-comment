@@ -17,7 +17,7 @@ describe('/Testing posts', () => {
     beforeAll(async () => {
         await request(app).delete(`${RouterPaths.testing}/all-data`)
 
-        // Создаем блог, к оторому будем прикреплять посты
+        // Создаем блог, к которому будем прикреплять посты
         const data: BlogCreateModel = {
             "name": "Richard Feynman",
             "description": "Bingo article about Richard Feynman",
@@ -36,7 +36,7 @@ describe('/Testing posts', () => {
             .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
     })
 
-    it('should return 404 for not existing blog', async () => {
+    it('should return 404 for not existing post', async () => {
         await request(app)
             .get(`${RouterPaths.posts}/-22222222220`)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
@@ -72,6 +72,25 @@ describe('/Testing posts', () => {
         "createdAt": "",
         "comments": []
     };
+
+    it('should not create post with AUTH and correct input data but non existed blogID', async () => {
+
+        const data: PostCreateModel = {
+            "title": "amazing Math_1",
+            "shortDescription": "Short description about new amazing Math_1 course",
+            "content": "Math_1 Math_1 Math_1 Math_1 Math_1 Math_1",
+            "blogId": "-222222",
+        }
+
+        await postsTestManager.createPost(data, STATUSES_HTTP.BAD_REQUEST_400, authBasicHeader)
+
+
+        await request(app)
+            .get(RouterPaths.posts)
+            .expect(STATUSES_HTTP.NOT_FOUND_404, {
+                pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []
+            })
+    })
 
     it('should create post with AUTH and correct input data', async () => {
 
@@ -150,7 +169,7 @@ describe('/Testing posts', () => {
 
     it('should not update post with AUTH and incorrect input data', async () => {
 
-        const data: PostUpdateModel = {
+        const data1: PostUpdateModel = {
             "id": createdPost2.id,
             "title": "",
             "shortDescription": "In this article we will look at two great movies - La la land and Interstellar",
@@ -161,7 +180,37 @@ describe('/Testing posts', () => {
         await request(app)
             .put(`${RouterPaths.posts}/${createdPost2.id}`)
             .set(authBasicHeader)
-            .send(data)
+            .send(data1)
+            .expect(STATUSES_HTTP.BAD_REQUEST_400)
+
+
+        const data2: PostUpdateModel = {
+            "id": createdPost2.id,
+            "title": "Correct title",
+            "shortDescription": "",
+            "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
+            "blogId": blog.id,
+        }
+
+        await request(app)
+            .put(`${RouterPaths.posts}/${createdPost2.id}`)
+            .set(authBasicHeader)
+            .send(data2)
+            .expect(STATUSES_HTTP.BAD_REQUEST_400)
+
+
+        const data3: PostUpdateModel = {
+            "id": createdPost2.id,
+            "title": "Correct title",
+            "shortDescription": "Correct short description",
+            "content": "",
+            "blogId": blog.id,
+        }
+
+        await request(app)
+            .put(`${RouterPaths.posts}/${createdPost2.id}`)
+            .set(authBasicHeader)
+            .send(data3)
             .expect(STATUSES_HTTP.BAD_REQUEST_400)
 
 
@@ -223,7 +272,7 @@ describe('/Testing posts', () => {
             .expect(STATUSES_HTTP.OK_200, createdPost2)
     })
 
-    it('should not update post with AUTH and nonexistent id ', async () => {
+    it('should not update post with AUTH and nonexistent id', async () => {
 
         const data: PostUpdateModel = {
             "id": "-2222",
@@ -239,6 +288,44 @@ describe('/Testing posts', () => {
             .set(authBasicHeader)
             .send(data)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
+    })
+
+    it('should not delete post without AUTH', async () => {
+
+        await request(app)
+            .delete(`${RouterPaths.posts}/${createdPost2.id}`)
+            .expect(STATUSES_HTTP.UNAUTHORIZED_401)
+    })
+
+    it('should not delete post with incorrect ID', async () => {
+
+        await request(app)
+            .delete(`${RouterPaths.posts}/-2222222`)
+            .set(authBasicHeader)
+            .expect(STATUSES_HTTP.NOT_FOUND_404)
+    })
+
+    it('should delete post with correct ID and AUTH', async () => {
+
+        await request(app)
+            .delete(`${RouterPaths.posts}/${createdPost2.id}`)
+            .set(authBasicHeader)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
+
+        await request(app)
+            .get(RouterPaths.posts)
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 1, items: [{
+                    "id": createdPost1.id,
+                    "title": createdPost1.title,
+                    "shortDescription": createdPost1.shortDescription,
+                    "content": createdPost1.content,
+                    "blogId": createdPost1.blogId,
+                    "blogName": createdPost1.blogName,
+                    "createdAt": createdPost1.createdAt
+                }]
+            })
+
     })
 
 })
