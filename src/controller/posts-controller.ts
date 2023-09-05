@@ -1,5 +1,5 @@
 import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel";
-import {queryBlogPostPagination, queryCommentswithPaination} from "../models/FilterModel";
+import {queryBlogPostPagination, queryCommentsWithPagination} from "../models/FilterModel";
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {postsService} from "../domain/posts-service";
@@ -91,7 +91,7 @@ export const postsController = {
     async getCommentsForPost(req: Request,
                              res: Response<CommentsWithPaginationModel>) {
 
-        const queryFilter = queryCommentswithPaination(req)
+        const queryFilter = queryCommentsWithPagination(req)
 
         let foundPosts = await commentsQueryRepo.findComments(queryFilter);
         if (!foundPosts.items.length) {

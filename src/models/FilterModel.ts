@@ -27,7 +27,7 @@ export const queryBlogPostPagination = (req: any): BlogPostFilterModel => {
 }
 
 
-export const queryCommentswithPaination = (req: any) : CommentsFilterModel => {
+export const queryCommentsWithPagination = (req: any) : CommentsFilterModel => {
     return {
         postId: req.params.postId,
         sortBy:  req.query.sortBy ?? 'createdAt',
