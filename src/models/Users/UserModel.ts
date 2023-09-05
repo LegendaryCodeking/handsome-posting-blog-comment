@@ -28,3 +28,8 @@ export type UserViewModel = {
     createdAt: string
 }
 
+export type UserCreateModel = {
+    user: string
+    password: string
+    email: string
+}
