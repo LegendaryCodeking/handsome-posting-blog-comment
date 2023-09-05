@@ -272,7 +272,7 @@ describe('/Testing posts', () => {
             .expect(STATUSES_HTTP.OK_200, createdPost2)
     })
 
-    it('should not update post with AUTH and nonexistent id', async () => {
+    it('should not update post with AUTH and nonexistent post id', async () => {
 
         const data: PostUpdateModel = {
             "id": "-2222",
@@ -288,6 +288,24 @@ describe('/Testing posts', () => {
             .set(authBasicHeader)
             .send(data)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
+    })
+
+    it('should not update post with AUTH and nonexistent blog id', async () => {
+
+        const data: PostUpdateModel = {
+            "id": createdPost2.id,
+            "title": "NEW TITLE 2",
+            "shortDescription": "In this article we will look at two great movies - La la land and Interstellar ",
+            "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
+            "blogId": "-242420002",
+        }
+
+
+        await request(app)
+            .put(`${RouterPaths.posts}/${data.id}`)
+            .set(authBasicHeader)
+            .send(data)
+            .expect(STATUSES_HTTP.BAD_REQUEST_400)
     })
 
     it('should not delete post without AUTH', async () => {
