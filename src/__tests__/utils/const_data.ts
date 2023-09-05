@@ -1,0 +1,1 @@
+export const authBasicHeader = {Authorization: "Basic YWRtaW46cXdlcnR5"}

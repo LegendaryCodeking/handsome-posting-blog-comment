@@ -5,14 +5,12 @@ import {BlogCreateModel, BlogDbModel, BlogUpdateModel} from "../../models/BLogs/
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
+import {authBasicHeader} from "../utils/const_data";
 
 describe('/Testing blogs', () => {
     beforeAll(async () => {
         await request(app).delete(`${RouterPaths.testing}/all-data`)
     })
-
-
-    const authBasicHeader = {Authorization: "Basic YWRtaW46cXdlcnR5"}
 
     it('should return 404 and empty array', async () => {
         await request(app)

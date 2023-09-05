@@ -7,14 +7,28 @@ import {postsTestManager} from "../utils/postsTestManager";
 import {PostCreateModel} from "../../models/Posts/PostCreateModel";
 import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostUpdateModel} from "../../models/Posts/PostUpdateModel";
+import {BlogCreateModel} from "../../models/BLogs/BlogModel";
+import {blogsTestManager} from "../utils/blogsTestManager";
+import {authBasicHeader} from "../utils/const_data";
+import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 
 describe('/Testing posts', () => {
+    let blog: BlogViewModel;
     beforeAll(async () => {
         await request(app).delete(`${RouterPaths.testing}/all-data`)
+
+        // Создаем блог, к оторому будем прикреплять посты
+        const data: BlogCreateModel = {
+            "name": "Richard Feynman",
+            "description": "Bingo article about Richard Feynman",
+            "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
+        }
+
+        const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
+        blog = createdBlog
     })
 
 
-    const authBasicHeader = {Authorization: "Basic YWRtaW46cXdlcnR5"}
 
     it('should return 404 and empty array', async () => {
         await request(app)
@@ -31,10 +45,10 @@ describe('/Testing posts', () => {
     it('should not create POST without AUTH', async () => {
 
         const data: PostCreateModel = {
-            "title": "New amazing post about Math_1",
+            "title": "amazing Math_1",
             "shortDescription": "Short description about new amazing Math_1 course",
             "content": "Math_1 Math_1 Math_1 Math_1 Math_1 Math_1",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
         await postsTestManager.createPost(data, STATUSES_HTTP.UNAUTHORIZED_401)
@@ -62,13 +76,13 @@ describe('/Testing posts', () => {
     it('should create post with AUTH and correct input data', async () => {
 
         const data: PostCreateModel = {
-            "title": "New amazing post about Math_1",
+            "title": "amazing Math_1",
             "shortDescription": "Short description about new amazing Math_1 course",
             "content": "Math_1 Math_1 Math_1 Math_1 Math_1 Math_1",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
-        const {createdPost} = await postsTestManager.createPost(data,STATUSES_HTTP.CREATED_201,authBasicHeader)
+        const {createdPost} = await postsTestManager.createPost(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
 
         createdPost1 = createdPost!
 
@@ -102,12 +116,12 @@ describe('/Testing posts', () => {
 
         const data: PostCreateModel = {
             "title": "LaLand VS Ints",
-            "shortDescription": "In this article we will look at two great movies - La la land and Interstellar ",
+            "shortDescription": "In this article we will look at two great movies - La la land and Interstellar",
             "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
-        const {createdPost} = await postsTestManager.createPost(data,STATUSES_HTTP.CREATED_201,authBasicHeader)
+        const {createdPost} = await postsTestManager.createPost(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
 
         createdPost2 = createdPost!
 
@@ -137,86 +151,86 @@ describe('/Testing posts', () => {
     it('should not update post with AUTH and incorrect input data', async () => {
 
         const data: PostUpdateModel = {
-            "id": "random_string",
+            "id": createdPost2.id,
             "title": "",
-            "shortDescription": "In this article we will look at two great movies - La la land and Interstellar ",
+            "shortDescription": "In this article we will look at two great movies - La la land and Interstellar",
             "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
         await request(app)
-            .put(`${RouterPaths.posts}/${createdPost1.id}`)
+            .put(`${RouterPaths.posts}/${createdPost2.id}`)
             .set(authBasicHeader)
             .send(data)
             .expect(STATUSES_HTTP.BAD_REQUEST_400)
 
 
         await request(app)
-            .get(`${RouterPaths.posts}/${createdPost1.id}`)
+            .get(`${RouterPaths.posts}/${createdPost2.id}`)
             .expect(STATUSES_HTTP.OK_200, {
-                "id": createdPost1.id,
-                "title": createdPost1.title,
-                "shortDescription": createdPost1.shortDescription,
-                "content": createdPost1.content,
-                "blogId": createdPost1.blogId,
-                "blogName": createdPost1.blogName,
-                "createdAt": createdPost1.createdAt
+                "id": createdPost2.id,
+                "title": createdPost2.title,
+                "shortDescription": createdPost2.shortDescription,
+                "content": createdPost2.content,
+                "blogId": createdPost2.blogId,
+                "blogName": createdPost2.blogName,
+                "createdAt": createdPost2.createdAt
             })
     })
 
     it('should update post with AUTH and correct input data', async () => {
 
         const data: PostUpdateModel = {
-            "id": "random_string",
+            "id": createdPost2.id,
             "title": "NEW TITLE !",
             "shortDescription": "In this article we will look at two great movies - La la land and Interstellar ",
             "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
 
         await request(app)
-            .put(`${RouterPaths.posts}/${createdPost1.id}`)
+            .put(`${RouterPaths.posts}/${createdPost2.id}`)
             .set(authBasicHeader)
             .send(data)
             .expect(STATUSES_HTTP.NO_CONTENT_204)
 
-        createdPost1.title = "NEW TITLE !"
+        createdPost2.title = "NEW TITLE !"
 
         await request(app)
-            .get(`${RouterPaths.posts}/${createdPost1.id}`)
-            .expect(STATUSES_HTTP.OK_200, createdPost1)
+            .get(`${RouterPaths.posts}/${createdPost2.id}`)
+            .expect(STATUSES_HTTP.OK_200, createdPost2)
     })
 
     it('should not update post without AUTH and correct input data', async () => {
 
         const data: PostUpdateModel = {
-            "id": "random_string",
+            "id": createdPost2.id,
             "title": "NEW TITLE 2",
             "shortDescription": "In this article we will look at two great movies - La la land and Interstellar ",
             "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
         await request(app)
-            .put(`${RouterPaths.posts}/${createdPost1.id}`)
+            .put(`${RouterPaths.posts}/${createdPost2.id}`)
             .send(data)
             .expect(STATUSES_HTTP.UNAUTHORIZED_401)
 
 
         await request(app)
-            .get(`${RouterPaths.posts}/${createdPost1.id}`)
-            .expect(STATUSES_HTTP.OK_200, createdPost1)
+            .get(`${RouterPaths.posts}/${createdPost2.id}`)
+            .expect(STATUSES_HTTP.OK_200, createdPost2)
     })
 
     it('should not update post with AUTH and nonexistent id ', async () => {
 
         const data: PostUpdateModel = {
-            "id": "random_string22",
+            "id": "-2222",
             "title": "NEW TITLE 2",
             "shortDescription": "In this article we will look at two great movies - La la land and Interstellar ",
             "content": "La la land and Interstellar La la land and Interstellar La la land and Interstellar La la land and Interstellar",
-            "blogId": "random id",
+            "blogId": blog.id,
         }
 
 
