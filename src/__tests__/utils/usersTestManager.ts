@@ -20,7 +20,7 @@ export const usersTestManager = {
 
             expect(createdUser).toEqual({
                 "id": expect.any(String),
-                "login": data.user,
+                "login": data.login,
                 "email": data.email,
                 "createdAt": expect.any(String),
 
