@@ -35,18 +35,20 @@ describe('/Testing comments', () => {
         const {createdPost} = await postsTestManager.createPost(dataPost, STATUSES_HTTP.CREATED_201, authBasicHeader)
         post = createdPost
 
-    })
 
-    it('should return 404 and empty array', async () => {
-        await request(app)
-            .get(RouterPaths.blogs)
-            .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
+
     })
 
     it('should return 404 for not existing comment', async () => {
         await request(app)
-            .get(`${RouterPaths.blogs}/-22222222220`)
+            .get(`${RouterPaths.comments}/-22222222220`)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
+    })
+
+    it('should return 404 and empty array', async () => {
+        await request(app)
+            .get(`${RouterPaths.posts}/-22222222220/comments`)
+            .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
     })
 
 })
