@@ -1,6 +1,6 @@
-import {CommentDbModel, CommentViewModel, CreateCommentModel} from "../models/Comments/CommentModel";
+import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 
-export const getCommentViewModel = (comment: CommentDbModel | CreateCommentModel): CommentViewModel => {
+export const getCommentViewModel = (comment: CommentDbModel): CommentViewModel => {
     return {
         id: comment.id,
         content: comment.content,

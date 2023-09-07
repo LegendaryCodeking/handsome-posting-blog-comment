@@ -1,11 +1,8 @@
 import {ObjectId} from "mongodb";
 
 export type CreateCommentModel = {
-    id: string
-    postId: string
     content: string
-    commentatorInfo: CommentatorInfoType
-    createdAt: string
+
 }
 
 export type CommentDbModel = {

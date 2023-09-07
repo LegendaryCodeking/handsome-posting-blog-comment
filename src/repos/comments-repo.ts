@@ -1,7 +1,7 @@
 import {commentsCollection} from "../db/db";
 import {
-    CommentViewModel,
-    CreateCommentModel
+    CommentDbModel,
+    CommentViewModel
 } from "../models/Comments/CommentModel";
 import {getCommentViewModel} from "../helpers/map-CommentViewModel";
 
@@ -19,7 +19,7 @@ export const commentsRepo = {
         let result = await commentsCollection.deleteOne({"id": id})
         return result.deletedCount === 1
     },
-    async createComment(newComment: CreateCommentModel ): Promise<CommentViewModel> {
+    async createComment(newComment: CommentDbModel ): Promise<CommentViewModel> {
         await commentsCollection.insertOne(newComment)
         return getCommentViewModel(newComment);
     }

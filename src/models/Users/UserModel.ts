@@ -29,7 +29,7 @@ export type UserViewModel = {
 }
 
 export type UserCreateModel = {
-    user: string
+    login: string
     password: string
     email: string
 }

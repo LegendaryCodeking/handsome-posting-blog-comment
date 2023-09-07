@@ -1,8 +1,8 @@
 
 import {commentsRepo} from "../repos/comments-repo";
 import {
-    CommentViewModel,
-    CreateCommentModel
+    CommentDbModel,
+    CommentViewModel
 } from "../models/Comments/CommentModel";
 
 
@@ -14,7 +14,7 @@ export const commentService = {
         return commentsRepo.deleteComment(id);
     },
     async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewModel> {
-        const newComment: CreateCommentModel = {
+        const newComment: CommentDbModel = {
             // В ID коммента будет вшит ID поста, к которому этот коммент оставлен
             "id": (+(new Date())).toString(),
             "postId": postId,
