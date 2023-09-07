@@ -14,11 +14,13 @@ import {usersTestManager} from "../utils/usersTestManager";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 import {CreateCommentModel} from "../../models/Comments/CommentModel";
 import {commentTestManager} from "../utils/commentTestManager";
+import {jwtService} from "../../application/jwt-service";
 
 describe('/Testing comments', () => {
     let post: PostViewModel;
     let user: UserViewModel;
     let blog: BlogViewModel;
+    let authJWTHeader: {};
     beforeAll(async () => {
         await request(app).delete(`${RouterPaths.testing}/all-data`)
 
@@ -54,6 +56,9 @@ describe('/Testing comments', () => {
         const {createdUser} = await usersTestManager.createUser(dataUser, STATUSES_HTTP.CREATED_201, authBasicHeader)
         user = createdUser
 
+        const AccessToken = await jwtService.createJWT(user)
+        authJWTHeader = {Authorization: `Bearer ${AccessToken}`}
+
     })
 
     it('Check that necessary support objects have been successfully created', async () => {
@@ -75,7 +80,7 @@ describe('/Testing comments', () => {
             .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
     })
 
-    it('should not create comment without AUTH 4', async () => {
+    it('should not create comment without AUTH', async () => {
 
         const data: CreateCommentModel = {
             content: "Absolutely new comment"
@@ -83,6 +88,20 @@ describe('/Testing comments', () => {
 
         await commentTestManager.createComment(post.id, data, STATUSES_HTTP.UNAUTHORIZED_401)
 
+
+        await request(app)
+            .get(`${RouterPaths.posts}/${post.id}/comments`)
+            .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
+    })
+
+
+    it('should not create comment without content', async () => {
+
+        const data: CreateCommentModel = {
+            content: ""
+        }
+
+        await commentTestManager.createComment(post.id, data, STATUSES_HTTP.BAD_REQUEST_400, authJWTHeader)
 
         await request(app)
             .get(`${RouterPaths.posts}/${post.id}/comments`)
