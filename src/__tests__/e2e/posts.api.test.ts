@@ -9,7 +9,7 @@ import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostUpdateModel} from "../../models/Posts/PostUpdateModel";
 import {BlogCreateModel} from "../../models/BLogs/BlogModel";
 import {blogsTestManager} from "../utils/blogsTestManager";
-import {authBasicHeader} from "../utils/const_data";
+import {authBasicHeader} from "../utils/export_data_functions";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 
 describe('/Testing posts', () => {

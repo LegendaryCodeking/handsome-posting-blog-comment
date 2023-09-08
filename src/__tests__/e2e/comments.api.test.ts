@@ -5,7 +5,7 @@ import {BlogCreateModel} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
-import {authBasicHeader} from "../utils/const_data";
+import {authBasicHeader, generateString} from "../utils/export_data_functions";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
 import {PostCreateModel} from "../../models/Posts/PostCreateModel";
 import {postsTestManager} from "../utils/postsTestManager";
@@ -221,6 +221,36 @@ describe('/Testing comments', () => {
             })
     })
 
+    it('should not update comment 1 with AUTH but incorrect body', async () => {
+
+        const data1: UpdateCommentModel = {
+            content: "UPDATED COMMENT 1"
+        }
+
+        const response1 = await request(app)
+            .put(`${RouterPaths.comments}/${comment_1.id}`)
+            .set(authJWTHeader1)
+            .send(data1)
+            .expect(STATUSES_HTTP.BAD_REQUEST_400)
+
+        const response2 = await request(app)
+            .put(`${RouterPaths.comments}/${comment_1.id}`)
+            .set(authJWTHeader1)
+            .send({
+                content: generateString(401)
+            })
+            .expect(STATUSES_HTTP.BAD_REQUEST_400)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.OK_200, {
+                id: comment_1.id,
+                content: comment_1.content,
+                commentatorInfo: comment_1.commentatorInfo,
+                createdAt: comment_1.createdAt
+            })
+    })
+
     it('should not update comment 2 with AUTH of another user (403)', async () => {
 
         const data: UpdateCommentModel = {
@@ -242,7 +272,6 @@ describe('/Testing comments', () => {
                 createdAt: comment_1.createdAt
             })
     })
-
 
     it('should update comment 1 with correct AUTH', async () => {
 
@@ -266,4 +295,75 @@ describe('/Testing comments', () => {
             })
         comment_1.content = data.content
     })
+
+    it('"DELETE/PUT should return 404 if :id from uri param not found', async () => {
+
+        const data: UpdateCommentModel = {
+            content: "NEW OUTSTANDING UPDATED COMMENT 222"
+        }
+
+        const response1 = await request(app)
+            .put(`${RouterPaths.comments}/-223232323`)
+            .set(authJWTHeader1)
+            .send(data)
+            .expect(STATUSES_HTTP.NOT_FOUND_404)
+
+        const response2 = await request(app)
+            .delete(`${RouterPaths.comments}/-223232323`)
+            .set(authJWTHeader1)
+            .expect(STATUSES_HTTP.NOT_FOUND_404)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.OK_200, {
+                id: comment_1.id,
+                content: comment_1.content,
+                commentatorInfo: comment_1.commentatorInfo,
+                createdAt: comment_1.createdAt
+            })
+    })
+
+    it('should not delete comment_1 with AUTH of another user (403)', async () => {
+
+        const response = await request(app)
+            .delete(`${RouterPaths.comments}/${comment_1.id}`)
+            .set(authJWTHeader2)
+            .expect(STATUSES_HTTP.FORBIDDEN_403)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.OK_200, {
+                id: comment_1.id,
+                content: comment_1.content,
+                commentatorInfo: comment_1.commentatorInfo,
+                createdAt: comment_1.createdAt
+            })
+    })
+
+    it('should delete comment 1 with correct AUTH and path', async () => {
+
+        const response = await request(app)
+            .delete(`${RouterPaths.comments}/${comment_1.id}`)
+            .set(authJWTHeader1)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.NOT_FOUND_404)
+
+        await request(app)
+            .get(`${RouterPaths.posts}/${post.id}/comments`)
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 1, items: [{
+                    id: comment_2.id,
+                    content: comment_2.content,
+                    commentatorInfo: comment_2.commentatorInfo,
+                    createdAt: comment_2.createdAt
+                }]
+            })
+    })
+
+
+
+
 })

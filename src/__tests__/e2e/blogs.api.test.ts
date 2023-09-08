@@ -5,7 +5,7 @@ import {BlogCreateModel, BlogDbModel, BlogUpdateModel} from "../../models/BLogs/
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
-import {authBasicHeader} from "../utils/const_data";
+import {authBasicHeader} from "../utils/export_data_functions";
 
 describe('/Testing blogs', () => {
     beforeAll(async () => {
