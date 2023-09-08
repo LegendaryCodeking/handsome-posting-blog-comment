@@ -12,7 +12,7 @@ import {postsTestManager} from "../utils/postsTestManager";
 import {UserCreateModel, UserViewModel} from "../../models/Users/UserModel";
 import {usersTestManager} from "../utils/usersTestManager";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
-import {CommentViewModel, CreateCommentModel} from "../../models/Comments/CommentModel";
+import {CommentViewModel, CreateCommentModel, UpdateCommentModel} from "../../models/Comments/CommentModel";
 import {commentTestManager} from "../utils/commentTestManager";
 import {jwtService} from "../../application/jwt-service";
 
@@ -200,4 +200,68 @@ describe('/Testing comments', () => {
             })
     })
 
+    it('should not update comment 1 without AUTH', async () => {
+
+        const data: UpdateCommentModel = {
+            content: "NEW OUTSTANDING UPDATED COMMENT 1"
+        }
+
+        const response = await request(app)
+            .put(`${RouterPaths.comments}/${comment_1.id}`)
+            .send(data)
+            .expect(STATUSES_HTTP.UNAUTHORIZED_401)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.OK_200, {
+                id: comment_1.id,
+                content: comment_1.content,
+                commentatorInfo: comment_1.commentatorInfo,
+                createdAt: comment_1.createdAt
+            })
+    })
+
+    it('should not update comment 2 with AUTH of another user (403)', async () => {
+
+        const data: UpdateCommentModel = {
+            content: "NEW OUTSTANDING UPDATED COMMENT 1"
+        }
+
+        const response = await request(app)
+            .put(`${RouterPaths.comments}/${comment_1.id}`)
+            .set(authJWTHeader2)
+            .send(data)
+            .expect(STATUSES_HTTP.FORBIDDEN_403)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.OK_200, {
+                id: comment_1.id,
+                content: comment_1.content,
+                commentatorInfo: comment_1.commentatorInfo,
+                createdAt: comment_1.createdAt
+            })
+    })
+
+
+    it('should update comment 1 with correct AUTH', async () => {
+
+        const data: UpdateCommentModel = {
+            content: "NEW OUTSTANDING UPDATED COMMENT 1"
+        }
+
+        const response = await request(app)
+            .put(`${RouterPaths.comments}/${comment_1.id}`)
+            .send(data)
+            .expect(STATUSES_HTTP.UNAUTHORIZED_401)
+
+        await request(app)
+            .get(`${RouterPaths.comments}/${comment_1.id}`)
+            .expect(STATUSES_HTTP.OK_200, {
+                id: comment_1.id,
+                content: comment_1.content,
+                commentatorInfo: comment_1.commentatorInfo,
+                createdAt: comment_1.createdAt
+            })
+    })
 })

@@ -2,7 +2,10 @@ import {ObjectId} from "mongodb";
 
 export type CreateCommentModel = {
     content: string
+}
 
+export type UpdateCommentModel = {
+    content: string
 }
 
 export type CommentDbModel = {
