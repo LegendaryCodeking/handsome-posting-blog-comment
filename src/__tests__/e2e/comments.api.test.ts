@@ -18,9 +18,11 @@ import {jwtService} from "../../application/jwt-service";
 
 describe('/Testing comments', () => {
     let post: PostViewModel;
-    let user: UserViewModel;
+    let user1: UserViewModel;
+    let user2: UserViewModel;
     let blog: BlogViewModel;
-    let authJWTHeader: {};
+    let authJWTHeader1: {};
+    let authJWTHeader2: {};
     beforeAll(async () => {
         await request(app).delete(`${RouterPaths.testing}/all-data`)
 
@@ -53,18 +55,32 @@ describe('/Testing comments', () => {
             "email": "email01@fishmail2dd.com",
         }
 
-        const {createdUser} = await usersTestManager.createUser(dataUser, STATUSES_HTTP.CREATED_201, authBasicHeader)
-        user = createdUser
+        const {createdUser: createdUser1} = await usersTestManager.createUser(dataUser, STATUSES_HTTP.CREATED_201, authBasicHeader)
+        user1 = createdUser1
 
-        const AccessToken = await jwtService.createJWT(user)
-        authJWTHeader = {Authorization: `Bearer ${AccessToken}`}
+        const AccessToken1 = await jwtService.createJWT(user1)
+        authJWTHeader1 = {Authorization: `Bearer ${AccessToken1}`}
+
+        //Создаем юзера2, чтобы оставлять комменты
+
+        const dataUser2: UserCreateModel = {
+            "login": "User02",
+            "password": "Password02",
+            "email": "email02@fishmail3dd.com",
+        }
+
+        const {createdUser: createdUser2} = await usersTestManager.createUser(dataUser2, STATUSES_HTTP.CREATED_201, authBasicHeader)
+        user2 = createdUser2
+
+        const AccessToken2 = await jwtService.createJWT(user2)
+        authJWTHeader2 = {Authorization: `Bearer ${AccessToken2}`}
 
     })
 
     it('Check that necessary support objects have been successfully created', async () => {
         expect(blog).not.toBeNull();
         expect(post).not.toBeNull();
-        expect(user).not.toBeNull();
+        expect(user1).not.toBeNull();
     })
 
 
@@ -101,7 +117,7 @@ describe('/Testing comments', () => {
             content: ""
         }
 
-        await commentTestManager.createComment(post.id, data, STATUSES_HTTP.BAD_REQUEST_400, authJWTHeader)
+        await commentTestManager.createComment(post.id, data, STATUSES_HTTP.BAD_REQUEST_400, authJWTHeader1)
 
         await request(app)
             .get(`${RouterPaths.posts}/${post.id}/comments`)
@@ -121,24 +137,67 @@ describe('/Testing comments', () => {
         createdAt: ""
     }
 
-    it('should create comment', async () => {
+    it('should create comment 1', async () => {
 
         const data: CreateCommentModel = {
             content: "I just called to say I love you"
         }
 
-        const {createdComment} = await commentTestManager.createComment(post.id, data, STATUSES_HTTP.CREATED_201, authJWTHeader)
+        const {createdComment} = await commentTestManager.createComment(post.id, data, STATUSES_HTTP.CREATED_201, authJWTHeader1)
 
         comment_1 = createdComment
 
         await request(app)
             .get(`${RouterPaths.posts}/${post.id}/comments`)
-            .expect(STATUSES_HTTP.OK_200, {pagesCount: 1, page: 1, pageSize: 10, totalCount: 1, items: [{
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 1, items: [{
                     id: comment_1.id,
                     content: data.content,
                     commentatorInfo: comment_1.commentatorInfo,
                     createdAt: comment_1.createdAt
-                }]})
+                }]
+            })
+    })
+
+
+    // Создаем второй коммент от первого юзера
+
+    let comment_2: CommentViewModel = {
+        id: "",
+        content: "",
+        commentatorInfo: {
+            userId: "",
+            userLogin: ""
+        },
+        createdAt: ""
+    }
+
+    it('should create comment 2', async () => {
+
+        const data: CreateCommentModel = {
+            content: "I just called to say I love you 2"
+        }
+
+        const {createdComment} = await commentTestManager.createComment(post.id, data, STATUSES_HTTP.CREATED_201, authJWTHeader2)
+
+        comment_2 = createdComment
+
+        await request(app)
+            .get(`${RouterPaths.posts}/${post.id}/comments`)
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 2, items: [
+                    {
+                        id: comment_2.id,
+                        content: data.content,
+                        commentatorInfo: comment_2.commentatorInfo,
+                        createdAt: comment_2.createdAt
+                    }, {
+                        id: comment_1.id,
+                        content: comment_1.content,
+                        commentatorInfo: comment_1.commentatorInfo,
+                        createdAt: comment_1.createdAt
+                    }]
+            })
     })
 
 })
