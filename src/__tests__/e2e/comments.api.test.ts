@@ -12,7 +12,7 @@ import {postsTestManager} from "../utils/postsTestManager";
 import {UserCreateModel, UserViewModel} from "../../models/Users/UserModel";
 import {usersTestManager} from "../utils/usersTestManager";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
-import {CreateCommentModel} from "../../models/Comments/CommentModel";
+import {CommentViewModel, CreateCommentModel} from "../../models/Comments/CommentModel";
 import {commentTestManager} from "../utils/commentTestManager";
 import {jwtService} from "../../application/jwt-service";
 
@@ -106,6 +106,39 @@ describe('/Testing comments', () => {
         await request(app)
             .get(`${RouterPaths.posts}/${post.id}/comments`)
             .expect(STATUSES_HTTP.NOT_FOUND_404, {pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: []})
+    })
+
+
+    // Создаем первый коммент от первого юзера
+
+    let comment_1: CommentViewModel = {
+        id: "",
+        content: "",
+        commentatorInfo: {
+            userId: "",
+            userLogin: ""
+        },
+        createdAt: ""
+    }
+
+    it('should create comment', async () => {
+
+        const data: CreateCommentModel = {
+            content: "I just called to say I love you"
+        }
+
+        const {createdComment} = await commentTestManager.createComment(post.id, data, STATUSES_HTTP.CREATED_201, authJWTHeader)
+
+        comment_1 = createdComment
+
+        await request(app)
+            .get(`${RouterPaths.posts}/${post.id}/comments`)
+            .expect(STATUSES_HTTP.OK_200, {pagesCount: 1, page: 1, pageSize: 10, totalCount: 1, items: [{
+                    id: comment_1.id,
+                    content: data.content,
+                    commentatorInfo: comment_1.commentatorInfo,
+                    createdAt: comment_1.createdAt
+                }]})
     })
 
 })
