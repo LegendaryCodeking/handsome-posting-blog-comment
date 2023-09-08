@@ -252,16 +252,18 @@ describe('/Testing comments', () => {
 
         const response = await request(app)
             .put(`${RouterPaths.comments}/${comment_1.id}`)
+            .set(authJWTHeader1)
             .send(data)
-            .expect(STATUSES_HTTP.UNAUTHORIZED_401)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
 
         await request(app)
             .get(`${RouterPaths.comments}/${comment_1.id}`)
             .expect(STATUSES_HTTP.OK_200, {
                 id: comment_1.id,
-                content: comment_1.content,
+                content: data.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt
             })
+        comment_1.content = data.content
     })
 })
