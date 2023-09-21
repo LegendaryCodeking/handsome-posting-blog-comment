@@ -15,7 +15,7 @@ export const authController = {
             const deviceId = (+(new Date())).toString()
             const refreshToken = await jwtService.createJWTRefresh(user,deviceId)
 
-            // Подготавливаем данные для записис в таблицу сессий
+            // Подготавливаем данные для записи в таблицу сессий
             const RFTokenInfo = await jwtService.getInfoFromRFToken(refreshToken)
             if (RFTokenInfo === null) {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")

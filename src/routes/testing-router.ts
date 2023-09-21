@@ -3,7 +3,7 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {
     blogsCollection,
     commentsCollection,
-    postsCollection,
+    PostModel,
     rateLimitingCollection,
     sessionsCollection,
     usersCollection
@@ -15,7 +15,7 @@ export const testingRouter = Router({})
 testingRouter.delete('/all-data', async (req: Request, res: Response) => {
     await Promise.all([
         blogsCollection.deleteMany({}),
-        postsCollection.deleteMany({}),
+        PostModel.deleteMany({}),
         commentsCollection.deleteMany({}),
         usersCollection.deleteMany({}),
         sessionsCollection.deleteMany({}),
