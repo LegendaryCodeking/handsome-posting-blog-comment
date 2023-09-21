@@ -11,12 +11,11 @@ import {BlogCreateModel} from "../../models/BLogs/BlogModel";
 import {blogsTestManager} from "../utils/blogsTestManager";
 import {authBasicHeader} from "../utils/export_data_functions";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
+import mongoose from "mongoose";
 
 describe('/Testing posts', () => {
     let blog: BlogViewModel;
     beforeAll(async () => {
-        await request(app).delete(`${RouterPaths.testing}/all-data`)
-
         // Создаем блог, к которому будем прикреплять посты
         const data: BlogCreateModel = {
             "name": "Richard Feynman",
@@ -26,7 +25,20 @@ describe('/Testing posts', () => {
 
         const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
         blog = createdBlog
+
+
+        const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
+        const DbName =  process.env.MONGODBNAME || "forum";
+        await mongoose.connect(mongoUri + '/' + DbName);
     })
+
+    it('Delete all data before tests', async () => {
+
+        await request(app)
+            .delete(`${RouterPaths.testing}/all-data`)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
+    })
+
 
 
 
@@ -346,4 +358,21 @@ describe('/Testing posts', () => {
 
     })
 
+
+    afterAll(async () => {
+        // await request(app).delete(`${RouterPaths.testing}/all-data`)
+
+        // // Создаем блог, к которому будем прикреплять посты
+        // const data: BlogCreateModel = {
+        //     "name": "Richard Feynman",
+        //     "description": "Bingo article about Richard Feynman",
+        //     "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
+        // }
+        //
+        // const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
+        // blog = createdBlog
+
+
+        await mongoose.disconnect()
+    })
 })

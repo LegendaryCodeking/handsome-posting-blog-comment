@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 
 dotenv.config()
 
-const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/";
+const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
 
 const client = new MongoClient(mongoUri);
 const db = client.db("forum")
@@ -21,8 +21,6 @@ const DbName =  process.env.MONGODBNAME || "forum";
 
 
 export const PostModel = mongoose.model('posts', postMongoSchema)
-
-// const postsCollection = db.collection<PostType>("posts")
 export const blogsCollection = db.collection<BlogDbModel>("blogs")
 export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
