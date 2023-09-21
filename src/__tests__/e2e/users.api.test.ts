@@ -3,13 +3,21 @@ import request from 'supertest'
 import {STATUSES_HTTP} from "../../enum/http-statuses";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
-import {authBasicHeader} from "../utils/export_data_functions";
+import {authBasicHeader, connection_string} from "../utils/export_data_functions";
 import {UserCreateModel, UserViewModel} from "../../models/Users/UserModel";
 import {usersTestManager} from "../utils/usersTestManager";
+import mongoose from "mongoose";
 
 describe('/Testing users', () => {
     beforeAll(async () => {
-        await request(app).delete(`${RouterPaths.testing}/all-data`)
+        await mongoose.connect(connection_string);
+    })
+
+
+    it('Delete all data before tests', async () => {
+        await request(app)
+            .delete(`${RouterPaths.testing}/all-data`)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
     })
 
     it('should return 401 without AUTH', async () => {
@@ -149,6 +157,10 @@ describe('/Testing users', () => {
                     "createdAt": createdUser1.createdAt,
                 }]
             })
+    })
+
+    afterAll(async () => {
+        await mongoose.disconnect()
     })
 
 })

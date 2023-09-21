@@ -1,8 +1,8 @@
 import {MongoClient} from 'mongodb'
 import {postMongoSchema} from "../models/Posts/PostModel";
-import {BlogDbModel, blogMongoSchema} from "../models/BLogs/BlogModel";
+import {blogMongoSchema} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
-import {UserDBModel} from "../models/Users/UserModel";
+import {userMongoSchema} from "../models/Users/UserModel";
 import {CommentDbModel} from "../models/Comments/CommentModel";
 import {SessionDBModel} from "../models/Sessions/SessionModel";
 import {rateLimitDBModel} from "../models/rateLimiting/rateLimitingModel";
@@ -20,9 +20,8 @@ const DbName =  process.env.MONGODBNAME || "forum";
 // Mongoose connection section
 export const PostModel = mongoose.model('posts', postMongoSchema)
 export const BlogModel = mongoose.model('blogs', blogMongoSchema)
+export const UserModel = mongoose.model('users', userMongoSchema)
 
-
-export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
 export const sessionsCollection = db.collection<SessionDBModel>("sessions")
 export const rateLimitingCollection = db.collection<rateLimitDBModel>("rateLimit")

@@ -1,25 +1,28 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
-import {Filter, Sort} from "mongodb";
+import {Sort} from "mongodb";
 import {UserDBModel, UsersWithPaginationModel} from "../../models/Users/UserModel";
-import {usersCollection} from "../../db/db";
+import {UserModel} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
+import {FilterQuery} from "mongoose";
 
 export const usersQueryRepo = {
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
-        const findFilter: Filter<UserDBModel> = {
+        const findFilter: FilterQuery<UserDBModel> = {
             $or: [{"accountData.login": {$regex: queryFilter.searchLoginTerm ?? '', $options: 'i'}},
                 {"accountData.email": {$regex: queryFilter.searchEmailTerm ?? '', $options: 'i'}}]
         }
         const sortFilter: Sort = {[queryFilter.sortBy]: queryFilter.sortDirection}
 
-        let foundUsers = await usersCollection
-            .find(findFilter)
+        let foundUsersMongoose = await UserModel
+            .find(findFilter).lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
-            .map(user => getUserViewModel(user)).toArray();
 
-        let totalCount = await usersCollection.countDocuments(findFilter)
+
+        const foundUsers = foundUsersMongoose.map(user => getUserViewModel(user))
+
+        let totalCount = await UserModel.countDocuments(findFilter)
 
         return {
             "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
@@ -31,7 +34,7 @@ export const usersQueryRepo = {
     },
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
-        const user = await usersCollection.findOne({$or: [{"accountData.email": loginOrEmail},{ "accountData.login":loginOrEmail }]})
+        const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail},{ "accountData.login":loginOrEmail }]})
         if (user) {
             return user
         }
@@ -39,7 +42,7 @@ export const usersQueryRepo = {
     },
 
     async findUserById(id: string) {
-        let user = await usersCollection.findOne({id: id})
+        let user = await UserModel.findOne({id: id})
         if (user) {
             return getUserViewModel(user)
         } else {
@@ -47,6 +50,6 @@ export const usersQueryRepo = {
         }
     },
     async findUserByConfirmationCode(code: string) {
-        return await usersCollection.findOne({"emailConfirmation.confirmationCode": code})
+        return await UserModel.findOne({"emailConfirmation.confirmationCode": code})
     }
 }

@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export type UserDBModel = {
     id: string,
     accountData: {
@@ -33,3 +35,18 @@ export type UserCreateModel = {
     password: string
     email: string
 }
+
+export const userMongoSchema = new mongoose.Schema<UserDBModel>({
+    id: String,
+    accountData: {
+        login: String,
+        email: String,
+        password: String,
+        createdAt: String
+    },
+    emailConfirmation: {
+        confirmationCode: String,
+        expirationDate: String,
+        isConfirmed: Boolean
+    }
+})
