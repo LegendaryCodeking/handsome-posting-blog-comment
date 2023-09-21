@@ -9,7 +9,7 @@ import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostUpdateModel} from "../../models/Posts/PostUpdateModel";
 import {BlogCreateModel} from "../../models/BLogs/BlogModel";
 import {blogsTestManager} from "../utils/blogsTestManager";
-import {authBasicHeader} from "../utils/export_data_functions";
+import {authBasicHeader, connection_string} from "../utils/export_data_functions";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 import mongoose from "mongoose";
 
@@ -26,10 +26,7 @@ describe('/Testing posts', () => {
         const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
         blog = createdBlog
 
-
-        const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
-        const DbName =  process.env.MONGODBNAME || "forum";
-        await mongoose.connect(mongoUri + '/' + DbName);
+        await mongoose.connect(connection_string);
     })
 
     it('Delete all data before tests', async () => {
