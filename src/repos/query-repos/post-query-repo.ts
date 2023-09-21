@@ -11,14 +11,14 @@ export const postQueryRepo = {
         const findFilter: FilterQuery<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy] : queryFilter.sortDirection} : {[queryFilter.sortBy] : queryFilter.sortDirection, 'createdAt': 1})
 
-        let foundPostsMongooose = await PostModel
+        let foundPostsMongoose = await PostModel
             .find(findFilter).lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
 
 
-        let foundPosts = foundPostsMongooose.map(post => getPostViewModel(post))
+        let foundPosts = foundPostsMongoose.map(post => getPostViewModel(post))
 
 
         let totalCount = await PostModel.countDocuments(findFilter)

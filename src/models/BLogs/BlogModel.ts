@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export type BlogDbModel = {
     "id": string,
     "name": string,
@@ -18,3 +20,12 @@ export type BlogUpdateModel = {
     "description": string,
     "websiteUrl": string,
 }
+
+export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
+    "id": String,
+    "name": String,
+    "description": String,
+    "websiteUrl": String,
+    "createdAt": String,
+    "isMembership": Boolean
+})

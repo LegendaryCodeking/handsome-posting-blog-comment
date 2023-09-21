@@ -2,7 +2,7 @@ import {BlogPostFilterModel} from "../../models/FilterModel";
 import {BlogsWithPaginationModel} from "../../models/BLogs/BlogsWithPaginationModel";
 import {Filter, Sort} from "mongodb";
 import {BlogDbModel} from "../../models/BLogs/BlogModel";
-import {blogsCollection} from "../../db/db";
+import {BlogModel} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {postQueryRepo} from "./post-query-repo";
 
@@ -13,14 +13,16 @@ export const blogsQueryRepo = {
 
         const sortFilter: Sort = {[queryFilter.sortBy] : queryFilter.sortDirection}
 
-        let foundBlogs =  await blogsCollection
-            .find(filter)
+        let foundBlogsMongoose =  await BlogModel
+            .find(filter).lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
-            .map(blog => getBlogViewModel(blog)).toArray();
+            .toArray();
 
-        let totalCount = await blogsCollection.countDocuments(filter)
+        const foundBlogs = foundBlogsMongoose.map(blog => getBlogViewModel(blog))
+
+        let totalCount = await BlogModel.countDocuments(filter)
 
         return {
             "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
@@ -31,7 +33,7 @@ export const blogsQueryRepo = {
         }
     },
     async findBlogById(id: string): Promise<BlogDbModel | null> {
-        let foundBlog: BlogDbModel | null = await blogsCollection.findOne({"id": id})
+        let foundBlog: BlogDbModel | null = await BlogModel.findOne({"id": id}).lean()
         if (foundBlog) {
             return getBlogViewModel(foundBlog)
         } else {

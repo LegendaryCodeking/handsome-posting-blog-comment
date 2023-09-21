@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb'
 import {postMongoSchema} from "../models/Posts/PostModel";
-import {BlogDbModel} from "../models/BLogs/BlogModel";
+import {BlogDbModel, blogMongoSchema} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {UserDBModel} from "../models/Users/UserModel";
 import {CommentDbModel} from "../models/Comments/CommentModel";
@@ -18,10 +18,10 @@ const db = client.db("forum")
 const DbName =  process.env.MONGODBNAME || "forum";
 
 // Mongoose connection section
-
-
 export const PostModel = mongoose.model('posts', postMongoSchema)
-export const blogsCollection = db.collection<BlogDbModel>("blogs")
+export const BlogModel = mongoose.model('blogs', blogMongoSchema)
+
+
 export const usersCollection = db.collection<UserDBModel>("users")
 export const commentsCollection = db.collection<CommentDbModel>("comments")
 export const sessionsCollection = db.collection<SessionDBModel>("sessions")

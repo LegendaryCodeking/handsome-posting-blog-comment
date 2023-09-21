@@ -5,11 +5,18 @@ import {BlogCreateModel, BlogDbModel, BlogUpdateModel} from "../../models/BLogs/
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
-import {authBasicHeader} from "../utils/export_data_functions";
+import {authBasicHeader, connection_string} from "../utils/export_data_functions";
+import mongoose from "mongoose";
 
 describe('/Testing blogs', () => {
     beforeAll(async () => {
-        await request(app).delete(`${RouterPaths.testing}/all-data`)
+        await mongoose.connect(connection_string);
+    })
+
+    it('Delete all data before tests', async () => {
+        await request(app)
+            .delete(`${RouterPaths.testing}/all-data`)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
     })
 
     it('should return 404 and empty array', async () => {
@@ -203,6 +210,10 @@ describe('/Testing blogs', () => {
             .set(authBasicHeader)
             .send(data)
             .expect(STATUSES_HTTP.NOT_FOUND_404)
+    })
+
+    afterAll(async () => {
+        await mongoose.disconnect()
     })
 
 })

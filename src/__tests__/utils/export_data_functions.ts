@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export const authBasicHeader = {Authorization: "Basic YWRtaW46cXdlcnR5"}
 
 export function generateString(length: number) {
@@ -11,3 +13,7 @@ export function generateString(length: number) {
     }
     return result;
 }
+
+// const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
+// const DbName =  process.env.MONGODBNAME || "forum";
+// export const connection_string = mongoUri + '/' + DbName
