@@ -5,7 +5,7 @@ import {BlogCreateModel} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
-import {authBasicHeader, generateString} from "../utils/export_data_functions";
+import {authBasicHeader, connection_string, generateString} from "../utils/export_data_functions";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
 import {PostCreateModel} from "../../models/Posts/PostCreateModel";
 import {postsTestManager} from "../utils/postsTestManager";
@@ -15,6 +15,7 @@ import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 import {CommentViewModel, CreateCommentModel, UpdateCommentModel} from "../../models/Comments/CommentModel";
 import {commentTestManager} from "../utils/commentTestManager";
 import {jwtService} from "../../application/jwt-service";
+import mongoose from "mongoose";
 
 describe('/Testing comments', () => {
     let post: PostViewModel;
@@ -24,6 +25,8 @@ describe('/Testing comments', () => {
     let authJWTHeader1: {};
     let authJWTHeader2: {};
     beforeAll(async () => {
+        await mongoose.connect(connection_string);
+
         await request(app).delete(`${RouterPaths.testing}/all-data`)
 
         // Создаем блог, к которому будем прикреплять пост
@@ -363,7 +366,7 @@ describe('/Testing comments', () => {
             })
     })
 
-
-
-
+    afterAll(async () => {
+        await mongoose.disconnect()
+    })
 })

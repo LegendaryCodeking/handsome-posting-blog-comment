@@ -1,24 +1,27 @@
 import {CommentDbModel, CommentsFilterModel, CommentsWithPaginationModel} from "../../models/Comments/CommentModel";
-import {Filter, Sort} from "mongodb";
-import {commentsCollection} from "../../db/db";
+import {Sort} from "mongodb";
+import {CommentModel} from "../../db/db";
 import {getCommentViewModel} from "../../helpers/map-CommentViewModel";
+import {FilterQuery} from "mongoose";
 
 export const commentsQueryRepo = {
     async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
-        const findFilter: Filter<CommentDbModel> = {postId: queryFilter.postId};
+        const findFilter: FilterQuery<CommentDbModel> = {postId: queryFilter.postId};
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: queryFilter.sortDirection} : {
             [queryFilter.sortBy]: queryFilter.sortDirection,
             'createdAt': 1
         });
 
-        let foundComments = await commentsCollection
+        let foundCommentsMongoose = await CommentModel
             .find(findFilter)
+            .lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
-            .map(value => getCommentViewModel(value)).toArray();
 
-        let totalCount = await commentsCollection.countDocuments(findFilter)
+        const foundComments = foundCommentsMongoose.map(value => getCommentViewModel(value))
+
+        let totalCount = await CommentModel.countDocuments(findFilter)
 
         return {
             "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
@@ -31,7 +34,7 @@ export const commentsQueryRepo = {
     },
 
     async findCommentById(id: string): Promise<any> {
-        let foundComment = await commentsCollection.findOne({"id": id})
+        let foundComment = await CommentModel.findOne({"id": id})
         if (foundComment) {
             return getCommentViewModel(foundComment)
         } else {
