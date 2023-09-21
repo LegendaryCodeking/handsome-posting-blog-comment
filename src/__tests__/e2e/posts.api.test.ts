@@ -16,6 +16,10 @@ import mongoose from "mongoose";
 describe('/Testing posts', () => {
     let blog: BlogViewModel;
     beforeAll(async () => {
+        await mongoose.connect(connection_string);
+
+        await request(app).delete(`${RouterPaths.testing}/all-data`)
+
         // Создаем блог, к которому будем прикреплять посты
         const data: BlogCreateModel = {
             "name": "Richard Feynman",
@@ -26,18 +30,8 @@ describe('/Testing posts', () => {
         const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
         blog = createdBlog
 
-        await mongoose.connect(connection_string);
+
     })
-
-    it('Delete all data before tests', async () => {
-
-        await request(app)
-            .delete(`${RouterPaths.testing}/all-data`)
-            .expect(STATUSES_HTTP.NO_CONTENT_204)
-    })
-
-
-
 
     it('should return 404 and empty array', async () => {
         await request(app)
@@ -357,19 +351,6 @@ describe('/Testing posts', () => {
 
 
     afterAll(async () => {
-        // await request(app).delete(`${RouterPaths.testing}/all-data`)
-
-        // // Создаем блог, к которому будем прикреплять посты
-        // const data: BlogCreateModel = {
-        //     "name": "Richard Feynman",
-        //     "description": "Bingo article about Richard Feynman",
-        //     "websiteUrl": "https://telegra.ph/Richard-Feynman-05-11",
-        // }
-        //
-        // const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
-        // blog = createdBlog
-
-
         await mongoose.disconnect()
     })
 })
