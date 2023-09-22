@@ -1,4 +1,3 @@
-import {MongoClient} from 'mongodb'
 import {postMongoSchema} from "../models/Posts/PostModel";
 import {blogMongoSchema} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
@@ -11,9 +10,6 @@ import mongoose from "mongoose";
 dotenv.config()
 
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
-
-const client = new MongoClient(mongoUri);
-const db = client.db("forum")
 
 const DbName =  process.env.MONGODBNAME || "forum";
 
@@ -29,11 +25,6 @@ export const RateLimitModel = mongoose.model('rateLimit', rateLimitMongooseSchem
 
 export async function runDb() {
     try {
-        // Connect the client to the server
-        // await client.connect()
-        // // Establish and verify connection
-        // await client.db("shop").command({ping: 1});
-        // console.log("Successfully connected to MongoDB server")
         await mongoose.connect(mongoUri + '/' + DbName);
         console.log("Connected successfully to mongo server");
     } catch {
