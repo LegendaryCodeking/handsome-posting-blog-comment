@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import {userMongoSchema} from "../models/Users/UserModel";
 import {commentMongooseSchema} from "../models/Comments/CommentModel";
 import {sessionMongooseSchema} from "../models/Sessions/SessionModel";
-import {rateLimitDBModel} from "../models/rateLimiting/rateLimitingModel";
+import {rateLimitMongooseSchema} from "../models/rateLimiting/rateLimitingModel";
 import mongoose from "mongoose";
 
 dotenv.config()
@@ -23,8 +23,7 @@ export const BlogModel = mongoose.model('blogs', blogMongoSchema)
 export const UserModel = mongoose.model('users', userMongoSchema)
 export const CommentModel = mongoose.model('comments', commentMongooseSchema)
 export const SessionModel = mongoose.model('sessions', sessionMongooseSchema)
-
-export const rateLimitingCollection = db.collection<rateLimitDBModel>("rateLimit")
+export const RateLimitModel = mongoose.model('rateLimit', rateLimitMongooseSchema)
 
 
 

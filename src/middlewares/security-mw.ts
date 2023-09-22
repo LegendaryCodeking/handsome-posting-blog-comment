@@ -1,9 +1,9 @@
 import {NextFunction, Request, Response} from "express";
-import {Filter, ObjectId} from "mongodb";
-import {rateLimitingCollection} from "../db/db";
+import {ObjectId} from "mongodb";
+import {FilterQuery} from "mongoose";
+import {RateLimitModel} from "../db/db";
 import {rateLimitDBModel, rateLimitViewModel} from "../models/rateLimiting/rateLimitingModel";
 import subSeconds from "date-fns/subSeconds";
-
 
 
 export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunction) => {
@@ -15,12 +15,12 @@ export const IpRateLimitMW = async (req: Request, res: Response, next: NextFunct
         date: new Date()
     }
 
-    await rateLimitingCollection.insertOne(newAPIUsage)
+    await RateLimitModel.insertMany([newAPIUsage])
 
 
-    const filter: Filter<rateLimitViewModel>  = {IP: newAPIUsage.IP, URL: newAPIUsage.URL, date: {$gt: subSeconds(new Date(), 10) }}
+    const filter: FilterQuery<rateLimitViewModel>  = {IP: newAPIUsage.IP, URL: newAPIUsage.URL, date: {$gt: subSeconds(new Date(), 10) }}
 
-    const APIUsageByIP = await rateLimitingCollection.countDocuments(filter)
+    const APIUsageByIP = await RateLimitModel.countDocuments(filter)
 
     if (APIUsageByIP > 5) {
         res.status(429)
