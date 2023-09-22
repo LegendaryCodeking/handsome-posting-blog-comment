@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {PostModel, BlogModel, UserModel, CommentModel} from "../db/db";
+import {PostModel, BlogModel, UserModel, CommentModel, SessionModel} from "../db/db";
 
 export const testingRouter = Router({})
 
@@ -11,7 +11,7 @@ testingRouter.delete('/all-data', async (req: Request, res: Response) => {
         PostModel.deleteMany({}),
         CommentModel.deleteMany({}),
         UserModel.deleteMany({}),
-        // sessionsCollection.deleteMany({}),
+        SessionModel.deleteMany({}),
         // rateLimitingCollection.deleteMany({})
     ]).catch((e) => {
         console.log(e)

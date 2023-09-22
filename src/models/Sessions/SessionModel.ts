@@ -1,7 +1,7 @@
-import {ObjectId} from "mongodb";
+import {WithId} from "mongodb";
+import mongoose from "mongoose";
 
-export type SessionDBModel = {
-    _id: ObjectId
+export type SessionDBModel = WithId<{
     "ip": string | string[]
     "title": string
     "lastActiveDate": string
@@ -10,7 +10,7 @@ export type SessionDBModel = {
     "userId": string
     "RFTokenIAT": Date
     "RFTokenObsoleteDate": Date
-}
+}>
 
 export type SessionViewModel = {
     "ip": string | string[]
@@ -31,3 +31,14 @@ export type SessionUpdateContentModel = {
     "RFTokenIAT": Date
     "deviceName": string | string[]
 }
+
+export const sessionMongooseSchema = new mongoose.Schema<SessionDBModel>({
+    "ip": String || [String],
+    "title": String,
+    "lastActiveDate": String,
+    "deviceId": String,
+    "deviceName": String || [String],
+    "userId": String,
+    "RFTokenIAT": Date,
+    "RFTokenObsoleteDate": Date
+})
