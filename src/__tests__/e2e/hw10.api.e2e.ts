@@ -52,9 +52,24 @@ describe('testing password recovery', () => {
         }
 
         await request(app)
-            .post(`${RouterPaths.auth}/password-recovery`)
+            .post(`${RouterPaths.auth}/new-password`)
             .send(data)
             .expect(STATUSES_HTTP.BAD_REQUEST_400)
+
+    })
+
+
+    it("should update password;", async () => {
+        const userDB = await usersQueryRepo.findByLoginOrEmail(user.email)
+        const data = {
+            "newPassword": "new_password",
+            "recoveryCode": userDB!.passwordRecovery!.passwordRecoveryCode
+        }
+
+        await request(app)
+            .post(`${RouterPaths.auth}/new-password`)
+            .send(data)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
 
     })
 
