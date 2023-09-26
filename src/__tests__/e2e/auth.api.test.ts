@@ -1,5 +1,5 @@
 // Заготовка для тестов
-
+// Test commit
 // import request from 'supertest'
 //
 // import {STATUSES_HTTP} from "../../enum/http-statuses";
