@@ -18,6 +18,7 @@ export const authRouter = Router({})
 
 authRouter.post('/login',
     IpRateLimitMW,
+    inputValidationMw,
     authController.loginUser)
 
 authRouter.post('/logout',
@@ -26,12 +27,14 @@ authRouter.post('/logout',
 
 authRouter.post('/refresh-token',
     verifyRefreshToken,
+    inputValidationMw,
     authController.updateTokens)
 
 authRouter.post('/registration-confirmation',
     IpRateLimitMW,
     isCodeCorrect,
     isAlreadyConfirmedCode,
+    inputValidationMw,
     authController.registrationConfirmation)
 
 authRouter.post('/registration',
@@ -39,28 +42,32 @@ authRouter.post('/registration',
     loginValidation,
     passwordValidation,
     emailValidation,
-    inputValidationMw,
     doesLoginEmailAlreadyExist,
+    inputValidationMw,
     authController.registration)
 
 authRouter.post('/registration-email-resending',
     IpRateLimitMW,
     doesEmailExist,
     isAlreadyConfirmedEmail,
+    inputValidationMw,
     authController.registrationEmailResending)
 
 
 authRouter.get('/me',
     authenticationCheckBearer,
+    inputValidationMw,
     authController.getInfoAboutMyself)
 
 authRouter.post('/password-recovery',
     IpRateLimitMW,
     emailValidation,
+    inputValidationMw,
     authController.passwordRecovery)
 
 authRouter.post('/new-password',
     IpRateLimitMW,
-    isCodeCorrectForPassRecovery,
     passwordUpdateValidation,
+    isCodeCorrectForPassRecovery,
+    inputValidationMw,
     authController.newPassword)

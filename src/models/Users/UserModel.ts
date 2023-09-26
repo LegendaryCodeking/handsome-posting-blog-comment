@@ -13,7 +13,7 @@ export type UserDBModel = {
         expirationDate: string,
         isConfirmed: boolean
     },
-    passwordRecovery?: {
+    passwordRecovery: {
         passwordRecoveryCode: string,
         active: boolean
     }
@@ -52,5 +52,9 @@ export const userMongoSchema = new mongoose.Schema<UserDBModel>({
         confirmationCode: String,
         expirationDate: String,
         isConfirmed: Boolean
+    },
+    passwordRecovery: {
+        passwordRecoveryCode: String,
+        active: Boolean
     }
 })

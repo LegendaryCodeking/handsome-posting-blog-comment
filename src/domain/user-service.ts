@@ -28,7 +28,12 @@ export const userService = {
                     minutes: 3
                 }).toISOString(),
                 isConfirmed: false
+            },
+            passwordRecovery: {
+                passwordRecoveryCode: "",
+                active: false
             }
+
         }
 
         if (isAuthorSuper) {
