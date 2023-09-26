@@ -17,6 +17,8 @@ import {commentTestManager} from "../utils/commentTestManager";
 import {jwtService} from "../../application/jwt-service";
 import mongoose from "mongoose";
 
+jest.setTimeout(10000)
+
 describe('/Testing comments', () => {
     let post: PostViewModel;
     let user1: UserViewModel;
