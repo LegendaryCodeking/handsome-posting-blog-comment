@@ -5,6 +5,11 @@ export const passwordValidation = body("password")
     .trim()
     .isLength({min: 6, max: 20}).withMessage(`Pass length should be from 6 to 20 symbols`)
 
+export const passwordUpdateValidation = body("newPassword")
+    .isString().withMessage(`Pass should be string`)
+    .trim()
+    .isLength({min: 6, max: 20}).withMessage(`Pass length should be from 6 to 20 symbols`)
+
 export const loginValidation = body("login")
     .isString().withMessage(`login should be string`)
     .trim()

@@ -5,7 +5,12 @@ import {
     doesLoginEmailAlreadyExist,
     isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect, isCodeCorrectForPassRecovery, verifyRefreshToken
 } from "../middlewares/auth-mw";
-import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
+import {
+    emailValidation,
+    loginValidation,
+    passwordUpdateValidation,
+    passwordValidation
+} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {IpRateLimitMW} from "../middlewares/security-mw";
 
@@ -57,5 +62,5 @@ authRouter.post('/password-recovery',
 authRouter.post('/new-password',
     IpRateLimitMW,
     isCodeCorrectForPassRecovery,
-    passwordValidation,
+    passwordUpdateValidation,
     authController.newPassword)
