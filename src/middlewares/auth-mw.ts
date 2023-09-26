@@ -75,23 +75,27 @@ export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, 
 
     if ((req.body.recoveryCode = '') || user!) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            .json({errorsMessages: [{message: "Confirmation code is incorrect", field: "code"}]}
+            .json({errorsMessages: [{message: "Confirmation code is incorrect", field: "newPassword"}]}
             )
         return
     }
 
     if (!user!.passwordRecovery!.active) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            .json({errorsMessages: [{message: "Confirmation code has been activated", field: "code"}]}
+            .json({errorsMessages: [{message: "Confirmation code has been activated", field: "newPassword"}]}
             )
         return
     }
 
-    // Check that the token is up to date
+    // Check that the token is up-to-date
     try {
-        const result: any = jwt.verify(req.body.code, process.env.JWT_SECRET!)
-    } catch (e) {
-        return catchTokenError(e, res)
+        jwt.verify(req.body.code, process.env.JWT_SECRET!)
+    } catch (err) {
+        if (err instanceof TokenExpiredError) {
+            return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Code has expired!", field: "newPassword"});
+        }
+
+        return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Code is incorrect! Try repeate a bi later", field: "newPassword"});
     }
 
     req.user = user
