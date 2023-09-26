@@ -76,14 +76,14 @@ export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, 
 
     if ((req.body.recoveryCode === '') || !user) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            .json({errorsMessages: [{message: "Confirmation code is incorrecttttttttttt", field: "newPassword"}]}
+            .json({errorsMessages: [{message: "Confirmation code is incorrecttttttttttt", field: "recoveryCode"}]}
             )
         return
     }
 
     if (!user!.passwordRecovery!.active) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            .json({errorsMessages: [{message: "Confirmation code has been activated", field: "newPassword"}]}
+            .json({errorsMessages: [{message: "Confirmation code has been already used", field: "recoveryCode"}]}
             )
         return
     }
