@@ -3,11 +3,21 @@ import request from 'supertest'
 import {STATUSES_HTTP} from "../../enum/http-statuses";
 import {app} from "../../app_settings";
 import {Response} from "supertest";
+import mongoose from "mongoose";
+import {connection_string} from "../utils/export_data_functions";
+import {RouterPaths} from "../../helpers/RouterPaths";
 
 describe('testing ip restriction for registration', () => {
     beforeAll(async () => {
-        await request(app).delete('/testing/all-data')
+        await mongoose.connect(connection_string);
     });
+
+    it('Delete all data before tests', async () => {
+        await request(app)
+            .delete(`${RouterPaths.testing}/all-data`)
+            .expect(STATUSES_HTTP.NO_CONTENT_204)
+    })
+
 
     it("should return 429 error ", async () => {
 
@@ -74,7 +84,9 @@ describe('testing ip restriction for registration', () => {
     }, 50000)
 
 
-
+    afterAll(async () => {
+        await mongoose.disconnect()
+    })
 
 })
 

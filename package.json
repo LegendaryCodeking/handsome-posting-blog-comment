@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "yarn nodemon --inspect dest/index.js",
     "watch": "tsc -w",
-    "jest": "jest"
+    "test": "jest \"__tests__/.*\\.e2e\\.ts\" -i"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
