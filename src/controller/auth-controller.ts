@@ -128,5 +128,21 @@ export const authController = {
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
+    },
+    async passwordRecovery(req: Request, res: Response) {
+        const user = await userService.recoveryPassword(req.body.email)
+        if (user) {
+            res.status(STATUSES_HTTP.NO_CONTENT_204).send()
+        } else {
+            res.status(STATUSES_HTTP.SERVER_ERROR_500).send()
+        }
+    },
+    async newPassword(req: Request, res: Response) {
+        const result = await userService.updatePassword(req.body.newPassword, req.user!.id)
+        if (result) {
+            res.status(STATUSES_HTTP.NO_CONTENT_204).send()
+        } else {
+            res.status(STATUSES_HTTP.SERVER_ERROR_500).send()
+        }
     }
 }

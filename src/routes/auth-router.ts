@@ -3,7 +3,7 @@ import {authController} from "../controller/auth-controller";
 import {
     authenticationCheckBearer, doesEmailExist,
     doesLoginEmailAlreadyExist,
-    isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect, verifyRefreshToken
+    isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect, isCodeCorrectForPassRecovery, verifyRefreshToken
 } from "../middlewares/auth-mw";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
@@ -48,3 +48,14 @@ authRouter.post('/registration-email-resending',
 authRouter.get('/me',
     authenticationCheckBearer,
     authController.getInfoAboutMyself)
+
+authRouter.post('/password-recovery',
+    IpRateLimitMW,
+    emailValidation,
+    authController.passwordRecovery)
+
+authRouter.post('/new-password',
+    IpRateLimitMW,
+    isCodeCorrectForPassRecovery,
+    passwordValidation,
+    authController.newPassword)

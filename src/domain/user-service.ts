@@ -6,6 +6,7 @@ import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
+import {jwtService} from "../application/jwt-service";
 
 export const userService = {
     async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<UserViewModel | null> {
@@ -49,7 +50,7 @@ export const userService = {
 
     },
     async deleteUser(id: string): Promise<boolean> {
-        return usersRepo.deleteUser(id)
+        return await usersRepo.deleteUser(id)
     },
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
@@ -68,5 +69,26 @@ export const userService = {
         }
         return null
 
+    },
+    async recoveryPassword(email: string): Promise<boolean> {
+        const userDB = await usersQueryRepo.findByLoginOrEmail(email)
+        // Return true even if current email is not registered (for prevent user's email detection)
+        if (!userDB) return true
+        const user = getUserViewModel(userDB)
+        const passwordRecoveryCode = await jwtService.createPassRecoveryCode(user)
+        await usersRepo.addPassRecoveryCode(user.id,passwordRecoveryCode)
+
+        try {
+            await emailManager.sendPasswordRecoveryMessage(user.email,passwordRecoveryCode)
+            return true
+        } catch (e) {
+            console.log(e)
+            return false;
+        }
+
+    },
+    async updatePassword(newPassword: string, userId: string): Promise<boolean> {
+        const passwordHash = await bcrypt.hash(newPassword, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
+        return await usersRepo.updatePassword(passwordHash, userId)
     }
 }

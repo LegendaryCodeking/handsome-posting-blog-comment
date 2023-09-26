@@ -12,6 +12,10 @@ export type UserDBModel = {
         confirmationCode: string,
         expirationDate: string,
         isConfirmed: boolean
+    },
+    passwordRecovery?: {
+        passwordRecoveryCode: string,
+        active: boolean
     }
 }
 

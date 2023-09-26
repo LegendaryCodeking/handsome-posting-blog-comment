@@ -34,7 +34,7 @@ export const usersQueryRepo = {
     },
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
-        const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail},{ "accountData.login":loginOrEmail }]})
+        const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
             return user
         }
@@ -51,5 +51,8 @@ export const usersQueryRepo = {
     },
     async findUserByConfirmationCode(code: string) {
         return await UserModel.findOne({"emailConfirmation.confirmationCode": code})
+    },
+    async findUserByPassRecoveryCode(code: string) {
+        return await UserModel.findOne({"passwordRecovery.passwordRecoveryCode": code})
     }
 }

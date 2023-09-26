@@ -3,9 +3,13 @@ import {UserDBModel} from "../models/Users/UserModel";
 
 
 export const emailManager = {
-    async sendPasswordRecoveryMessage(user: any) {
+    async sendPasswordRecoveryMessage(email: string, code: string) {
 
-        await emailAdapter.sendEmail("user.email", "password recovery", "<div>${user.recoveryCode}Recovery message</div>>")
+        const messageRecovery = `<h1>Password recovery</h1>
+       <p>To finish password recovery please follow the link below:
+          <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>
+      </p>`
+        await emailAdapter.sendEmail(email, "password recovery",messageRecovery)
 
     },
     async sendEmailConfirmationMessage(user: UserDBModel) {

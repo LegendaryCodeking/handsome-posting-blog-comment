@@ -4,6 +4,7 @@ import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import jwt, {TokenExpiredError} from "jsonwebtoken";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
+import {UserDBModel} from "../models/Users/UserModel";
 
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +38,7 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
 
 
     if (loginExists) {
-        res.status(400)
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
             .json({errorsMessages: [{message: "Login or email is already used on the website", field: "login"}]}
             )
         return
@@ -45,7 +46,7 @@ export const doesLoginEmailAlreadyExist = async (req: Request, res: Response, ne
 
 
     if (emailExists) {
-        res.status(400)
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
             .json({errorsMessages: [{message: "Login or email is already used on the website", field: "email"}]}
             )
         return
@@ -59,7 +60,7 @@ export const isCodeCorrect = async (req: Request, res: Response, next: NextFunct
 
 
     if (!correct) {
-        res.status(400)
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
             .json({errorsMessages: [{message: "Confirmation code is incorrect", field: "code"}]}
             )
         return
@@ -69,12 +70,40 @@ export const isCodeCorrect = async (req: Request, res: Response, next: NextFunct
 
 }
 
+export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, next: NextFunction) => {
+    const user: UserDBModel | null = await usersQueryRepo.findUserByPassRecoveryCode(req.body.recoveryCode)
+
+    if ((req.body.recoveryCode = '') || user!) {
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
+            .json({errorsMessages: [{message: "Confirmation code is incorrect", field: "code"}]}
+            )
+        return
+    }
+
+    if (!user!.passwordRecovery!.active) {
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
+            .json({errorsMessages: [{message: "Confirmation code has been activated", field: "code"}]}
+            )
+        return
+    }
+
+    // Check that the token is up to date
+    try {
+        const result: any = jwt.verify(req.body.code, process.env.JWT_SECRET!)
+    } catch (e) {
+        return catchTokenError(e, res)
+    }
+
+    req.user = user
+    next()
+}
+
 export const isAlreadyConfirmedCode = async (req: Request, res: Response, next: NextFunction) => {
     const confirmed = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
 
 
     if (confirmed!.emailConfirmation.isConfirmed) {
-        res.status(400)
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
             .json({errorsMessages: [{message: "The email is already confirmed", field: "code"}]}
             )
         return
@@ -104,7 +133,7 @@ export const doesEmailExist = async (req: Request, res: Response, next: NextFunc
 
 
     if (!existence) {
-        res.status(400)
+        res.status(STATUSES_HTTP.BAD_REQUEST_400)
             .json({errorsMessages: [{message: "The email is incorrect", field: "email"}]}
             )
         return
