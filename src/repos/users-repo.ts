@@ -30,7 +30,7 @@ export const usersRepo = {
         const result = await UserModel.updateOne({"id": id}, {
             $set: {
                 "passwordRecovery.passwordRecoveryCode": passwordRecoveryCode,
-                "passwordRecoveryCode.active": true
+                "passwordRecovery.active": true
             }
         });
         return result.matchedCount === 1

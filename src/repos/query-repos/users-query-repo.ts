@@ -53,6 +53,6 @@ export const usersQueryRepo = {
         return UserModel.findOne({"emailConfirmation.confirmationCode": code})
     },
     async findUserByPassRecoveryCode(code: string) {
-        return UserModel.findOne({"passwordRecovery.passwordRecoveryCode": code})
+        return UserModel.findOne({"passwordRecovery.passwordRecoveryCode": code}).lean()
     }
 }

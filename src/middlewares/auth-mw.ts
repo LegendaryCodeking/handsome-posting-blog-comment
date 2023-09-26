@@ -5,6 +5,7 @@ import jwt, {TokenExpiredError} from "jsonwebtoken";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {UserDBModel} from "../models/Users/UserModel";
+import {getUserViewModel} from "../helpers/map-UserViewModel";
 
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
@@ -73,9 +74,9 @@ export const isCodeCorrect = async (req: Request, res: Response, next: NextFunct
 export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, next: NextFunction) => {
     const user: UserDBModel | null = await usersQueryRepo.findUserByPassRecoveryCode(req.body.recoveryCode)
 
-    if ((req.body.recoveryCode = '') || user!) {
+    if ((req.body.recoveryCode === '') || !user) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
-            .json({errorsMessages: [{message: "Confirmation code is incorrect", field: "newPassword"}]}
+            .json({errorsMessages: [{message: "Confirmation code is incorrecttttttttttt", field: "newPassword"}]}
             )
         return
     }
@@ -89,16 +90,15 @@ export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, 
 
     // Check that the token is up-to-date
     try {
-        jwt.verify(req.body.code, process.env.JWT_SECRET!)
+        jwt.verify(req.body.recoveryCode, process.env.JWT_SECRET!)
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Code has expired!", field: "newPassword"});
+            return res.status(STATUSES_HTTP.BAD_REQUEST_400).send({message: "Code has expired!", field: "newPassword"});
         }
 
-        return res.status(STATUSES_HTTP.UNAUTHORIZED_401).send({message: "Code is incorrect! Try repeate a bi later", field: "newPassword"});
+        return res.status(STATUSES_HTTP.BAD_REQUEST_400).send({message: "Code is incorrect! Try repeat a bit later", field: "newPassword"});
     }
-
-    req.user = user
+    req.user = getUserViewModel(user)
     next()
 }
 
