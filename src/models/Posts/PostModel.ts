@@ -1,5 +1,6 @@
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
+import {PostDBModel} from "./PostDBModel";
 
 export type PostType = {
     _id?: ObjectId,
@@ -12,7 +13,7 @@ export type PostType = {
     "createdAt": string,
 }
 
-export const postMongoSchema = new mongoose.Schema<PostType>({
+export const postMongoSchema = new mongoose.Schema<PostDBModel>({
     "id": String,
     "title": String,
     "shortDescription": String,

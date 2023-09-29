@@ -10,6 +10,7 @@ import {commentService} from "../domain/comment-service";
 import {postQueryRepo} from "../repos/query-repos/post-query-repo";
 import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
+import {getPostViewModel} from "../helpers/map-PostViewModel";
 
 export const postsController = {
 
@@ -55,7 +56,7 @@ export const postsController = {
             .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
 
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdPost)
+            .json(getPostViewModel(createdPost))
     },
 
     async updatePost(req: RequestsWithParams<URIParamsPostIdModel>,

@@ -1,7 +1,8 @@
 import {PostType} from "../models/Posts/PostModel";
 import {PostViewModel} from "../models/Posts/PostViewModel";
+import {PostDBModel} from "../models/Posts/PostDBModel";
 
-export const getPostViewModel = (post: PostType): PostViewModel => {
+export const getPostViewModel = (post: PostType | PostDBModel): PostViewModel => {
     return {
         id: post.id,
         title: post.title,

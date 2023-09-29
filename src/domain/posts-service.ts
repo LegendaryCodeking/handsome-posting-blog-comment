@@ -1,4 +1,3 @@
-import {PostType} from "../models/Posts/PostModel";
 import {postsRepo} from "../repos/posts-repo";
 import {PostDBModel} from "../models/Posts/PostDBModel";
 
@@ -6,7 +5,7 @@ export const postsService = {
     async deletePost(id: string): Promise<boolean> {
         return postsRepo.deletePost(id)
     },
-    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostType> {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostDBModel> {
         const createdPost: PostDBModel = {
             "id": (+(new Date())).toString(),
             "title": title,
