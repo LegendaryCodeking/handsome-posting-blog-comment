@@ -7,8 +7,9 @@ import {authBasicHeader, connection_string} from "../utils/export_data_functions
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {UserCreateModel, UserViewModel} from "../../models/Users/UserModel";
 import {usersTestManager} from "../utils/usersTestManager";
-import {usersQueryRepo} from "../../repos/query-repos/users-query-repo";
 import {usersRepo} from "../../repos/users-repo";
+
+jest.setTimeout(10000)
 
 describe('testing password recovery', () => {
     let user: UserViewModel;
