@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {WithPagination} from "../custom";
 
 export type UserDBModel = {
     id: string,
@@ -19,13 +20,7 @@ export type UserDBModel = {
     }
 }
 
-export type UsersWithPaginationModel = {
-    "pagesCount": number,
-    "page": number,
-    "pageSize": number,
-    "totalCount": number,
-    "items": UserViewModel[]
-}
+export type UsersWithPaginationModel = WithPagination<UserViewModel>
 
 export type UserViewModel = {
     id: string

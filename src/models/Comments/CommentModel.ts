@@ -1,5 +1,6 @@
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
+import {WithPagination} from "../custom";
 
 export type CreateCommentModel = {
     content: string
@@ -39,13 +40,7 @@ export type CommentatorInfoType = {
     userLogin: string
 }
 
-export type CommentsWithPaginationModel = {
-    "pagesCount": number,
-    "page": number,
-    "pageSize": number,
-    "totalCount": number,
-    "items": CommentViewModel[]
-}
+export type CommentsWithPaginationModel = WithPagination<CommentViewModel>
 
 export const commentMongooseSchema = new mongoose.Schema<CommentDbModel>({
     id: String,

@@ -11,17 +11,14 @@ export const usersRepo = {
 
         return getUserViewModel(createdUser)
     },
-
     async deleteUser(id: string): Promise<boolean> {
         const result = await UserModel.deleteOne({"id": id});
         return result.deletedCount === 1
     },
-
     async updateConfirmation(id: string): Promise<boolean> {
         const result = await UserModel.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
         return result.matchedCount === 1
     },
-
     async updateUserEmailConfirmationInfo(id: string, user: UserDBModel): Promise<boolean> {
         const result = await UserModel.replaceOne({"id": id}, user)
         return result.modifiedCount === 1
@@ -43,5 +40,30 @@ export const usersRepo = {
             }
         });
         return result.matchedCount === 1
+    },
+
+    async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
+        const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
+        if (user) {
+            return user
+        }
+        return null
+    },
+    async findUserByConfirmationCode(code: string) {
+        let user = await UserModel.findOne({"emailConfirmation.confirmationCode": code})
+        if (user) {
+            return user
+        } else {
+            return null
+        }
+    },
+    async findUserByPassRecoveryCode(code: string) {
+        let user = await UserModel.findOne({"passwordRecovery.passwordRecoveryCode": code})
+        if (user) {
+            return user
+        } else {
+            return null
+        }
     }
+
 }

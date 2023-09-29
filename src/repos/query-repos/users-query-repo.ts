@@ -1,6 +1,6 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
 import {Sort} from "mongodb";
-import {UserDBModel, UsersWithPaginationModel} from "../../models/Users/UserModel";
+import {UserDBModel, UsersWithPaginationModel, UserViewModel} from "../../models/Users/UserModel";
 import {UserModel} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
@@ -33,10 +33,10 @@ export const usersQueryRepo = {
         }
     },
 
-    async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
+    async findByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
         const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
-            return user
+            return getUserViewModel(user)
         }
         return null
     },
@@ -50,9 +50,11 @@ export const usersQueryRepo = {
         }
     },
     async findUserByConfirmationCode(code: string) {
-        return UserModel.findOne({"emailConfirmation.confirmationCode": code})
-    },
-    async findUserByPassRecoveryCode(code: string) {
-        return UserModel.findOne({"passwordRecovery.passwordRecoveryCode": code}).lean()
+        let user = await UserModel.findOne({"emailConfirmation.confirmationCode": code})
+        if (user) {
+            return getUserViewModel(user)
+        } else {
+            return null
+        }
     }
 }

@@ -8,8 +8,22 @@ import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
 import {jwtService} from "../application/jwt-service";
 
+enum ResultCode {
+    success,
+    internalServerError,
+    badRequest,
+    incorrectEmail
+}
+
+type Result<T> = {
+    resultCode: ResultCode,
+    data: T | null,
+    errorMessage?: string
+}
+
+
 export const userService = {
-    async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<UserViewModel | null> {
+    async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<Result<string>> {
 
         const passwordHash = await bcrypt.hash(password, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
 
@@ -31,26 +45,22 @@ export const userService = {
             },
             passwordRecovery: {
                 passwordRecoveryCode: "",
-                active: false
+                active: isAuthorSuper
             }
 
         }
 
-        if (isAuthorSuper) {
-            createdUser.emailConfirmation.isConfirmed = true
-            return await usersRepo.createUser(createdUser)
-        } else {
 
-            let resultUser = await usersRepo.createUser(createdUser)
-            try {
-                await emailManager.sendEmailConfirmationMessage(createdUser)
-            } catch (e) {
-                console.log(e)
-                return null;
-            }
-            return resultUser
-
+        let resultUser = await usersRepo.createUser(createdUser)
+        if (!isAuthorSuper) {
+            emailManager.sendEmailConfirmationMessage(createdUser).catch((err) => console.log(err))
         }
+
+        return {
+            resultCode: ResultCode.success,
+            data: resultUser.id
+        }
+
 
 
     },
@@ -59,13 +69,13 @@ export const userService = {
     },
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
-        const user = await usersQueryRepo.findByLoginOrEmail(loginOrEmail)
+        const user = await usersRepo.findByLoginOrEmail(loginOrEmail)
         if (!user) return null
 
 
         const passHash = user.accountData.password
 
-       const result = await bcrypt.compare(password, passHash).then(function (result) {
+        const result = await bcrypt.compare(password, passHash).then(function (result) {
             return result
         });
 
@@ -76,15 +86,14 @@ export const userService = {
 
     },
     async recoveryPassword(email: string): Promise<boolean> {
-        const userDB = await usersQueryRepo.findByLoginOrEmail(email)
+        const user = await usersQueryRepo.findByLoginOrEmail(email)
         // Return true even if current email is not registered (for prevent user's email detection)
-        if (!userDB) return true
-        const user = getUserViewModel(userDB)
+        if (!user) return true
         const passwordRecoveryCode = await jwtService.createPassRecoveryCode(user)
-        await usersRepo.addPassRecoveryCode(user.id,passwordRecoveryCode)
+        await usersRepo.addPassRecoveryCode(user.id, passwordRecoveryCode)
 
         try {
-            await emailManager.sendPasswordRecoveryMessage(user.email,passwordRecoveryCode)
+            await emailManager.sendPasswordRecoveryMessage(user.email, passwordRecoveryCode)
             return true
         } catch (e) {
             console.log(e)

@@ -16,10 +16,14 @@ export const usersController = {
     },
 
     async createUser(req: Request, res: Response) {
-        let createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email, true)
-
+        const createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email, true)
+        if (createdUser.data === null) {
+            res.status(STATUSES_HTTP.BAD_REQUEST_400)
+                .json({"message": createdUser.errorMessage})
+        }
+        const foundUser = await usersQueryRepo.findUserById(createdUser.data!)
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdUser)
+            .json(foundUser)
     },
 
     async deleteUser(req: Request, res: Response) {

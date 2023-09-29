@@ -1,10 +1,5 @@
 import {BlogViewModel} from "./BlogViewModel";
+import {WithPagination} from "../custom";
 
 
-export type BlogsWithPaginationModel = {
-    "pagesCount": number,
-    "page": number,
-    "pageSize": number,
-    "totalCount": number,
-    "items": BlogViewModel[]
-}
+export type BlogsWithPaginationModel = WithPagination<BlogViewModel>

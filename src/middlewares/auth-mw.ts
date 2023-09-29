@@ -6,6 +6,7 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {UserDBModel} from "../models/Users/UserModel";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
+import {usersRepo} from "../repos/users-repo";
 
 
 export const authenticationCheck = (req: Request, res: Response, next: NextFunction) => {
@@ -72,7 +73,7 @@ export const isCodeCorrect = async (req: Request, res: Response, next: NextFunct
 }
 
 export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, next: NextFunction) => {
-    const user: UserDBModel | null = await usersQueryRepo.findUserByPassRecoveryCode(req.body.recoveryCode)
+    const user: UserDBModel | null = await usersRepo.findUserByPassRecoveryCode(req.body.recoveryCode)
 
     if ((req.body.recoveryCode === '') || !user) {
         res.status(STATUSES_HTTP.BAD_REQUEST_400)
@@ -103,7 +104,7 @@ export const isCodeCorrectForPassRecovery = async (req: Request, res: Response, 
 }
 
 export const isAlreadyConfirmedCode = async (req: Request, res: Response, next: NextFunction) => {
-    const confirmed = await usersQueryRepo.findUserByConfirmationCode(req.body.code)
+    const confirmed = await usersRepo.findUserByConfirmationCode(req.body.code)
 
 
     if (confirmed!.emailConfirmation.isConfirmed) {
@@ -118,7 +119,7 @@ export const isAlreadyConfirmedCode = async (req: Request, res: Response, next: 
 }
 
 export const isAlreadyConfirmedEmail = async (req: Request, res: Response, next: NextFunction) => {
-    const confirmed = await usersQueryRepo.findByLoginOrEmail(req.body.email)
+    const confirmed = await usersRepo.findByLoginOrEmail(req.body.email)
 
 
     if (confirmed?.emailConfirmation.isConfirmed === true) {

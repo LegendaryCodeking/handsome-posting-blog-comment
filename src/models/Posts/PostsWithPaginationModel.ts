@@ -1,9 +1,4 @@
 import {PostViewModel} from "./PostViewModel";
+import {WithPagination} from "../custom";
 
-export type PostsWithPaginationModel = {
-    "pagesCount": number,
-    "page": number,
-    "pageSize": number,
-    "totalCount": number,
-    "items": PostViewModel[]
-}
+export type PostsWithPaginationModel = WithPagination<PostViewModel>

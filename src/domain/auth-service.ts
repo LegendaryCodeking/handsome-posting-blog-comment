@@ -8,7 +8,7 @@ export const authService = {
     async confirmEmail(code: string | undefined): Promise<boolean> {
         if (code === undefined) return false
 
-        let user = await usersQueryRepo.findUserByConfirmationCode(code)
+        let user = await usersRepo.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
@@ -19,7 +19,7 @@ export const authService = {
     },
     async resendEmail(email: string): Promise<boolean> {
         if (email === undefined) return false
-        let user = await usersQueryRepo.findByLoginOrEmail(email)
+        let user = await usersRepo.findByLoginOrEmail(email)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
 
