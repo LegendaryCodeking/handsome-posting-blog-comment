@@ -30,6 +30,7 @@ export type SessionUpdateContentModel = {
     "lastActiveDate": string
     "RFTokenIAT": Date
     "deviceName": string | string[]
+    RFTokenObsoleteDate: Date
 }
 
 export const sessionMongooseSchema = new mongoose.Schema<SessionDBModel>({
