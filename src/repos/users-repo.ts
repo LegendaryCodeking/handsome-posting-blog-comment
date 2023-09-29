@@ -7,39 +7,100 @@ import {getUserViewModel} from "../helpers/map-UserViewModel";
 export const usersRepo = {
 
     async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
-        await UserModelClass.insertMany([createdUser])
+        // Mongo native driver code
+        // await UserModelClass.insertMany([createdUser])
+
+        const userInstance = new UserModelClass()
+
+        userInstance.id = createdUser.id
+        userInstance.accountData = createdUser.accountData
+        userInstance.emailConfirmation = createdUser.emailConfirmation
+        userInstance.passwordRecovery = createdUser.passwordRecovery
+
+        await userInstance.save()
 
         return getUserViewModel(createdUser)
     },
     async deleteUser(id: string): Promise<boolean> {
-        const result = await UserModelClass.deleteOne({"id": id});
-        return result.deletedCount === 1
+        // Mongo native driver code
+        // const result = await UserModelClass.deleteOne({"id": id});
+        // return result.deletedCount === 1
+
+        const userInstance = await UserModelClass.findOne({"id": id})
+        if (!userInstance) return false
+
+        await userInstance.deleteOne()
+
+        return true
     },
     async updateConfirmation(id: string): Promise<boolean> {
-        const result = await UserModelClass.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
-        return result.matchedCount === 1
+        // Mongo native driver code
+        // const result = await UserModelClass.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
+        // return result.matchedCount === 1
+
+        const userInstance = await UserModelClass.findOne({"id": id})
+        if (!userInstance) return false
+
+        userInstance.emailConfirmation.isConfirmed = true
+
+        await userInstance.save()
+
+        return true
+
     },
     async updateUserEmailConfirmationInfo(id: string, user: UserDBModel): Promise<boolean> {
-        const result = await UserModelClass.replaceOne({"id": id}, user)
-        return result.modifiedCount === 1
+        // Mongo native driver code
+        // const result = await UserModelClass.replaceOne({"id": id}, user)
+        // return result.modifiedCount === 1
+
+        const userInstance = await UserModelClass.findOne({"id": id})
+        if (!userInstance) return false
+
+        await userInstance.replaceOne(user)
+
+        return true
     },
-    async addPassRecoveryCode(id: string, passwordRecoveryCode: string) {
-        const result = await UserModelClass.updateOne({"id": id}, {
-            $set: {
-                "passwordRecovery.passwordRecoveryCode": passwordRecoveryCode,
-                "passwordRecovery.active": true
-            }
-        });
-        return result.matchedCount === 1
+    async addPassRecoveryCode(id: string, passwordRecoveryCode: string): Promise<boolean> {
+        // Mongo native driver code
+        // const result = await UserModelClass.updateOne({"id": id}, {
+        //     $set: {
+        //         "passwordRecovery.passwordRecoveryCode": passwordRecoveryCode,
+        //         "passwordRecovery.active": true
+        //     }
+        // });
+        // return result.matchedCount === 1
+
+        const userInstance = await UserModelClass.findOne({"id": id})
+        if (!userInstance) return false
+
+        userInstance.passwordRecovery.passwordRecoveryCode = passwordRecoveryCode
+        userInstance.passwordRecovery.active = true
+
+        await userInstance.save()
+
+        return true
+
     },
     async updatePassword(newPassword: string, userId: string): Promise<boolean> {
-        const result = await UserModelClass.updateOne({"id": userId}, {
-            $set: {
-                "accountData.password": newPassword,
-                "passwordRecovery.active": false
-            }
-        });
-        return result.matchedCount === 1
+        // Mongo native driver code
+        // const result = await UserModelClass.updateOne({"id": userId}, {
+        //     $set: {
+        //         "accountData.password": newPassword,
+        //         "passwordRecovery.active": false
+        //     }
+        // });
+        // return result.matchedCount === 1
+
+
+        const userInstance = await UserModelClass.findOne({"id": userId})
+        if (!userInstance) return false
+
+        userInstance.accountData.password = newPassword
+        userInstance.passwordRecovery.active = false
+
+        await userInstance.save()
+
+        return true
     },
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
