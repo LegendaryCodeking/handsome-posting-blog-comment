@@ -1,4 +1,4 @@
-import {SessionModel} from "../db/db";
+import {SessionModelClass} from "../db/db";
 import {
     SessionDBModel,
     SessionUpdateContentModel, SessionUpdateFilterModel,
@@ -10,7 +10,7 @@ import {getSessionViewModel} from "../helpers/map-SessionViewModel";
 export const sessionsRepo = {
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
         try {
-            await SessionModel.deleteMany({
+            await SessionModelClass.deleteMany({
                 "RFTokenIAT": {$ne: new Date(currentRFTokenIAT)},
                 "deviceId": {$ne: deviceId}
             });
@@ -21,25 +21,25 @@ export const sessionsRepo = {
         return true
     },
     async deleteDeviceSessions(deviceId: string): Promise<boolean> {
-        const result = await SessionModel.deleteOne({"deviceId": deviceId});
+        const result = await SessionModelClass.deleteOne({"deviceId": deviceId});
         return result.deletedCount === 1
     },
     async registerSession(createdSession: SessionDBModel): Promise<SessionViewModel | null> {
         try {
-            const result = await SessionModel.insertMany([createdSession]);
+            const result = await SessionModelClass.insertMany([createdSession]);
             return getSessionViewModel(createdSession)
         } catch (e) {
             return null
         }
     },
     async updateSessionInfo(filter: SessionUpdateFilterModel, updateSessionContent: SessionUpdateContentModel) {
-        let result = await SessionModel.updateOne(filter, {
+        let result = await SessionModelClass.updateOne(filter, {
             $set: updateSessionContent
         })
         return result.matchedCount === 1
     },
     async deleteSession(currentRFTokenIAT: number, userId: string) {
-        let result = await SessionModel.deleteOne({"RFTokenIAT": new Date(currentRFTokenIAT), "userId": userId})
+        let result = await SessionModelClass.deleteOne({"RFTokenIAT": new Date(currentRFTokenIAT), "userId": userId})
         return result.deletedCount === 1
     }
 }

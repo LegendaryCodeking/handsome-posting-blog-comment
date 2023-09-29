@@ -1,4 +1,4 @@
-import {CommentModel} from "../db/db";
+import {CommentModelClass} from "../db/db";
 import {
     CommentDbModel,
     CommentViewModel
@@ -8,7 +8,7 @@ import {getCommentViewModel} from "../helpers/map-CommentViewModel";
 
 export const commentsRepo = {
     async updateComment(id: string, content: string): Promise<boolean> {
-        let result = await CommentModel.updateOne({"id": id}, {
+        let result = await CommentModelClass.updateOne({"id": id}, {
             $set: {
                 "content": content
             }
@@ -16,11 +16,11 @@ export const commentsRepo = {
         return result.matchedCount === 1
     },
     async deleteComment(id: string): Promise<boolean> {
-        let result = await CommentModel.deleteOne({"id": id})
+        let result = await CommentModelClass.deleteOne({"id": id})
         return result.deletedCount === 1
     },
     async createComment(newComment: CommentDbModel ): Promise<CommentViewModel> {
-        await CommentModel.insertMany([newComment])
+        await CommentModelClass.insertMany([newComment])
         return getCommentViewModel(newComment);
     }
 }

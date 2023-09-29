@@ -3,7 +3,7 @@ import {PostsWithPaginationModel} from "../../models/Posts/PostsWithPaginationMo
 import {Sort} from "mongodb";
 import {FilterQuery} from "mongoose";
 import {PostType} from "../../models/Posts/PostModel";
-import {PostModel} from "../../db/db";
+import {PostModelClass} from "../../db/db";
 import {getPostViewModel} from "../../helpers/map-PostViewModel";
 
 export const postQueryRepo = {
@@ -11,7 +11,7 @@ export const postQueryRepo = {
         const findFilter: FilterQuery<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy] : queryFilter.sortDirection} : {[queryFilter.sortBy] : queryFilter.sortDirection, 'createdAt': 1})
 
-        let foundPostsMongoose = await PostModel
+        let foundPostsMongoose = await PostModelClass
             .find(findFilter).lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
@@ -21,7 +21,7 @@ export const postQueryRepo = {
         let foundPosts = foundPostsMongoose.map(post => getPostViewModel(post))
 
 
-        let totalCount = await PostModel.countDocuments(findFilter)
+        let totalCount = await PostModelClass.countDocuments(findFilter)
 
         return {
             "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
@@ -32,7 +32,7 @@ export const postQueryRepo = {
         }
     },
     async findPostsById(id: string): Promise<PostType | null> {
-        let foundPost: PostType | null = await PostModel.findOne({"id": id})
+        let foundPost: PostType | null = await PostModelClass.findOne({"id": id})
         if (foundPost) {
             return getPostViewModel(foundPost)
         } else {

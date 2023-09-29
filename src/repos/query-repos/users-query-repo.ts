@@ -1,7 +1,7 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
 import {Sort} from "mongodb";
 import {UserDBModel, UsersWithPaginationModel, UserViewModel} from "../../models/Users/UserModel";
-import {UserModel} from "../../db/db";
+import {UserModelClass} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
 
@@ -13,7 +13,7 @@ export const usersQueryRepo = {
         }
         const sortFilter: Sort = {[queryFilter.sortBy]: queryFilter.sortDirection}
 
-        let foundUsersMongoose = await UserModel
+        let foundUsersMongoose = await UserModelClass
             .find(findFilter).lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
@@ -22,7 +22,7 @@ export const usersQueryRepo = {
 
         const foundUsers = foundUsersMongoose.map(user => getUserViewModel(user))
 
-        let totalCount = await UserModel.countDocuments(findFilter)
+        let totalCount = await UserModelClass.countDocuments(findFilter)
 
         return {
             "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
@@ -34,7 +34,7 @@ export const usersQueryRepo = {
     },
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
-        const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
+        const user = await UserModelClass.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
             return getUserViewModel(user)
         }
@@ -42,7 +42,7 @@ export const usersQueryRepo = {
     },
 
     async findUserById(id: string) {
-        let user = await UserModel.findOne({id: id})
+        let user = await UserModelClass.findOne({id: id})
         if (user) {
             return getUserViewModel(user)
         } else {
@@ -50,7 +50,7 @@ export const usersQueryRepo = {
         }
     },
     async findUserByConfirmationCode(code: string) {
-        let user = await UserModel.findOne({"emailConfirmation.confirmationCode": code})
+        let user = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
         if (user) {
             return getUserViewModel(user)
         } else {

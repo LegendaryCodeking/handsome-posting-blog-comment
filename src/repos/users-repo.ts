@@ -1,30 +1,30 @@
 import {UserDBModel} from "../models/Users/UserModel";
 import {UserViewModel} from "../models/Users/UserModel";
-import {UserModel} from "../db/db";
+import {UserModelClass} from "../db/db";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
 
 
 export const usersRepo = {
 
     async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
-        await UserModel.insertMany([createdUser])
+        await UserModelClass.insertMany([createdUser])
 
         return getUserViewModel(createdUser)
     },
     async deleteUser(id: string): Promise<boolean> {
-        const result = await UserModel.deleteOne({"id": id});
+        const result = await UserModelClass.deleteOne({"id": id});
         return result.deletedCount === 1
     },
     async updateConfirmation(id: string): Promise<boolean> {
-        const result = await UserModel.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
+        const result = await UserModelClass.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
         return result.matchedCount === 1
     },
     async updateUserEmailConfirmationInfo(id: string, user: UserDBModel): Promise<boolean> {
-        const result = await UserModel.replaceOne({"id": id}, user)
+        const result = await UserModelClass.replaceOne({"id": id}, user)
         return result.modifiedCount === 1
     },
     async addPassRecoveryCode(id: string, passwordRecoveryCode: string) {
-        const result = await UserModel.updateOne({"id": id}, {
+        const result = await UserModelClass.updateOne({"id": id}, {
             $set: {
                 "passwordRecovery.passwordRecoveryCode": passwordRecoveryCode,
                 "passwordRecovery.active": true
@@ -33,7 +33,7 @@ export const usersRepo = {
         return result.matchedCount === 1
     },
     async updatePassword(newPassword: string, userId: string): Promise<boolean> {
-        const result = await UserModel.updateOne({"id": userId}, {
+        const result = await UserModelClass.updateOne({"id": userId}, {
             $set: {
                 "accountData.password": newPassword,
                 "passwordRecovery.active": false
@@ -43,14 +43,14 @@ export const usersRepo = {
     },
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
-        const user = await UserModel.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
+        const user = await UserModelClass.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
             return user
         }
         return null
     },
     async findUserByConfirmationCode(code: string) {
-        let user = await UserModel.findOne({"emailConfirmation.confirmationCode": code})
+        let user = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
         if (user) {
             return user
         } else {
@@ -58,7 +58,7 @@ export const usersRepo = {
         }
     },
     async findUserByPassRecoveryCode(code: string) {
-        let user = await UserModel.findOne({"passwordRecovery.passwordRecoveryCode": code})
+        let user = await UserModelClass.findOne({"passwordRecovery.passwordRecoveryCode": code})
         if (user) {
             return user
         } else {

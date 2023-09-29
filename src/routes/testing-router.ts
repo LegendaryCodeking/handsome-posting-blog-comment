@@ -1,18 +1,18 @@
 import {Request, Response, Router} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {PostModel, BlogModel, UserModel, CommentModel, SessionModel, RateLimitModel} from "../db/db";
+import {PostModelClass, BlogModelClass, UserModelClass, CommentModelClass, SessionModelClass, RateLimitModelClass} from "../db/db";
 
 export const testingRouter = Router({})
 
 
 testingRouter.delete('/all-data', async (req: Request, res: Response) => {
     await Promise.all([
-        BlogModel.deleteMany({}),
-        PostModel.deleteMany({}),
-        CommentModel.deleteMany({}),
-        UserModel.deleteMany({}),
-        SessionModel.deleteMany({}),
-        RateLimitModel.deleteMany({})
+        BlogModelClass.deleteMany({}),
+        PostModelClass.deleteMany({}),
+        CommentModelClass.deleteMany({}),
+        UserModelClass.deleteMany({}),
+        SessionModelClass.deleteMany({}),
+        RateLimitModelClass.deleteMany({})
     ]).catch((e) => {
         console.log(e)
         return res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)

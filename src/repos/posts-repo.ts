@@ -1,19 +1,19 @@
 import {PostType} from "../models/Posts/PostModel";
-import {PostModel} from "../db/db";
+import {PostModelClass} from "../db/db";
 import {getPostViewModel} from "../helpers/map-PostViewModel";
 
 export const postsRepo = {
     async deletePost(id: string): Promise<boolean> {
-        let result = await PostModel.deleteOne({"id": id})
+        let result = await PostModelClass.deleteOne({"id": id})
         return result.deletedCount === 1
     },
     async createPost(createdPost: PostType): Promise<PostType> {
 
-        await PostModel.insertMany([createdPost]);
+        await PostModelClass.insertMany([createdPost]);
         return getPostViewModel(createdPost);
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        let result = await PostModel.updateOne({"id": id}, {
+        let result = await PostModelClass.updateOne({"id": id}, {
             $set: {
                 title: title,
                 shortDescription: shortDescription,

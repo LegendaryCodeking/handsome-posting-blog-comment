@@ -14,12 +14,12 @@ const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
 const DbName =  process.env.MONGODBNAME || "forum";
 
 // Mongoose connection section
-export const PostModel = mongoose.model('posts', postMongoSchema)
-export const BlogModel = mongoose.model('blogs', blogMongoSchema)
-export const UserModel = mongoose.model('users', userMongoSchema)
-export const CommentModel = mongoose.model('comments', commentMongooseSchema)
-export const SessionModel = mongoose.model('sessions', sessionMongooseSchema)
-export const RateLimitModel = mongoose.model('rateLimit', rateLimitMongooseSchema)
+export const PostModelClass = mongoose.model('posts', postMongoSchema)
+export const BlogModelClass = mongoose.model('blogs', blogMongoSchema)
+export const UserModelClass = mongoose.model('users', userMongoSchema)
+export const CommentModelClass = mongoose.model('comments', commentMongooseSchema)
+export const SessionModelClass = mongoose.model('sessions', sessionMongooseSchema)
+export const RateLimitModelClass = mongoose.model('rateLimit', rateLimitMongooseSchema)
 
 
 

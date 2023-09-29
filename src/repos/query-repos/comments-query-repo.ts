@@ -1,6 +1,6 @@
 import {CommentDbModel, CommentsFilterModel, CommentsWithPaginationModel} from "../../models/Comments/CommentModel";
 import {Sort} from "mongodb";
-import {CommentModel} from "../../db/db";
+import {CommentModelClass} from "../../db/db";
 import {getCommentViewModel} from "../../helpers/map-CommentViewModel";
 import {FilterQuery} from "mongoose";
 
@@ -12,7 +12,7 @@ export const commentsQueryRepo = {
             'createdAt': 1
         });
 
-        let foundCommentsMongoose = await CommentModel
+        let foundCommentsMongoose = await CommentModelClass
             .find(findFilter)
             .lean()
             .sort(sortFilter)
@@ -21,7 +21,7 @@ export const commentsQueryRepo = {
 
         const foundComments = foundCommentsMongoose.map(value => getCommentViewModel(value))
 
-        let totalCount = await CommentModel.countDocuments(findFilter)
+        let totalCount = await CommentModelClass.countDocuments(findFilter)
 
         return {
             "pagesCount": Math.ceil(totalCount / queryFilter.pageSize),
@@ -34,7 +34,7 @@ export const commentsQueryRepo = {
     },
 
     async findCommentById(id: string): Promise<any> {
-        let foundComment = await CommentModel.findOne({"id": id})
+        let foundComment = await CommentModelClass.findOne({"id": id})
         if (foundComment) {
             return getCommentViewModel(foundComment)
         } else {
