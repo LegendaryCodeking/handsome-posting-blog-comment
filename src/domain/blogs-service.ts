@@ -7,14 +7,15 @@ export const blogsService = {
         return blogsRepo.deleteBlog(id)
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogDbModel> {
-        const createdBlog = {
-            "id": (+(new Date())).toString(),
-            "name": name,
-            "description": description,
-            "websiteUrl": websiteUrl,
-            "createdAt": new Date().toISOString(),
-            "isMembership": false
-        }
+
+        const createdBlog = new BlogDbModel(
+            (+(new Date())).toString(),
+            name,
+            description,
+            websiteUrl,
+            new Date().toISOString(),
+            false
+        )
 
         return await blogsRepo.createBlog(createdBlog)
 
