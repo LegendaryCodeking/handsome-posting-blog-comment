@@ -2,10 +2,9 @@ import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {BlogsRepo} from "../repos/blogs-repo";
 
 export class BlogsService {
-    blogsRepo: BlogsRepo
 
-    constructor() {
-        this.blogsRepo = new BlogsRepo()
+
+    constructor(protected blogsRepo: BlogsRepo) {
     }
 
     async deleteBlog(id: string): Promise<boolean> {

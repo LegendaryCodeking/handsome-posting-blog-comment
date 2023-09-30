@@ -2,7 +2,8 @@ import {Router} from "express";
 import {authMW} from "../middlewares/auth-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {commentsController} from "../controller/comments-controller";
+import {commentsController} from "../composition-root";
+
 
 export const commentsRouter = Router({})
 

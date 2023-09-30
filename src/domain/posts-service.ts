@@ -3,12 +3,11 @@ import {PostDBModel} from "../models/Posts/PostDBModel";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 
 export class PostsService {
-    private blogsQueryRepo: BlogsQueryRepo;
-    private postsRepo: PostsRepo;
 
-    constructor() {
-        this.blogsQueryRepo = new BlogsQueryRepo()
-        this.postsRepo = new PostsRepo()
+    constructor(
+        protected postsRepo: PostsRepo,
+        protected blogsQueryRepo: BlogsQueryRepo
+    ) {
     }
 
     async deletePost(id: string): Promise<boolean> {

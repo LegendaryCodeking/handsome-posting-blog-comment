@@ -3,7 +3,8 @@ import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {authMW} from "../middlewares/auth-mw";
 import {postValidationMW} from "../middlewares/post-validation-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
-import {postsController} from "../controller/posts-controller";
+import {postsController} from "../composition-root";
+
 
 export const postsRouter = Router({})
 

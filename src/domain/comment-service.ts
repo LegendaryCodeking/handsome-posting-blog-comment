@@ -6,11 +6,8 @@ import {
 import {ObjectId} from "mongodb";
 
 export class CommentService {
-    private commentsRepo: CommentsRepo;
 
-    constructor() {
-        this.commentsRepo = new CommentsRepo()
-    }
+    constructor(protected commentsRepo: CommentsRepo) {    }
 
     async updateComment(id: string, content: string): Promise<boolean> {
         return this.commentsRepo.updateComment(id, content)

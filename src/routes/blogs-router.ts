@@ -3,7 +3,8 @@ import {descriptionValidation, nameValidation, urlValidation} from "../middlewar
 import {authMW} from "../middlewares/auth-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {postValidationMW} from "../middlewares/post-validation-mw";
-import {blogsController} from "../controller/blogs-controller";
+import {blogsController} from "../composition-root";
+
 
 export const blogsRouter = Router({})
 

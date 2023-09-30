@@ -13,17 +13,13 @@ import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
 
-class BlogsController {
-    private blogsService: BlogsService;
-    private blogsQueryRepo: BlogsQueryRepo;
-    private postsService: PostsService;
-    private postQueryRepo: PostQueryRepo;
+export class BlogsController {
 
-    constructor() {
-        this.blogsService = new BlogsService()
-        this.blogsQueryRepo = new BlogsQueryRepo()
-        this.postsService = new PostsService()
-        this.postQueryRepo = new PostQueryRepo()
+    constructor(protected blogsService: BlogsService,
+                protected blogsQueryRepo: BlogsQueryRepo,
+                protected postQueryRepo: PostQueryRepo,
+                protected postsService: PostsService) {
+
     }
 
     async FindAllBlog(req: Request, res: Response<BlogsWithPaginationModel>) {
@@ -110,4 +106,3 @@ class BlogsController {
     }
 }
 
-export const blogsController = new BlogsController()

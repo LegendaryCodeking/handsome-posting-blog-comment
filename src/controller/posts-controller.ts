@@ -12,17 +12,16 @@ import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
 import {getPostViewModel} from "../helpers/map-PostViewModel";
 
-class PostsController {
-    private postQueryRepo: PostQueryRepo;
-    private postsService: PostsService;
-    private commentsQueryRepo: CommentsQueryRepo;
-    private commentService: CommentService;
+export class PostsController {
 
-    constructor() {
-        this.postsService = new PostsService()
-        this.postQueryRepo = new PostQueryRepo()
-        this.commentService = new CommentService()
-        this.commentsQueryRepo = new CommentsQueryRepo()
+
+    constructor(
+        protected postQueryRepo: PostQueryRepo,
+        protected postsService: PostsService,
+        protected commentsQueryRepo: CommentsQueryRepo,
+        protected commentService: CommentService
+    ) {
+
     }
 
     async findAllPosts(req: Request,
@@ -117,5 +116,3 @@ class PostsController {
 
     }
 }
-
-export const postsController = new PostsController()

@@ -6,13 +6,11 @@ import {CommentService} from "../domain/comment-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 
-class CommentsController {
-    private commentsQueryRepo: CommentsQueryRepo;
-    private commentService: CommentService;
-
-    constructor() {
-        this.commentsQueryRepo = new CommentsQueryRepo()
-        this.commentService = new CommentService()
+export class CommentsController {
+    constructor(
+        protected commentsQueryRepo: CommentsQueryRepo,
+        protected commentService: CommentService
+    ) {
     }
 
     async findCommentById(req: Request, res: Response) {
@@ -58,5 +56,3 @@ class CommentsController {
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 }
-
-export const commentsController = new CommentsController()
