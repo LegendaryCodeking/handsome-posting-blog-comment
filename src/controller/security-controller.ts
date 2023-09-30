@@ -3,12 +3,18 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {sessionsService} from "../domain/sessions-service";
 import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSessionDeviceIdModel";
-import {jwtService} from "../application/jwt-service";
+import {JwtService} from "../application/jwt-service";
 import {RequestsWithParams} from "../models/requestModels";
 
 class SecurityController {
+    private jwtService: JwtService;
+
+    constructor() {
+        this.jwtService = new JwtService()
+    }
+
     async findAllSessions(req: Request, res: Response) {
-        let RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        let RFTokenInfo = await this.jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return
@@ -26,7 +32,7 @@ class SecurityController {
 
     async terminateAllSessions(req: Request, res: Response) {
 
-        const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        const RFTokenInfo = await this.jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return
@@ -41,7 +47,7 @@ class SecurityController {
     }
 
     async terminateDeviceSessions(req: RequestsWithParams<URIParamsSessionDeviceIdModel>, res: Response) {
-        const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        const RFTokenInfo = await this.jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return

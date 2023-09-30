@@ -6,7 +6,7 @@ import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
-import {jwtService} from "../application/jwt-service";
+import {JwtService} from "../application/jwt-service";
 import {ObjectId} from "mongodb"
 
 enum ResultCode {
@@ -25,10 +25,12 @@ type Result<T> = {
 export class UserService {
     private usersQueryRepo: UsersQueryRepo;
     private usersRepo: UsersRepo;
+    private jwtService: JwtService;
 
     constructor() {
         this.usersRepo = new UsersRepo()
         this.usersQueryRepo = new UsersQueryRepo()
+        this.jwtService = new JwtService()
 
     }
 
@@ -98,7 +100,7 @@ export class UserService {
         const user = await this.usersQueryRepo.findByLoginOrEmail(email)
         // Return true even if current email is not registered (for prevent user's email detection)
         if (!user) return true
-        const passwordRecoveryCode = await jwtService.createPassRecoveryCode(user)
+        const passwordRecoveryCode = await this.jwtService.createPassRecoveryCode(user)
         await this.usersRepo.addPassRecoveryCode(user.id, passwordRecoveryCode)
 
         try {

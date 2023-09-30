@@ -1,28 +1,30 @@
 import {Request, Response} from "express";
 import {UserViewModel} from "../models/Users/UserModel";
 import {UserService} from "../domain/user-service";
-import {jwtService} from "../application/jwt-service";
+import {JwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {authService} from "../domain/auth-service";
 import {sessionsService} from "../domain/sessions-service";
 
 class AuthController {
     private userService: UserService;
+    private jwtService: JwtService;
 
     constructor() {
         this.userService = new UserService()
+        this.jwtService = new JwtService()
     }
 
     async loginUser(req: Request, res: Response) {
         const user: UserViewModel | null = await this.userService
             .checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {
-            const accessToken = await jwtService.createJWT(user)
+            const accessToken = await this.jwtService.createJWT(user)
             const deviceId = (+(new Date())).toString()
-            const refreshToken = await jwtService.createJWTRefresh(user, deviceId)
+            const refreshToken = await this.jwtService.createJWTRefresh(user, deviceId)
 
             // Подготавливаем данные для записи в таблицу сессий
-            const RFTokenInfo = await jwtService.getInfoFromRFToken(refreshToken)
+            const RFTokenInfo = await this.jwtService.getInfoFromRFToken(refreshToken)
             if (RFTokenInfo === null) {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
                 return;
@@ -85,20 +87,20 @@ class AuthController {
 
     async updateTokens(req: Request, res: Response) {
 
-        const accessTokenNew = await jwtService.createJWT(req.user!)
+        const accessTokenNew = await this.jwtService.createJWT(req.user!)
 
         // Получаем данные о текущем токене
-        const CurrentRFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        const CurrentRFTokenInfo = await this.jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (!CurrentRFTokenInfo) {
             res.status(STATUSES_HTTP.SERVER_ERROR_500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
         }
 
         // Генерируем новый RT
-        const refreshTokenNew = await jwtService.createJWTRefresh(req.user!, CurrentRFTokenInfo.deviceId)
+        const refreshTokenNew = await this.jwtService.createJWTRefresh(req.user!, CurrentRFTokenInfo.deviceId)
 
         // Подготавливаем данные для записи в таблицу сессий
-        const FRTokenInfo = await jwtService.getInfoFromRFToken(refreshTokenNew)
+        const FRTokenInfo = await this.jwtService.getInfoFromRFToken(refreshTokenNew)
         if (FRTokenInfo === null) {
             res.status(STATUSES_HTTP.SERVER_ERROR_500).json("Не удалось залогиниться. Попроубуйте позднее")
             return;
@@ -125,7 +127,7 @@ class AuthController {
     }
 
     async logoutUser(req: Request, res: Response) {
-        const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
+        const RFTokenInfo = await this.jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
             res.status(STATUSES_HTTP.SERVER_ERROR_500).json("Не удалось вылогиниться. Попроубуйте позднее")
             return;
