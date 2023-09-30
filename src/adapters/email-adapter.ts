@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from 'dotenv'
 dotenv.config()
 
-export const emailAdapter = {
+export class EmailAdapter {
     async sendEmail(email : string, subject: string, message: string) {
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
@@ -21,8 +21,6 @@ export const emailAdapter = {
             html: message , // html body
         });
 
-
         console.log(info)
-
     }
 }

@@ -1,25 +1,33 @@
-import {usersRepo} from "../repos/users-repo";
-import {emailManager} from "../managers/email-manager";
+import {UsersRepo} from "../repos/users-repo";
+import {EmailManager} from "../managers/email-manager";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
 class AuthService {
+    private usersRepo: UsersRepo;
+    private emailManager: EmailManager;
+
+    constructor() {
+        this.usersRepo = new UsersRepo()
+        this.emailManager = new EmailManager()
+    }
+
     async confirmEmail(code: string | undefined): Promise<boolean> {
         if (code === undefined) return false
 
-        let user = await usersRepo.findUserByConfirmationCode(code)
+        let user = await this.usersRepo.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
         if (new Date(user.emailConfirmation.expirationDate) < new Date()) return false
 
-        return await usersRepo.updateConfirmation(user.id)
+        return await this.usersRepo.updateConfirmation(user.id)
 
     }
 
     async resendEmail(email: string): Promise<boolean> {
         if (email === undefined) return false
-        let user = await usersRepo.findByLoginOrEmail(email)
+        let user = await this.usersRepo.findByLoginOrEmail(email)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
 
@@ -33,11 +41,11 @@ class AuthService {
             isConfirmed: false
         }
         //Перезаписываем пользователя
-        let updatedUser = await usersRepo.updateUserEmailConfirmationInfo(user._id, user)
+        let updatedUser = await this.usersRepo.updateUserEmailConfirmationInfo(user._id, user)
         if (!updatedUser) return false
 
         try {
-            await emailManager.sendEmailConfirmationMessage(user)
+            await this.emailManager.sendEmailConfirmationMessage(user)
         } catch (e) {
             console.log(e)
             return false;

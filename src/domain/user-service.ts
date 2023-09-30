@@ -5,7 +5,7 @@ import {UsersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
-import {emailManager} from "../managers/email-manager";
+import {EmailManager} from "../managers/email-manager";
 import {JwtService} from "../application/jwt-service";
 import {ObjectId} from "mongodb"
 
@@ -26,11 +26,13 @@ export class UserService {
     private usersQueryRepo: UsersQueryRepo;
     private usersRepo: UsersRepo;
     private jwtService: JwtService;
+    private emailManager: EmailManager;
 
     constructor() {
         this.usersRepo = new UsersRepo()
         this.usersQueryRepo = new UsersQueryRepo()
         this.jwtService = new JwtService()
+        this.emailManager = new EmailManager()
 
     }
 
@@ -63,7 +65,7 @@ export class UserService {
 
         let resultUser = await this.usersRepo.createUser(createdUser)
         if (!isAuthorSuper) {
-            emailManager.sendEmailConfirmationMessage(createdUser).catch((err) => console.log(err))
+            this.emailManager.sendEmailConfirmationMessage(createdUser).catch((err) => console.log(err))
         }
 
         return {
@@ -104,7 +106,7 @@ export class UserService {
         await this.usersRepo.addPassRecoveryCode(user.id, passwordRecoveryCode)
 
         try {
-            await emailManager.sendPasswordRecoveryMessage(user.email, passwordRecoveryCode)
+            await this.emailManager.sendPasswordRecoveryMessage(user.email, passwordRecoveryCode)
             return true
         } catch (e) {
             console.log(e)
