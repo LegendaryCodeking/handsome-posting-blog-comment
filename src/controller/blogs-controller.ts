@@ -12,9 +12,7 @@ import {postsService} from "../domain/posts-service";
 import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 
-
-export const blogsController = {
-
+class BlogsController {
     async FindAllBlog(req: Request, res: Response<BlogsWithPaginationModel>) {
         let queryFilter = queryBlogPostPagination(req)
         let foundBlogs: BlogsWithPaginationModel = await blogsQueryRepo.FindAllBlog(queryFilter)
@@ -26,7 +24,7 @@ export const blogsController = {
         }
         res.status(STATUSES_HTTP.OK_200)
             .json(foundBlogs)
-    },
+    }
 
     async findBlogById(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel>) {
         const foundBlog: BlogDbModel | null = await blogsQueryRepo.findBlogById(req.params.id)
@@ -35,7 +33,7 @@ export const blogsController = {
             return;
         }
         res.json(foundBlog)
-    },
+    }
 
     async findPostsForBlog(req: Request, res: Response<PostsWithPaginationModel>) {
         const blogId = req.params.id
@@ -57,7 +55,7 @@ export const blogsController = {
         res.status(STATUSES_HTTP.OK_200)
             .json(foundPosts)
 
-    },
+    }
 
     async deleteBlog(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response) {
         let deleteStatus: boolean = await blogsService.deleteBlog(req.params.id)
@@ -66,7 +64,7 @@ export const blogsController = {
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
-    },
+    }
 
     async createBlog(req: RequestsWithBody<BlogCreateModel>, res: Response<BlogViewModel>) {
         let createdBlog: BlogDbModel = await blogsService
@@ -74,7 +72,7 @@ export const blogsController = {
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdBlog)
-    },
+    }
 
     async createPostsForBlog(req: Request, res: Response<PostViewModel>) {
 
@@ -87,7 +85,7 @@ export const blogsController = {
         let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdPost)
-    },
+    }
 
     async updateBlog(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response) {
         let updateStatus: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
@@ -97,5 +95,6 @@ export const blogsController = {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
     }
-
 }
+
+export const blogsController = new BlogsController()

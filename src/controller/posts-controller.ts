@@ -12,8 +12,7 @@ import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
 import {getPostViewModel} from "../helpers/map-PostViewModel";
 
-export const postsController = {
-
+class PostsController {
     async findAllPosts(req: Request,
                        res: Response<PostsWithPaginationModel>) {
         const queryFilter = queryBlogPostPagination(req)
@@ -26,7 +25,7 @@ export const postsController = {
         }
         res.status(STATUSES_HTTP.OK_200)
             .json(foundPosts)
-    },
+    }
 
     async findPostById(req: RequestsWithParams<URIParamsPostIdModel>,
                        res: Response) {
@@ -38,7 +37,7 @@ export const postsController = {
         }
 
         res.json(foundPost)
-    },
+    }
 
     async deletePost(req: RequestsWithParams<URIParamsPostIdModel>,
                      res: Response) {
@@ -48,7 +47,7 @@ export const postsController = {
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
-    },
+    }
 
     async createPost(req: Request,
                      res: Response<PostViewModel>) {
@@ -57,7 +56,7 @@ export const postsController = {
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(getPostViewModel(createdPost))
-    },
+    }
 
     async updatePost(req: RequestsWithParams<URIParamsPostIdModel>,
                      res: Response) {
@@ -68,7 +67,7 @@ export const postsController = {
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
-    },
+    }
     ////////////////////////////
     // working with comments
     ////////////////////////////
@@ -87,7 +86,7 @@ export const postsController = {
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createComment)
 
-    },
+    }
 
     async getCommentsForPost(req: Request,
                              res: Response<CommentsWithPaginationModel>) {
@@ -104,6 +103,6 @@ export const postsController = {
             .json(foundPosts)
 
     }
-
-
 }
+
+export const postsController = new PostsController()

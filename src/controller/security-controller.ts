@@ -6,8 +6,7 @@ import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSession
 import {jwtService} from "../application/jwt-service";
 import {RequestsWithParams} from "../models/requestModels";
 
-export const securityController = {
-
+class SecurityController {
     async findAllSessions(req: Request, res: Response) {
         let RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
@@ -23,7 +22,8 @@ export const securityController = {
         }
         res.status(STATUSES_HTTP.OK_200)
             .json(foundSessions)
-    },
+    }
+
     async terminateAllSessions(req: Request, res: Response) {
 
         const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
@@ -32,14 +32,15 @@ export const securityController = {
             return
         }
 
-        let deleteStatus: boolean = await sessionsService.deleteAllSessions(RFTokenInfo.iat,RFTokenInfo.deviceId)
+        let deleteStatus: boolean = await sessionsService.deleteAllSessions(RFTokenInfo.iat, RFTokenInfo.deviceId)
         if (deleteStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
-    },
-    async terminateDeviceSessions(req: RequestsWithParams<URIParamsSessionDeviceIdModel>, res: Response){
+    }
+
+    async terminateDeviceSessions(req: RequestsWithParams<URIParamsSessionDeviceIdModel>, res: Response) {
         const RFTokenInfo = await jwtService.getInfoFromRFToken(req.cookies.refreshToken)
         if (RFTokenInfo === null) {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
@@ -51,7 +52,7 @@ export const securityController = {
             return
         }
 
-        if (RFTokenInfo.userId !== ownerOfDeletedSession ) {
+        if (RFTokenInfo.userId !== ownerOfDeletedSession) {
             res.sendStatus(STATUSES_HTTP.FORBIDDEN_403)
             return;
         }
@@ -64,3 +65,5 @@ export const securityController = {
         }
     }
 }
+
+export const securityController = new SecurityController()

@@ -5,15 +5,15 @@ import {userService} from "../domain/user-service";
 import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {UsersWithPaginationModel} from "../models/Users/UserModel";
 
-export const usersController = {
+class UsersController {
+
     async findAllUsers(req: Request, res: Response<UsersWithPaginationModel>) {
         let queryFilter = queryBlogPostPagination(req)
         let foundUsers = await usersQueryRepo.findUsers(queryFilter)
 
         res.status(STATUSES_HTTP.OK_200)
             .json(foundUsers)
-
-    },
+    }
 
     async createUser(req: Request, res: Response) {
         const createdUser = await userService.createUser(req.body.login, req.body.password, req.body.email, true)
@@ -24,7 +24,7 @@ export const usersController = {
         const foundUser = await usersQueryRepo.findUserById(createdUser.data!)
         res.status(STATUSES_HTTP.CREATED_201)
             .json(foundUser)
-    },
+    }
 
     async deleteUser(req: Request, res: Response) {
         let deletionStatus: boolean = await userService.deleteUser(req.params.id)
@@ -33,6 +33,7 @@ export const usersController = {
         } else {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
         }
-
     }
 }
+
+export const usersController = new UsersController()

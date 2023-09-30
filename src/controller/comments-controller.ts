@@ -6,8 +6,8 @@ import {commentService} from "../domain/comment-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 
+class CommentsController {
 
-export const commentsController = {
     async findCommentById(req: Request, res: Response) {
         let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
@@ -16,7 +16,7 @@ export const commentsController = {
         } else {
             res.json(foundComment)
         }
-    },
+    }
 
     async updateComment(req: Request, res: Response) {
         let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
@@ -32,7 +32,7 @@ export const commentsController = {
 
         let updateStatus: boolean = await commentService.updateComment(req.params.id, req.body.content)
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
-    },
+    }
 
     async deleteComment(req: Request, res: Response) {
 
@@ -50,5 +50,6 @@ export const commentsController = {
         let deletionStatus: boolean = await commentService.deleteComment(req.params.id)
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
-
 }
+
+export const commentsController = new CommentsController()
