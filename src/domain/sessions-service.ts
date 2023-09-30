@@ -6,7 +6,7 @@ import add from "date-fns/add";
 export const sessionsService = {
 
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
-        return sessionsRepo.deleteAllSessions(currentRFTokenIAT,deviceId)
+        return sessionsRepo.deleteAllSessions(currentRFTokenIAT, deviceId)
     },
     async deleteDeviceSessions(deviceId: string): Promise<boolean> {
         return sessionsRepo.deleteDeviceSessions(deviceId)
@@ -14,19 +14,19 @@ export const sessionsService = {
     async registerSession(loginIp: string | string[], RefreshTokenIssuedAt: number,
                           deviceName: string | string[], UserId: string, deviceId: string):
         Promise<SessionViewModel | null> {
-        const createdSession: SessionDBModel = {
-            _id: new ObjectId(),
-            "ip": loginIp,
-            "title": "Title for Session. Need to change in future",
-            "lastActiveDate": new Date().toISOString(),
-            "deviceId": deviceId,
-            "deviceName": deviceName,
-            "userId": UserId,
-            "RFTokenIAT": new Date(RefreshTokenIssuedAt),
-            "RFTokenObsoleteDate": add(new Date(RefreshTokenIssuedAt), {
-                seconds: 20
-            })
-        }
+        const createdSession = new SessionDBModel(
+            new ObjectId(),
+            loginIp,
+            "Title for Session. Need to change in future",
+            new Date().toISOString(),
+            deviceId,
+            deviceName,
+            UserId,
+            new Date(RefreshTokenIssuedAt),
+            add(new Date(RefreshTokenIssuedAt), {
+                    seconds: 20
+                }
+            ))
 
         return await sessionsRepo.registerSession(createdSession)
     },

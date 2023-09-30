@@ -1,19 +1,37 @@
-import {WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
 
-export type SessionDBModel = WithId<{
-    "ip": string | string[]
-    "title": string
-    "lastActiveDate": string
-    "deviceId": string
-    "deviceName": string | string[]
-    "userId": string
-    "RFTokenIAT": Date
-    "RFTokenObsoleteDate": Date
-}>
+export class SessionDBModel {
+    constructor(
+        public _id: ObjectId,
+        public ip: SessionIpModel,
+        public title: string,
+        public lastActiveDate: string,
+        public deviceId: string,
+        public deviceName: DeviceNameModel,
+        public userId: string,
+        public RFTokenIAT: Date,
+        public RFTokenObsoleteDate: Date
+    ) {
+    }
+}
+
+// export type SessionDBModel = WithId<{
+//     "ip": SessionIpModel
+//     "title": string
+//     "lastActiveDate": string
+//     "deviceId": string
+//     "deviceName": DeviceNameModel
+//     "userId": string
+//     "RFTokenIAT": Date
+//     "RFTokenObsoleteDate": Date
+// }>
+
+type SessionIpModel = string | string[]
+type DeviceNameModel = string | string[]
 
 export type SessionViewModel = {
-    "ip": string | string[]
+    "ip": SessionIpModel
     "title": string
     "lastActiveDate": string
     "deviceId": string
@@ -26,10 +44,10 @@ export type SessionUpdateFilterModel = {
 }
 
 export type SessionUpdateContentModel = {
-    "ip": string | string[]
+    "ip": SessionIpModel
     "lastActiveDate": string
     "RFTokenIAT": Date
-    "deviceName": string | string[]
+    "deviceName": DeviceNameModel
     RFTokenObsoleteDate: Date
 }
 
