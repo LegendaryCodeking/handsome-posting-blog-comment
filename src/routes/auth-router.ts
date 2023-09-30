@@ -19,23 +19,23 @@ export const authRouter = Router({})
 authRouter.post('/login',
     IpRateLimitMW,
     inputValidationMw,
-    authController.loginUser)
+    authController.loginUser.bind(authController))
 
 authRouter.post('/logout',
     verifyRefreshToken,
-    authController.logoutUser)
+    authController.logoutUser.bind(authController))
 
 authRouter.post('/refresh-token',
     verifyRefreshToken,
     inputValidationMw,
-    authController.updateTokens)
+    authController.updateTokens.bind(authController))
 
 authRouter.post('/registration-confirmation',
     IpRateLimitMW,
     isCodeCorrect,
     isAlreadyConfirmedCode,
     inputValidationMw,
-    authController.registrationConfirmation)
+    authController.registrationConfirmation.bind(authController))
 
 authRouter.post('/registration',
     IpRateLimitMW,
@@ -44,30 +44,30 @@ authRouter.post('/registration',
     emailValidation,
     doesLoginEmailAlreadyExist,
     inputValidationMw,
-    authController.registration)
+    authController.registration.bind(authController))
 
 authRouter.post('/registration-email-resending',
     IpRateLimitMW,
     doesEmailExist,
     isAlreadyConfirmedEmail,
     inputValidationMw,
-    authController.registrationEmailResending)
+    authController.registrationEmailResending.bind(authController))
 
 
 authRouter.get('/me',
     authenticationCheckBearer,
     inputValidationMw,
-    authController.getInfoAboutMyself)
+    authController.getInfoAboutMyself.bind(authController))
 
 authRouter.post('/password-recovery',
     IpRateLimitMW,
     emailValidation,
     inputValidationMw,
-    authController.passwordRecovery)
+    authController.passwordRecovery.bind(authController))
 
 authRouter.post('/new-password',
     IpRateLimitMW,
     passwordUpdateValidation,
     isCodeCorrectForPassRecovery,
     inputValidationMw,
-    authController.newPassword)
+    authController.newPassword.bind(authController))

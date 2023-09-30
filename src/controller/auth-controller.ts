@@ -3,16 +3,20 @@ import {UserViewModel} from "../models/Users/UserModel";
 import {UserService} from "../domain/user-service";
 import {JwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {authService} from "../domain/auth-service";
-import {sessionsService} from "../domain/sessions-service";
+import {AuthService} from "../domain/auth-service";
+import {SessionsService} from "../domain/sessions-service";
 
 class AuthController {
     private userService: UserService;
     private jwtService: JwtService;
+    private authService: AuthService;
+    private sessionsService: SessionsService;
 
     constructor() {
         this.userService = new UserService()
         this.jwtService = new JwtService()
+        this.authService = new AuthService()
+        this.sessionsService = new SessionsService()
     }
 
     async loginUser(req: Request, res: Response) {
@@ -33,7 +37,7 @@ class AuthController {
             const deviceName: string = req.headers['user-agent'] || "deviceName undefined"
 
             // Фиксируем сессию
-            const sessionRegInfo = await sessionsService.registerSession(loginIp, RFTokenInfo.iat, deviceName, user.id, deviceId)
+            const sessionRegInfo = await this.sessionsService.registerSession(loginIp, RFTokenInfo.iat, deviceName, user.id, deviceId)
             if (sessionRegInfo === null) {
                 res.status(500).json("Не удалось залогиниться. Попроубуйте позднее")
             }
@@ -67,7 +71,7 @@ class AuthController {
 
     async registrationConfirmation(req: Request, res: Response) {
 
-        const result = await authService.confirmEmail(req.body.code)
+        const result = await this.authService.confirmEmail(req.body.code)
         if (result) {
             res.status(STATUSES_HTTP.NO_CONTENT_204).send()
         } else {
@@ -77,7 +81,7 @@ class AuthController {
     }
 
     async registrationEmailResending(req: Request, res: Response) {
-        const result = await authService.resendEmail(req.body.email)
+        const result = await this.authService.resendEmail(req.body.email)
         if (result) {
             res.status(STATUSES_HTTP.NO_CONTENT_204).send()
         } else {
@@ -109,7 +113,7 @@ class AuthController {
         const deviceName = req.headers['User-Agent'] || "deviceName undefined"
 
         // Обновляем запись в списке сессий
-        const sessionRegInfoNew = await sessionsService.updateSession(
+        const sessionRegInfoNew = await this.sessionsService.updateSession(
             CurrentRFTokenInfo.iat,
             CurrentRFTokenInfo.deviceId,
             loginIp,
@@ -134,7 +138,7 @@ class AuthController {
         }
 
         // Удаляем запись с текущей сессией из БД
-        const deletionStatus = await sessionsService.deleteSession(RFTokenInfo.iat, req.user!.id)
+        const deletionStatus = await this.sessionsService.deleteSession(RFTokenInfo.iat, req.user!.id)
 
         if (deletionStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)

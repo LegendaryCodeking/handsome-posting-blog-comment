@@ -3,7 +3,7 @@ import {EmailManager} from "../managers/email-manager";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
-class AuthService {
+export class AuthService {
     private usersRepo: UsersRepo;
     private emailManager: EmailManager;
 
@@ -53,6 +53,3 @@ class AuthService {
         return true
     }
 }
-
-
-export const authService = new AuthService()
