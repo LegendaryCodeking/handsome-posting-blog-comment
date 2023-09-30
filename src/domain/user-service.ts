@@ -7,6 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
 import {jwtService} from "../application/jwt-service";
+import {ObjectId} from "mongodb"
 
 enum ResultCode {
     success,
@@ -28,7 +29,7 @@ export const userService = {
         const passwordHash = await bcrypt.hash(password, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
 
         const createdUser = new UserDBModel(
-            (+(new Date())).toString(),
+            new ObjectId(),
             {
                 login: login,
                 email: email,

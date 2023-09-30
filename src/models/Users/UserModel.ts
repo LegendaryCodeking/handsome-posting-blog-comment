@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import {WithPagination} from "../custom";
+import {ObjectId} from "mongodb";
 
 export class UserDBModel {
     constructor(
-        public id: string,
+        public _id: ObjectId,
         public accountData: accountDataModel,
         public emailConfirmation: emailConfirmationModel,
         public passwordRecovery: passwordRecoveryModel
@@ -64,7 +65,7 @@ export type UserCreateModel = {
 }
 
 export const userMongoSchema = new mongoose.Schema<UserDBModel>({
-    id: String,
+    _id: ObjectId,
     accountData: {
         login: String,
         email: String,

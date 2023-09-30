@@ -2,6 +2,8 @@ import {UserDBModel} from "../models/Users/UserModel";
 import {UserViewModel} from "../models/Users/UserModel";
 import {UserModelClass} from "../db/db";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
+import {createObjectIdFromSting} from "../helpers/map-ObjectId";
+import {ObjectId} from "mongodb";
 
 
 export const usersRepo = {
@@ -12,7 +14,7 @@ export const usersRepo = {
 
         const userInstance = new UserModelClass()
 
-        userInstance.id = createdUser.id
+        userInstance._id = createdUser._id
         userInstance.accountData = createdUser.accountData
         userInstance.emailConfirmation = createdUser.emailConfirmation
         userInstance.passwordRecovery = createdUser.passwordRecovery
@@ -25,8 +27,9 @@ export const usersRepo = {
         // Mongo native driver code
         // const result = await UserModelClass.deleteOne({"id": id});
         // return result.deletedCount === 1
-
-        const userInstance = await UserModelClass.findOne({"id": id})
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return false
+        const userInstance = await UserModelClass.findOne({"_id": _id})
         if (!userInstance) return false
 
         await userInstance.deleteOne()
@@ -37,8 +40,9 @@ export const usersRepo = {
         // Mongo native driver code
         // const result = await UserModelClass.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
         // return result.matchedCount === 1
-
-        const userInstance = await UserModelClass.findOne({"id": id})
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return false
+        const userInstance = await UserModelClass.findOne({"_id": _id})
         if (!userInstance) return false
 
         userInstance.emailConfirmation.isConfirmed = true
@@ -48,12 +52,12 @@ export const usersRepo = {
         return true
 
     },
-    async updateUserEmailConfirmationInfo(id: string, user: UserDBModel): Promise<boolean> {
+    async updateUserEmailConfirmationInfo(_id: ObjectId, user: UserDBModel): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.replaceOne({"id": id}, user)
         // return result.modifiedCount === 1
 
-        const userInstance = await UserModelClass.findOne({"id": id})
+        const userInstance = await UserModelClass.findOne({"_id": _id})
         if (!userInstance) return false
 
         await userInstance.replaceOne(user)
@@ -70,7 +74,9 @@ export const usersRepo = {
         // });
         // return result.matchedCount === 1
 
-        const userInstance = await UserModelClass.findOne({"id": id})
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return false
+        const userInstance = await UserModelClass.findOne({"_id": _id})
         if (!userInstance) return false
 
         userInstance.passwordRecovery.passwordRecoveryCode = passwordRecoveryCode
@@ -91,8 +97,9 @@ export const usersRepo = {
         // });
         // return result.matchedCount === 1
 
-
-        const userInstance = await UserModelClass.findOne({"id": userId})
+        const _id = createObjectIdFromSting(userId)
+        if (_id === null) return false
+        const userInstance = await UserModelClass.findOne({"_id": _id})
         if (!userInstance) return false
 
         userInstance.accountData.password = newPassword

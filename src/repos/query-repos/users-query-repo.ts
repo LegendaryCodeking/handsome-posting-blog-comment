@@ -4,6 +4,7 @@ import {UserDBModel, UsersWithPaginationModel, UserViewModel} from "../../models
 import {UserModelClass} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
+import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
 export const usersQueryRepo = {
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
@@ -42,7 +43,10 @@ export const usersQueryRepo = {
     },
 
     async findUserById(id: string) {
-        let user = await UserModelClass.findOne({id: id})
+
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return null
+        let user = await UserModelClass.findOne({_id: _id})
         if (user) {
             return getUserViewModel(user)
         } else {

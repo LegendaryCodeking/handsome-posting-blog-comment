@@ -3,7 +3,7 @@ import {UserViewModel} from "../models/Users/UserModel";
 
 export const getUserViewModel = (user: UserDBModel): UserViewModel => {
     return {
-        id: user.id,
+        id: user._id.toString(),
         login: user.accountData.login,
         email: user.accountData.email,
         createdAt: user.accountData.createdAt

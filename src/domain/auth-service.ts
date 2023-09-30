@@ -1,4 +1,3 @@
-import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {usersRepo} from "../repos/users-repo";
 import {emailManager} from "../managers/email-manager";
 import {v4 as uuidv4} from "uuid";
@@ -33,7 +32,7 @@ export const authService = {
             isConfirmed: false
         }
         //Перезаписываем пользователя
-        let updatedUser = await usersRepo.updateUserEmailConfirmationInfo(user.id,user)
+        let updatedUser = await usersRepo.updateUserEmailConfirmationInfo(user._id,user)
         if (!updatedUser) return false
 
         try {
