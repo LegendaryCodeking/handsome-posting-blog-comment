@@ -7,15 +7,15 @@ import {blogsController} from "../controller/blogs-controller";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', blogsController.FindAllBlog)
+blogsRouter.get('/', blogsController.FindAllBlog.bind(blogsController))
 
-blogsRouter.get('/:id', blogsController.findBlogById)
+blogsRouter.get('/:id', blogsController.findBlogById.bind(blogsController))
 
-blogsRouter.get('/:id/posts', blogsController.findPostsForBlog)
+blogsRouter.get('/:id/posts', blogsController.findPostsForBlog.bind(blogsController))
 
 blogsRouter.delete('/:id',
     authenticationCheck,
-    blogsController.deleteBlog)
+    blogsController.deleteBlog.bind(blogsController))
 
 blogsRouter.post('/',
     authenticationCheck,
@@ -23,7 +23,7 @@ blogsRouter.post('/',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    blogsController.createBlog)
+    blogsController.createBlog.bind(blogsController))
 
 blogsRouter.post('/:id/posts',
     authenticationCheck,
@@ -31,7 +31,7 @@ blogsRouter.post('/:id/posts',
     shortDescription,
     content,
     inputValidationMw,
-    blogsController.createPostsForBlog)
+    blogsController.createPostsForBlog.bind(blogsController))
 
 
 blogsRouter.put('/:id',
@@ -40,5 +40,5 @@ blogsRouter.put('/:id',
     descriptionValidation,
     urlValidation,
     inputValidationMw,
-    blogsController.updateBlog
+    blogsController.updateBlog.bind(blogsController)
 )

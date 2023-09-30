@@ -7,7 +7,7 @@ import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {postQueryRepo} from "./post-query-repo";
 import {FilterQuery} from "mongoose";
 
-class BlogsQueryRepo {
+export class BlogsQueryRepo {
 
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
 
@@ -48,4 +48,5 @@ class BlogsQueryRepo {
     }
 }
 
+// Не можем пока удалить т.к. используется в MW
 export const blogsQueryRepo = new BlogsQueryRepo()

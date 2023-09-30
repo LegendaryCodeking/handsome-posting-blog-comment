@@ -1,14 +1,20 @@
 import {postsRepo} from "../repos/posts-repo";
 import {PostDBModel} from "../models/Posts/PostDBModel";
-import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
+import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 
 class PostsService {
+    private blogsQueryRepo: BlogsQueryRepo;
+
+    constructor() {
+        this.blogsQueryRepo = new BlogsQueryRepo
+    }
+
     async deletePost(id: string): Promise<boolean> {
         return postsRepo.deletePost(id)
     }
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostDBModel> {
-        const blogName = await blogsQueryRepo.findBlogById(blogId)
+        const blogName = await this.blogsQueryRepo.findBlogById(blogId)
 
         const createdPost = new PostDBModel(
             (+(new Date())).toString(),
