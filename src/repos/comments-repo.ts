@@ -4,6 +4,7 @@ import {
     CommentViewModel
 } from "../models/Comments/CommentModel";
 import {getCommentViewModel} from "../helpers/map-CommentViewModel";
+import {ObjectId} from "mongodb";
 
 
 export const commentsRepo = {
@@ -15,15 +16,22 @@ export const commentsRepo = {
         //     }
         // })
         // return result.matchedCount === 1
+        try {
+            // Отлавливаем ошибку, когда в ID передается неверные данные
+            // Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer
+            // BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer
+            const _id = new ObjectId(id);
+            const commentInstance = await CommentModelClass.findOne({"_id": _id})
+            if (!commentInstance) return false
 
-        const commentInstance = await CommentModelClass.findOne({"id": id})
-        if (!commentInstance) return false
+            commentInstance.content = content
 
-        commentInstance.content = content
+            await commentInstance.save()
 
-        await commentInstance.save()
-
-        return true
+            return true
+        } catch (e) {
+            return false
+        }
 
     },
     async deleteComment(id: string): Promise<boolean> {
@@ -32,12 +40,18 @@ export const commentsRepo = {
         // let result = await CommentModelClass.deleteOne({"id": id})
         // return result.deletedCount === 1
 
-        const commentInstance = await CommentModelClass.findOne({"id": id})
-        if (!commentInstance) return false
+        try {
+            const _id = new ObjectId(id);
+            const commentInstance = await CommentModelClass.findOne({"_id": _id})
+            if (!commentInstance) return false
 
-        await commentInstance.deleteOne()
+            await commentInstance.deleteOne()
 
-        return true
+            return true
+        } catch {
+            return false
+        }
+
 
     },
     async createComment(newComment: CommentDbModel ): Promise<CommentViewModel> {
@@ -46,7 +60,7 @@ export const commentsRepo = {
 
         const commentInstance = new CommentModelClass()
 
-        commentInstance.id = newComment.id
+        commentInstance._id = newComment._id
         commentInstance.postId = newComment.postId
         commentInstance.content = newComment.content
         commentInstance.commentatorInfo = newComment.commentatorInfo

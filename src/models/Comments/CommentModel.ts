@@ -10,14 +10,25 @@ export type UpdateCommentModel = {
     content: string
 }
 
-export type CommentDbModel = {
-    _id?: ObjectId
-    id: string,
-    postId: string
-    content: string
-    commentatorInfo: CommentatorInfoType
-    createdAt: string
+export class CommentDbModel {
+constructor(
+    public _id: ObjectId,
+    public postId: string,
+    public content: string,
+    public commentatorInfo: CommentatorInfoType,
+    public createdAt: string
+) {
 }
+}
+
+// export type CommentDbModel = {
+//     _id?: ObjectId
+//     id: string,
+//     postId: string
+//     content: string
+//     commentatorInfo: CommentatorInfoType
+//     createdAt: string
+// }
 
 export type CommentViewModel = {
     id: string
@@ -43,7 +54,7 @@ export type CommentatorInfoType = {
 export type CommentsWithPaginationModel = WithPagination<CommentViewModel>
 
 export const commentMongooseSchema = new mongoose.Schema<CommentDbModel>({
-    id: String,
+    _id: ObjectId,
     postId: String,
     content: String,
     commentatorInfo: {

@@ -3,6 +3,7 @@ import {Sort} from "mongodb";
 import {CommentModelClass} from "../../db/db";
 import {getCommentViewModel} from "../../helpers/map-CommentViewModel";
 import {FilterQuery} from "mongoose";
+import {ObjectId} from "mongodb"
 
 export const commentsQueryRepo = {
     async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
@@ -34,12 +35,21 @@ export const commentsQueryRepo = {
     },
 
     async findCommentById(id: string): Promise<any> {
-        let foundComment = await CommentModelClass.findOne({"id": id})
-        if (foundComment) {
-            return getCommentViewModel(foundComment)
-        } else {
+        // c помощью try Отлавливаем ошибку, когда в ID передается неверные данные
+        // Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer
+        // BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer
+        try {
+            const _id = new ObjectId(id);
+            let foundComment = await CommentModelClass.findOne({"_id": _id})
+            if (foundComment) {
+                return getCommentViewModel(foundComment)
+            } else {
+                return null
+            }
+        } catch {
             return null
         }
+
 
     },
 }

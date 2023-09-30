@@ -4,6 +4,7 @@ import {
     CommentDbModel,
     CommentViewModel
 } from "../models/Comments/CommentModel";
+import {ObjectId} from "mongodb";
 
 
 export const commentService = {
@@ -14,17 +15,16 @@ export const commentService = {
         return commentsRepo.deleteComment(id);
     },
     async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewModel> {
-        const newComment: CommentDbModel = {
-            // В ID коммента будет вшит ID поста, к которому этот коммент оставлен
-            "id": (+(new Date())).toString(),
-            "postId": postId,
-            "content": content,
-            "commentatorInfo": {
+        const newComment = new CommentDbModel(
+            new ObjectId(),
+            postId,
+            content,
+            {
                 "userId": userId,
                 "userLogin": userLogin
             },
-            "createdAt": new Date().toISOString()
-        }
+            new Date().toISOString()
+        )
 
         return commentsRepo.createComment(newComment);
     }
