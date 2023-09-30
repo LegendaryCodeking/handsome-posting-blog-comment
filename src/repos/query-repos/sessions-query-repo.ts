@@ -27,5 +27,3 @@ export class SessionsQueryRepo {
         }
     }
 }
-
-export const sessionsQueryRepo = new SessionsQueryRepo()

@@ -7,7 +7,7 @@ import {authBasicHeader, connection_string} from "../utils/export_data_functions
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {UserCreateModel, UserViewModel} from "../../models/Users/UserModel";
 import {usersTestManager} from "../utils/usersTestManager";
-import {usersRepo} from "../../repos/users-repo";
+import {UserModelClass} from "../../db/db";
 
 jest.setTimeout(10000)
 
@@ -47,7 +47,7 @@ describe('testing password recovery', () => {
     })
 
     it("should return error if password is incorrect; status 400;", async () => {
-        const userDB = await usersRepo.findByLoginOrEmail(user.email)
+        const userDB = await UserModelClass.findOne({"accountData.email": user.email})
         const data = {
             "newPassword": "short",
             "recoveryCode": userDB!.passwordRecovery!.passwordRecoveryCode
@@ -62,7 +62,7 @@ describe('testing password recovery', () => {
 
 
     it("should update password;", async () => {
-        const userDB = await usersRepo.findByLoginOrEmail(user.email)
+        const userDB = await UserModelClass.findOne({"accountData.email": user.email})
         const data = {
             "newPassword": "new_password",
             "recoveryCode": userDB!.passwordRecovery!.passwordRecoveryCode

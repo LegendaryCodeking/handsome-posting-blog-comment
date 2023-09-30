@@ -52,6 +52,3 @@ export class BlogsQueryRepo {
         return this.postQueryRepo.findPosts(queryFilter)
     }
 }
-
-// Не можем пока удалить т.к. используется в MW
-export const blogsQueryRepo = new BlogsQueryRepo()

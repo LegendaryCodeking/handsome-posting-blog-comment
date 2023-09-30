@@ -129,5 +129,3 @@ export class UsersRepo {
         }
     }
 }
-
-export const usersRepo = new UsersRepo()
