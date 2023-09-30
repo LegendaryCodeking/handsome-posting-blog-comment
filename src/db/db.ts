@@ -6,6 +6,7 @@ import {commentMongooseSchema} from "../models/Comments/CommentModel";
 import {sessionMongooseSchema} from "../models/Sessions/SessionModel";
 import {rateLimitMongooseSchema} from "../models/rateLimiting/rateLimitingModel";
 import mongoose from "mongoose";
+import {likesMongooseSchema} from "../models/Comments/LikeModel";
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ export const PostModelClass = mongoose.model('posts', postMongoSchema)
 export const BlogModelClass = mongoose.model('blogs', blogMongoSchema)
 export const UserModelClass = mongoose.model('users', userMongoSchema)
 export const CommentModelClass = mongoose.model('comments', commentMongooseSchema)
+export const LikeModelClass = mongoose.model('likes', likesMongooseSchema)
 export const SessionModelClass = mongoose.model('sessions', sessionMongooseSchema)
 export const RateLimitModelClass = mongoose.model('rateLimit', rateLimitMongooseSchema)
 
