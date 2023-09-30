@@ -5,7 +5,7 @@ import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {ObjectId} from "mongodb";
 
-class UsersRepo {
+export class UsersRepo {
     async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
         // Mongo native driver code
         // await UserModelClass.insertMany([createdUser])

@@ -8,7 +8,7 @@ export const usersRouter = Router({})
 
 usersRouter.get('/',
     authenticationCheck,
-    usersController.findAllUsers)
+    usersController.findAllUsers.bind(usersController))
 
 usersRouter.post('/',
     authenticationCheck,
@@ -16,8 +16,8 @@ usersRouter.post('/',
     passwordValidation,
     emailValidation,
     inputValidationMw,
-    usersController.createUser)
+    usersController.createUser.bind(usersController))
 
 usersRouter.delete('/:id',
     authenticationCheck,
-    usersController.deleteUser )
+    usersController.deleteUser.bind(usersController))

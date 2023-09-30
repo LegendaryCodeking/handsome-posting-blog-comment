@@ -6,7 +6,7 @@ import {getUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
-class UsersQueryRepo {
+export class UsersQueryRepo {
 
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
         const findFilter: FilterQuery<UserDBModel> = {

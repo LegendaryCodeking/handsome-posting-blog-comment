@@ -1,7 +1,7 @@
-import {usersRepo} from "../repos/users-repo";
+import {UsersRepo} from "../repos/users-repo";
 import {UserDBModel, UserViewModel} from "../models/Users/UserModel";
 import bcrypt from 'bcrypt';
-import {usersQueryRepo} from "../repos/query-repos/users-query-repo";
+import {UsersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
@@ -22,7 +22,15 @@ type Result<T> = {
     errorMessage?: string
 }
 
-class UserService {
+export class UserService {
+    private usersQueryRepo: UsersQueryRepo;
+    private usersRepo: UsersRepo;
+
+    constructor() {
+        this.usersRepo = new UsersRepo()
+        this.usersQueryRepo = new UsersQueryRepo()
+
+    }
 
     async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<Result<string>> {
 
@@ -51,7 +59,7 @@ class UserService {
         )
 
 
-        let resultUser = await usersRepo.createUser(createdUser)
+        let resultUser = await this.usersRepo.createUser(createdUser)
         if (!isAuthorSuper) {
             emailManager.sendEmailConfirmationMessage(createdUser).catch((err) => console.log(err))
         }
@@ -65,11 +73,11 @@ class UserService {
     }
 
     async deleteUser(id: string): Promise<boolean> {
-        return await usersRepo.deleteUser(id)
+        return await this.usersRepo.deleteUser(id)
     }
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
-        const user = await usersRepo.findByLoginOrEmail(loginOrEmail)
+        const user = await this.usersRepo.findByLoginOrEmail(loginOrEmail)
         if (!user) return null
 
 
@@ -87,11 +95,11 @@ class UserService {
     }
 
     async recoveryPassword(email: string): Promise<boolean> {
-        const user = await usersQueryRepo.findByLoginOrEmail(email)
+        const user = await this.usersQueryRepo.findByLoginOrEmail(email)
         // Return true even if current email is not registered (for prevent user's email detection)
         if (!user) return true
         const passwordRecoveryCode = await jwtService.createPassRecoveryCode(user)
-        await usersRepo.addPassRecoveryCode(user.id, passwordRecoveryCode)
+        await this.usersRepo.addPassRecoveryCode(user.id, passwordRecoveryCode)
 
         try {
             await emailManager.sendPasswordRecoveryMessage(user.email, passwordRecoveryCode)
@@ -105,8 +113,6 @@ class UserService {
 
     async updatePassword(newPassword: string, userId: string): Promise<boolean> {
         const passwordHash = await bcrypt.hash(newPassword, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
-        return await usersRepo.updatePassword(passwordHash, userId)
+        return await this.usersRepo.updatePassword(passwordHash, userId)
     }
 }
-
-export const userService = new UserService()

@@ -1,14 +1,20 @@
 import {Request, Response} from "express";
 import {UserViewModel} from "../models/Users/UserModel";
-import {userService} from "../domain/user-service";
+import {UserService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {authService} from "../domain/auth-service";
 import {sessionsService} from "../domain/sessions-service";
 
 class AuthController {
+    private userService: UserService;
+
+    constructor() {
+        this.userService = new UserService()
+    }
+
     async loginUser(req: Request, res: Response) {
-        const user: UserViewModel | null = await userService
+        const user: UserViewModel | null = await this.userService
             .checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {
             const accessToken = await jwtService.createJWT(user)
@@ -49,7 +55,7 @@ class AuthController {
 
     async registration(req: Request, res: Response) {
 
-        const user = await userService.createUser(req.body.login, req.body.password, req.body.email, false)
+        const user = await this.userService.createUser(req.body.login, req.body.password, req.body.email, false)
         if (user) {
             res.status(STATUSES_HTTP.NO_CONTENT_204).send()
         } else {
@@ -136,7 +142,7 @@ class AuthController {
     }
 
     async passwordRecovery(req: Request, res: Response) {
-        const user = await userService.recoveryPassword(req.body.email)
+        const user = await this.userService.recoveryPassword(req.body.email)
         if (user) {
             res.status(STATUSES_HTTP.NO_CONTENT_204).send()
         } else {
@@ -145,7 +151,7 @@ class AuthController {
     }
 
     async newPassword(req: Request, res: Response) {
-        const result = await userService.updatePassword(req.body.newPassword, req.user!.id)
+        const result = await this.userService.updatePassword(req.body.newPassword, req.user!.id)
         if (result) {
             res.status(STATUSES_HTTP.NO_CONTENT_204).send()
         } else {
