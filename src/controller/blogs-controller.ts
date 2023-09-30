@@ -11,16 +11,19 @@ import {PostViewModel} from "../models/Posts/PostViewModel";
 import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
+import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
 
 class BlogsController {
     private blogsService: BlogsService;
     private blogsQueryRepo: BlogsQueryRepo;
     private postsService: PostsService;
+    private postQueryRepo: PostQueryRepo;
 
     constructor() {
         this.blogsService = new BlogsService()
         this.blogsQueryRepo = new BlogsQueryRepo()
         this.postsService = new PostsService()
+        this.postQueryRepo = new PostQueryRepo()
     }
 
     async FindAllBlog(req: Request, res: Response<BlogsWithPaginationModel>) {
@@ -55,7 +58,7 @@ class BlogsController {
 
         const queryFilter = queryBlogPostPagination(req)
 
-        let foundPosts = await this.blogsQueryRepo.findPostsByBlogId(queryFilter);
+        let foundPosts = await this.postQueryRepo.findPosts(queryFilter);
 
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
