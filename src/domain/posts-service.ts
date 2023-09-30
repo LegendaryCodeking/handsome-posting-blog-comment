@@ -7,8 +7,8 @@ export class PostsService {
     private postsRepo: PostsRepo;
 
     constructor() {
-        this.blogsQueryRepo = new BlogsQueryRepo
-        this.postsRepo = new PostsRepo
+        this.blogsQueryRepo = new BlogsQueryRepo()
+        this.postsRepo = new PostsRepo()
     }
 
     async deletePost(id: string): Promise<boolean> {

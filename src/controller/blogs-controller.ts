@@ -18,9 +18,9 @@ class BlogsController {
     private postsService: PostsService;
 
     constructor() {
-        this.blogsService = new BlogsService
-        this.blogsQueryRepo = new BlogsQueryRepo
-        this.postsService = new PostsService
+        this.blogsService = new BlogsService()
+        this.blogsQueryRepo = new BlogsQueryRepo()
+        this.postsService = new PostsService()
     }
 
     async FindAllBlog(req: Request, res: Response<BlogsWithPaginationModel>) {

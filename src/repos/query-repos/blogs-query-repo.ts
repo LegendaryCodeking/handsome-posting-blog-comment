@@ -11,7 +11,7 @@ export class BlogsQueryRepo {
     private postQueryRepo: PostQueryRepo;
 
     constructor() {
-        this.postQueryRepo = new PostQueryRepo
+        this.postQueryRepo = new PostQueryRepo()
     }
 
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
