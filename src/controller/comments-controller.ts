@@ -2,14 +2,21 @@ import {
     CommentViewModel,
 } from "../models/Comments/CommentModel";
 import {Request, Response} from "express";
-import {commentService} from "../domain/comment-service";
+import {CommentService} from "../domain/comment-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
+import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 
 class CommentsController {
+    private commentsQueryRepo: CommentsQueryRepo;
+    private commentService: CommentService;
+
+    constructor() {
+        this.commentsQueryRepo = new CommentsQueryRepo()
+        this.commentService = new CommentService()
+    }
 
     async findCommentById(req: Request, res: Response) {
-        let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -19,7 +26,7 @@ class CommentsController {
     }
 
     async updateComment(req: Request, res: Response) {
-        let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -30,13 +37,13 @@ class CommentsController {
             return;
         }
 
-        let updateStatus: boolean = await commentService.updateComment(req.params.id, req.body.content)
+        let updateStatus: boolean = await this.commentService.updateComment(req.params.id, req.body.content)
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 
     async deleteComment(req: Request, res: Response) {
 
-        let foundComment: CommentViewModel | null = await commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -47,7 +54,7 @@ class CommentsController {
             return;
         }
 
-        let deletionStatus: boolean = await commentService.deleteComment(req.params.id)
+        let deletionStatus: boolean = await this.commentService.deleteComment(req.params.id)
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 }

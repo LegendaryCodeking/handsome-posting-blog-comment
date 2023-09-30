@@ -3,7 +3,7 @@ import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel"
 import {getCommentViewModel} from "../helpers/map-CommentViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 
-class CommentsRepo {
+export class CommentsRepo {
     async updateComment(id: string, content: string): Promise<boolean> {
         // Mongo native driver code
         // let result = await CommentModelClass.updateOne({"id": id}, {
@@ -37,8 +37,6 @@ class CommentsRepo {
         await commentInstance.deleteOne()
 
         return true
-
-
     }
 
     async createComment(newComment: CommentDbModel): Promise<CommentViewModel> {
@@ -58,5 +56,3 @@ class CommentsRepo {
         return getCommentViewModel(newComment);
     }
 }
-
-export const commentsRepo = new CommentsRepo()

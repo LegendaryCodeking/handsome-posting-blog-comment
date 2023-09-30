@@ -6,19 +6,23 @@ import {PostsService} from "../domain/posts-service";
 import {URIParamsPostIdModel} from "../models/Posts/URIParamsPostIdModel";
 import {PostViewModel} from "../models/Posts/PostViewModel";
 import {CommentsWithPaginationModel, CommentViewModel} from "../models/Comments/CommentModel";
-import {commentService} from "../domain/comment-service";
+import {CommentService} from "../domain/comment-service";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
-import {commentsQueryRepo} from "../repos/query-repos/comments-query-repo";
+import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
 import {getPostViewModel} from "../helpers/map-PostViewModel";
 
 class PostsController {
     private postQueryRepo: PostQueryRepo;
     private postsService: PostsService;
+    private commentsQueryRepo: CommentsQueryRepo;
+    private commentService: CommentService;
 
     constructor() {
-        this.postsService = new PostsService
-        this.postQueryRepo = new PostQueryRepo
+        this.postsService = new PostsService()
+        this.postQueryRepo = new PostQueryRepo()
+        this.commentService = new CommentService()
+        this.commentsQueryRepo = new CommentsQueryRepo()
     }
 
     async findAllPosts(req: Request,
@@ -91,7 +95,7 @@ class PostsController {
             return;
         }
 
-        let createComment = await commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
+        let createComment = await this.commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createComment)
 
@@ -102,7 +106,7 @@ class PostsController {
 
         const queryFilter = queryCommentsWithPagination(req)
 
-        let foundPosts = await commentsQueryRepo.findComments(queryFilter);
+        let foundPosts = await this.commentsQueryRepo.findComments(queryFilter);
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundPosts);

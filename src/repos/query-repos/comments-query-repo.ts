@@ -5,7 +5,7 @@ import {getCommentViewModel} from "../../helpers/map-CommentViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
-class CommentsQueryRepo {
+export class CommentsQueryRepo {
 
     async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
         const findFilter: FilterQuery<CommentDbModel> = {postId: queryFilter.postId};
@@ -47,5 +47,3 @@ class CommentsQueryRepo {
         }
     }
 }
-
-export const commentsQueryRepo = new CommentsQueryRepo()
