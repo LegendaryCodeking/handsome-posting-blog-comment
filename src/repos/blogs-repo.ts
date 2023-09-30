@@ -2,7 +2,7 @@ import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {BlogModelClass} from "../db/db";
 import {getBlogViewModel} from "../helpers/map-BlogViewModel";
 
-export const blogsRepo = {
+class BlogsRepo {
     async deleteBlog(id: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await BlogModelClass.deleteOne({"id": id});
@@ -15,7 +15,8 @@ export const blogsRepo = {
 
         return true
 
-    },
+    }
+
     async createBlog(createdBlog: BlogDbModel): Promise<BlogDbModel> {
         // Mongo native driver code
         // await BlogModel.insertMany([createdBlog])
@@ -31,7 +32,8 @@ export const blogsRepo = {
         await blogInstance.save() // await т.к. сохранение асинхронное
 
         return getBlogViewModel(createdBlog)
-    },
+    }
+
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await BlogModelClass.updateOne({"id": id}, {
@@ -54,6 +56,7 @@ export const blogsRepo = {
 
         // Mongo native driver code
         // return result.matchedCount === 1
-    },
-
+    }
 }
+
+export const blogsRepo = new BlogsRepo()

@@ -5,9 +5,7 @@ import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {ObjectId} from "mongodb";
 
-
-export const usersRepo = {
-
+class UsersRepo {
     async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
         // Mongo native driver code
         // await UserModelClass.insertMany([createdUser])
@@ -22,7 +20,7 @@ export const usersRepo = {
         await userInstance.save()
 
         return getUserViewModel(createdUser)
-    },
+    }
     async deleteUser(id: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.deleteOne({"id": id});
@@ -35,7 +33,7 @@ export const usersRepo = {
         await userInstance.deleteOne()
 
         return true
-    },
+    }
     async updateConfirmation(id: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
@@ -50,8 +48,7 @@ export const usersRepo = {
         await userInstance.save()
 
         return true
-
-    },
+    }
     async updateUserEmailConfirmationInfo(_id: ObjectId, user: UserDBModel): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.replaceOne({"id": id}, user)
@@ -63,7 +60,7 @@ export const usersRepo = {
         await userInstance.replaceOne(user)
 
         return true
-    },
+    }
     async addPassRecoveryCode(id: string, passwordRecoveryCode: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.updateOne({"id": id}, {
@@ -85,8 +82,7 @@ export const usersRepo = {
         await userInstance.save()
 
         return true
-
-    },
+    }
     async updatePassword(newPassword: string, userId: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.updateOne({"id": userId}, {
@@ -108,15 +104,14 @@ export const usersRepo = {
         await userInstance.save()
 
         return true
-    },
-
+    }
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
         const user = await UserModelClass.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
             return user
         }
         return null
-    },
+    }
     async findUserByConfirmationCode(code: string) {
         let user = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
         if (user) {
@@ -124,7 +119,7 @@ export const usersRepo = {
         } else {
             return null
         }
-    },
+    }
     async findUserByPassRecoveryCode(code: string) {
         let user = await UserModelClass.findOne({"passwordRecovery.passwordRecoveryCode": code})
         if (user) {
@@ -133,5 +128,6 @@ export const usersRepo = {
             return null
         }
     }
-
 }
+
+export const usersRepo = new UsersRepo()

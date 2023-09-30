@@ -1,7 +1,7 @@
 import {PostModelClass} from "../db/db";
 import {PostDBModel} from "../models/Posts/PostDBModel";
 
-export const postsRepo = {
+class PostsRepo {
     async deletePost(id: string): Promise<boolean> {
         // Mongo native driver code
         // let result = await PostModelClass.deleteOne({"id": id})
@@ -13,7 +13,8 @@ export const postsRepo = {
         await postInstance.deleteOne()
 
         return true
-    },
+    }
+
     async createPost(createdPost: PostDBModel): Promise<PostDBModel> {
         // Mongo native driver code
         // await PostModelClass.insertMany([createdPost]);
@@ -33,7 +34,8 @@ export const postsRepo = {
         await postInstance.save()
 
         return createdPost
-    },
+    }
+
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         // Mongo native driver code
         // let result = await PostModelClass.updateOne({"id": id}, {
@@ -49,14 +51,15 @@ export const postsRepo = {
         const postInstance = await PostModelClass.findOne({"id": id})
         if (!postInstance) return false
 
-        postInstance.title  = title
-        postInstance.shortDescription  = shortDescription
-        postInstance.content  = content
-        postInstance.blogId  = blogId
+        postInstance.title = title
+        postInstance.shortDescription = shortDescription
+        postInstance.content = content
+        postInstance.blogId = blogId
 
         await postInstance.save()
 
         return true
-
     }
 }
+
+export const postsRepo = new PostsRepo()

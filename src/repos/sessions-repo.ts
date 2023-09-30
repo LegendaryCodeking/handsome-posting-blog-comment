@@ -6,8 +6,8 @@ import {
 } from "../models/Sessions/SessionModel";
 import {getSessionViewModel} from "../helpers/map-SessionViewModel";
 
+class SessionsRepo {
 
-export const sessionsRepo = {
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
         try {
             // Mongo native driver code
@@ -17,9 +17,9 @@ export const sessionsRepo = {
             // });
 
             let sessionInstance = await SessionModelClass.findOne({
-                    "RFTokenIAT": {$ne: new Date(currentRFTokenIAT)},
-                    "deviceId": {$ne: deviceId}
-                })
+                "RFTokenIAT": {$ne: new Date(currentRFTokenIAT)},
+                "deviceId": {$ne: deviceId}
+            })
 
             while (sessionInstance) {
                 await sessionInstance.deleteOne()
@@ -34,7 +34,8 @@ export const sessionsRepo = {
             return false
         }
         return true
-    },
+    }
+
     async deleteDeviceSessions(deviceId: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await SessionModelClass.deleteOne({"deviceId": deviceId});
@@ -45,7 +46,8 @@ export const sessionsRepo = {
 
         await sessionInstance.deleteOne()
         return true
-    },
+    }
+
     async registerSession(createdSession: SessionDBModel): Promise<SessionViewModel | null> {
         try {
             // Mongo native driver code
@@ -69,7 +71,8 @@ export const sessionsRepo = {
         } catch (e) {
             return null
         }
-    },
+    }
+
     async updateSessionInfo(filter: SessionUpdateFilterModel, updateSessionContent: SessionUpdateContentModel): Promise<boolean> {
         // Mongo native driver code
         // let result = await SessionModelClass.updateOne(filter, {
@@ -88,8 +91,8 @@ export const sessionsRepo = {
 
         await sessionInstance.save()
         return true
+    }
 
-    },
     async deleteSession(currentRFTokenIAT: number, userId: string): Promise<boolean> {
         // Mongo native driver code
         // let result = await SessionModelClass.deleteOne({"RFTokenIAT": new Date(currentRFTokenIAT), "userId": userId})
@@ -102,3 +105,5 @@ export const sessionsRepo = {
         return true
     }
 }
+
+export const sessionsRepo = new SessionsRepo()
