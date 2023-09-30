@@ -6,7 +6,7 @@ import {
 } from "../models/Sessions/SessionModel";
 import {getSessionViewModel} from "../helpers/map-SessionViewModel";
 
-class SessionsRepo {
+export class SessionsRepo {
 
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
         try {
@@ -105,5 +105,3 @@ class SessionsRepo {
         return true
     }
 }
-
-export const sessionsRepo = new SessionsRepo()

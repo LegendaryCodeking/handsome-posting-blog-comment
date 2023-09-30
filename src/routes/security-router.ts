@@ -7,15 +7,15 @@ export const securityRouter = Router({})
 
 securityRouter.get('/',
     verifyRefreshToken,
-    securityController.findAllSessions
+    securityController.findAllSessions.bind(securityController)
 )
 
 securityRouter.delete('/',
     verifyRefreshToken,
-    securityController.terminateAllSessions
+    securityController.terminateAllSessions.bind(securityController)
 )
 
 securityRouter.delete('/:deviceId',
     verifyRefreshToken,
-    securityController.terminateDeviceSessions
+    securityController.terminateDeviceSessions.bind(securityController)
 )

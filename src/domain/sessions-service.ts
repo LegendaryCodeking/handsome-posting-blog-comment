@@ -1,16 +1,21 @@
-import {sessionsRepo} from "../repos/sessions-repo";
+import {SessionsRepo} from "../repos/sessions-repo";
 import {SessionDBModel, SessionUpdateFilterModel, SessionViewModel} from "../models/Sessions/SessionModel";
 import {ObjectId} from "mongodb";
 import add from "date-fns/add";
 
-class SessionsService {
+export class SessionsService {
+    private sessionsRepo: SessionsRepo;
+
+    constructor() {
+        this.sessionsRepo = new SessionsRepo()
+    }
 
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
-        return sessionsRepo.deleteAllSessions(currentRFTokenIAT, deviceId)
+        return this.sessionsRepo.deleteAllSessions(currentRFTokenIAT, deviceId)
     }
 
     async deleteDeviceSessions(deviceId: string): Promise<boolean> {
-        return sessionsRepo.deleteDeviceSessions(deviceId)
+        return this.sessionsRepo.deleteDeviceSessions(deviceId)
     }
 
     async registerSession(loginIp: string | string[], RefreshTokenIssuedAt: number,
@@ -30,7 +35,7 @@ class SessionsService {
                 }
             ))
 
-        return await sessionsRepo.registerSession(createdSession)
+        return await this.sessionsRepo.registerSession(createdSession)
     }
 
     async updateSession(currentRFTokenIAT: number, deviceId: string, loginIp: string | string[],
@@ -52,12 +57,12 @@ class SessionsService {
             })
         }
 
-        return await sessionsRepo.updateSessionInfo(filter, updateSessionContent)
+        return await this.sessionsRepo.updateSessionInfo(filter, updateSessionContent)
 
     }
 
     async deleteSession(currentRFTokenIAT: number, userId: string) {
-        return await sessionsRepo.deleteSession(currentRFTokenIAT, userId)
+        return await this.sessionsRepo.deleteSession(currentRFTokenIAT, userId)
     }
 }
 

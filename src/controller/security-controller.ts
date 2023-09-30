@@ -1,16 +1,20 @@
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {sessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
-import {sessionsService} from "../domain/sessions-service";
+import {SessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
+import {SessionsService} from "../domain/sessions-service";
 import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSessionDeviceIdModel";
 import {JwtService} from "../application/jwt-service";
 import {RequestsWithParams} from "../models/requestModels";
 
 class SecurityController {
     private jwtService: JwtService;
+    private sessionsQueryRepo: SessionsQueryRepo;
+    private sessionsService: SessionsService;
 
     constructor() {
         this.jwtService = new JwtService()
+        this.sessionsQueryRepo = new SessionsQueryRepo()
+        this.sessionsService = new SessionsService()
     }
 
     async findAllSessions(req: Request, res: Response) {
@@ -19,7 +23,7 @@ class SecurityController {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return
         }
-        let foundSessions = await sessionsQueryRepo.FindAllSessions(RFTokenInfo.userId)
+        let foundSessions = await this.sessionsQueryRepo.FindAllSessions(RFTokenInfo.userId)
 
         if (!foundSessions.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
@@ -38,7 +42,7 @@ class SecurityController {
             return
         }
 
-        let deleteStatus: boolean = await sessionsService.deleteAllSessions(RFTokenInfo.iat, RFTokenInfo.deviceId)
+        let deleteStatus: boolean = await this.sessionsService.deleteAllSessions(RFTokenInfo.iat, RFTokenInfo.deviceId)
         if (deleteStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {
@@ -52,7 +56,7 @@ class SecurityController {
             res.sendStatus(STATUSES_HTTP.SERVER_ERROR_500)
             return
         }
-        const ownerOfDeletedSession = await sessionsQueryRepo.findUserIdByDeviceId(req.params.deviceId)
+        const ownerOfDeletedSession = await this.sessionsQueryRepo.findUserIdByDeviceId(req.params.deviceId)
         if (ownerOfDeletedSession === null) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return
@@ -63,7 +67,7 @@ class SecurityController {
             return;
         }
 
-        let deleteStatus: boolean = await sessionsService.deleteDeviceSessions(req.params.deviceId)
+        let deleteStatus: boolean = await this.sessionsService.deleteDeviceSessions(req.params.deviceId)
         if (deleteStatus) {
             res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
         } else {
