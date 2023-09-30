@@ -22,8 +22,8 @@ type Result<T> = {
     errorMessage?: string
 }
 
+class UserService {
 
-export const userService = {
     async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<Result<string>> {
 
         const passwordHash = await bcrypt.hash(password, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
@@ -62,10 +62,11 @@ export const userService = {
         }
 
 
-    },
+    }
+
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepo.deleteUser(id)
-    },
+    }
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
         const user = await usersRepo.findByLoginOrEmail(loginOrEmail)
@@ -83,7 +84,8 @@ export const userService = {
         }
         return null
 
-    },
+    }
+
     async recoveryPassword(email: string): Promise<boolean> {
         const user = await usersQueryRepo.findByLoginOrEmail(email)
         // Return true even if current email is not registered (for prevent user's email detection)
@@ -99,9 +101,12 @@ export const userService = {
             return false;
         }
 
-    },
+    }
+
     async updatePassword(newPassword: string, userId: string): Promise<boolean> {
         const passwordHash = await bcrypt.hash(newPassword, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
         return await usersRepo.updatePassword(passwordHash, userId)
     }
 }
+
+export const userService = new UserService()

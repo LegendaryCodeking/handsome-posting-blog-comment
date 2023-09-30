@@ -3,14 +3,16 @@ import {SessionDBModel, SessionUpdateFilterModel, SessionViewModel} from "../mod
 import {ObjectId} from "mongodb";
 import add from "date-fns/add";
 
-export const sessionsService = {
+class SessionsService {
 
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
         return sessionsRepo.deleteAllSessions(currentRFTokenIAT, deviceId)
-    },
+    }
+
     async deleteDeviceSessions(deviceId: string): Promise<boolean> {
         return sessionsRepo.deleteDeviceSessions(deviceId)
-    },
+    }
+
     async registerSession(loginIp: string | string[], RefreshTokenIssuedAt: number,
                           deviceName: string | string[], UserId: string, deviceId: string):
         Promise<SessionViewModel | null> {
@@ -29,7 +31,8 @@ export const sessionsService = {
             ))
 
         return await sessionsRepo.registerSession(createdSession)
-    },
+    }
+
     async updateSession(currentRFTokenIAT: number, deviceId: string, loginIp: string | string[],
                         RefreshTokenIssuedAt: number, deviceName: string | string[], UserId: string) {
 
@@ -51,8 +54,11 @@ export const sessionsService = {
 
         return await sessionsRepo.updateSessionInfo(filter, updateSessionContent)
 
-    },
+    }
+
     async deleteSession(currentRFTokenIAT: number, userId: string) {
         return await sessionsRepo.deleteSession(currentRFTokenIAT, userId)
     }
 }
+
+export const sessionsService = new SessionsService()

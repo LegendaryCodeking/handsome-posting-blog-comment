@@ -1,4 +1,3 @@
-
 import {commentsRepo} from "../repos/comments-repo";
 import {
     CommentDbModel,
@@ -6,14 +5,15 @@ import {
 } from "../models/Comments/CommentModel";
 import {ObjectId} from "mongodb";
 
-
-export const commentService = {
+class CommentService {
     async updateComment(id: string, content: string): Promise<boolean> {
         return commentsRepo.updateComment(id, content)
-    },
+    }
+
     async deleteComment(id: string): Promise<boolean> {
         return commentsRepo.deleteComment(id);
-    },
+    }
+
     async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewModel> {
         const newComment = new CommentDbModel(
             new ObjectId(),
@@ -29,3 +29,5 @@ export const commentService = {
         return commentsRepo.createComment(newComment);
     }
 }
+
+export const commentService = new CommentService()

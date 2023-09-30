@@ -2,10 +2,11 @@ import {postsRepo} from "../repos/posts-repo";
 import {PostDBModel} from "../models/Posts/PostDBModel";
 import {blogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 
-export const postsService = {
+class PostsService {
     async deletePost(id: string): Promise<boolean> {
         return postsRepo.deletePost(id)
-    },
+    }
+
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostDBModel> {
         const blogName = await blogsQueryRepo.findBlogById(blogId)
 
@@ -21,8 +22,11 @@ export const postsService = {
         )
 
         return await postsRepo.createPost(createdPost)
-    },
+    }
+
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         return postsRepo.updatePost(id, title, shortDescription, content, blogId)
     }
 }
+
+export const postsService = new PostsService()

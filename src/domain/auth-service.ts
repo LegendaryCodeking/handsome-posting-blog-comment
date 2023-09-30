@@ -3,7 +3,7 @@ import {emailManager} from "../managers/email-manager";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
-export const authService = {
+class AuthService {
     async confirmEmail(code: string | undefined): Promise<boolean> {
         if (code === undefined) return false
 
@@ -15,7 +15,8 @@ export const authService = {
 
         return await usersRepo.updateConfirmation(user.id)
 
-    },
+    }
+
     async resendEmail(email: string): Promise<boolean> {
         if (email === undefined) return false
         let user = await usersRepo.findByLoginOrEmail(email)
@@ -32,7 +33,7 @@ export const authService = {
             isConfirmed: false
         }
         //Перезаписываем пользователя
-        let updatedUser = await usersRepo.updateUserEmailConfirmationInfo(user._id,user)
+        let updatedUser = await usersRepo.updateUserEmailConfirmationInfo(user._id, user)
         if (!updatedUser) return false
 
         try {
@@ -44,3 +45,6 @@ export const authService = {
         return true
     }
 }
+
+
+export const authService = new AuthService()
