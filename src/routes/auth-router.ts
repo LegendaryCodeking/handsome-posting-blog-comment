@@ -1,9 +1,7 @@
 import {Router} from "express";
 import {authController} from "../controller/auth-controller";
 import {
-    authenticationCheckBearer, doesEmailExist,
-    doesLoginEmailAlreadyExist,
-    isAlreadyConfirmedCode, isAlreadyConfirmedEmail, isCodeCorrect, isCodeCorrectForPassRecovery, verifyRefreshToken
+    authMW
 } from "../middlewares/auth-mw";
 import {
     emailValidation,
@@ -22,18 +20,18 @@ authRouter.post('/login',
     authController.loginUser.bind(authController))
 
 authRouter.post('/logout',
-    verifyRefreshToken,
+    authMW.verifyRefreshToken.bind(authMW),
     authController.logoutUser.bind(authController))
 
 authRouter.post('/refresh-token',
-    verifyRefreshToken,
+    authMW.verifyRefreshToken.bind(authMW),
     inputValidationMw,
     authController.updateTokens.bind(authController))
 
 authRouter.post('/registration-confirmation',
     IpRateLimitMW,
-    isCodeCorrect,
-    isAlreadyConfirmedCode,
+    authMW.isCodeCorrect.bind(authMW),
+    authMW.isAlreadyConfirmedCode.bind(authMW),
     inputValidationMw,
     authController.registrationConfirmation.bind(authController))
 
@@ -42,20 +40,20 @@ authRouter.post('/registration',
     loginValidation,
     passwordValidation,
     emailValidation,
-    doesLoginEmailAlreadyExist,
+    authMW.doesLoginEmailAlreadyExist.bind(authMW),
     inputValidationMw,
     authController.registration.bind(authController))
 
 authRouter.post('/registration-email-resending',
     IpRateLimitMW,
-    doesEmailExist,
-    isAlreadyConfirmedEmail,
+    authMW.doesEmailExist.bind(authMW),
+    authMW.isAlreadyConfirmedEmail.bind(authMW),
     inputValidationMw,
     authController.registrationEmailResending.bind(authController))
 
 
 authRouter.get('/me',
-    authenticationCheckBearer,
+    authMW.authenticationCheckBearer.bind(authMW),
     inputValidationMw,
     authController.getInfoAboutMyself.bind(authController))
 
@@ -68,6 +66,6 @@ authRouter.post('/password-recovery',
 authRouter.post('/new-password',
     IpRateLimitMW,
     passwordUpdateValidation,
-    isCodeCorrectForPassRecovery,
+    authMW.isCodeCorrectForPassRecovery.bind(authMW),
     inputValidationMw,
     authController.newPassword.bind(authController))

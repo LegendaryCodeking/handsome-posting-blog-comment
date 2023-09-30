@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {authenticationCheck} from "../middlewares/auth-mw";
+import {authMW} from "../middlewares/auth-mw";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {usersController} from "../controller/users-controller";
@@ -7,11 +7,11 @@ import {usersController} from "../controller/users-controller";
 export const usersRouter = Router({})
 
 usersRouter.get('/',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     usersController.findAllUsers.bind(usersController))
 
 usersRouter.post('/',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     loginValidation,
     passwordValidation,
     emailValidation,
@@ -19,5 +19,5 @@ usersRouter.post('/',
     usersController.createUser.bind(usersController))
 
 usersRouter.delete('/:id',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     usersController.deleteUser.bind(usersController))

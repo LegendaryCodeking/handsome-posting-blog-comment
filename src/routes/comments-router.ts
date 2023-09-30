@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {authenticationCheckBearer} from "../middlewares/auth-mw";
+import {authMW} from "../middlewares/auth-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {commentsController} from "../controller/comments-controller";
@@ -12,14 +12,14 @@ commentsRouter.get('/:id',
 )
 
 commentsRouter.put('/:id',
-    authenticationCheckBearer,
+    authMW.authenticationCheckBearer.bind(authMW),
     contentValidation,
     inputValidationMw,
     commentsController.updateComment.bind(commentsController)
 )
 
 commentsRouter.delete('/:id',
-    authenticationCheckBearer,
+    authMW.authenticationCheckBearer.bind(authMW),
     inputValidationMw,
     commentsController.deleteComment.bind(commentsController)
 )

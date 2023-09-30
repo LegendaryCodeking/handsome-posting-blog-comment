@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import {descriptionValidation, nameValidation, urlValidation} from "../middlewares/blog-validation-mw";
-import {authenticationCheck} from "../middlewares/auth-mw";
+import {authMW} from "../middlewares/auth-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 import {blogsController} from "../controller/blogs-controller";
@@ -14,11 +14,11 @@ blogsRouter.get('/:id', blogsController.findBlogById.bind(blogsController))
 blogsRouter.get('/:id/posts', blogsController.findPostsForBlog.bind(blogsController))
 
 blogsRouter.delete('/:id',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     blogsController.deleteBlog.bind(blogsController))
 
 blogsRouter.post('/',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     nameValidation,
     descriptionValidation,
     urlValidation,
@@ -26,7 +26,7 @@ blogsRouter.post('/',
     blogsController.createBlog.bind(blogsController))
 
 blogsRouter.post('/:id/posts',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     titleValidation,
     shortDescription,
     content,
@@ -35,7 +35,7 @@ blogsRouter.post('/:id/posts',
 
 
 blogsRouter.put('/:id',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     nameValidation,
     descriptionValidation,
     urlValidation,

@@ -1,21 +1,21 @@
 import {Router} from "express";
 import {securityController} from "../controller/security-controller";
-import {verifyRefreshToken} from "../middlewares/auth-mw";
+import {authMW} from "../middlewares/auth-mw";
 
 
 export const securityRouter = Router({})
 
 securityRouter.get('/',
-    verifyRefreshToken,
+    authMW.verifyRefreshToken.bind(authMW),
     securityController.findAllSessions.bind(securityController)
 )
 
 securityRouter.delete('/',
-    verifyRefreshToken,
+    authMW.verifyRefreshToken.bind(authMW),
     securityController.terminateAllSessions.bind(securityController)
 )
 
 securityRouter.delete('/:deviceId',
-    verifyRefreshToken,
+    authMW.verifyRefreshToken.bind(authMW),
     securityController.terminateDeviceSessions.bind(securityController)
 )

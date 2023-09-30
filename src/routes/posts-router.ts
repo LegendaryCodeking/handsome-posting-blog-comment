@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {authenticationCheck, authenticationCheckBearer} from "../middlewares/auth-mw";
+import {authMW} from "../middlewares/auth-mw";
 import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {postsController} from "../controller/posts-controller";
@@ -12,11 +12,11 @@ postsRouter.get('/', postsController.findAllPosts.bind(postsController))
 postsRouter.get('/:id', postsController.findPostById.bind(postsController))
 
 postsRouter.delete('/:id',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     postsController.deletePost.bind(postsController))
 
 postsRouter.post('/',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     titleValidation,
     shortDescription,
     content,
@@ -26,7 +26,7 @@ postsRouter.post('/',
 )
 
 postsRouter.put('/:id',
-    authenticationCheck,
+    authMW.authenticationCheck.bind(authMW),
     titleValidation,
     shortDescription,
     content,
@@ -39,7 +39,7 @@ postsRouter.put('/:id',
 // working with comments
 ////////////////////////////
 postsRouter.post('/:postId/comments',
-    authenticationCheckBearer,
+    authMW.authenticationCheckBearer.bind(authMW),
     contentValidation,
     inputValidationMw,
     postsController.createCommentForPost.bind(postsController))
