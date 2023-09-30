@@ -6,7 +6,7 @@ import {PostType} from "../../models/Posts/PostModel";
 import {PostModelClass} from "../../db/db";
 import {getPostViewModel} from "../../helpers/map-PostViewModel";
 
-class PostQueryRepo {
+export class PostQueryRepo {
 
     async findPosts(queryFilter: BlogPostFilterModel): Promise<PostsWithPaginationModel> {
         const findFilter: FilterQuery<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
@@ -42,5 +42,3 @@ class PostQueryRepo {
         }
     }
 }
-
-export const postQueryRepo = new PostQueryRepo()

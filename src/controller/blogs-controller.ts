@@ -8,17 +8,19 @@ import {URIParamsBlogIdModel} from "../models/BLogs/URIParamsBlogIdModel";
 import {BlogViewModel} from "../models/BLogs/BlogViewModel";
 import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel";
 import {PostViewModel} from "../models/Posts/PostViewModel";
-import {postsService} from "../domain/posts-service";
+import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 
 class BlogsController {
     private blogsService: BlogsService;
     private blogsQueryRepo: BlogsQueryRepo;
+    private postsService: PostsService;
 
     constructor() {
         this.blogsService = new BlogsService
         this.blogsQueryRepo = new BlogsQueryRepo
+        this.postsService = new PostsService
     }
 
     async FindAllBlog(req: Request, res: Response<BlogsWithPaginationModel>) {
@@ -90,7 +92,7 @@ class BlogsController {
             return;
         }
 
-        let createdPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
+        let createdPost = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
         res.status(STATUSES_HTTP.CREATED_201)
             .json(createdPost)
     }

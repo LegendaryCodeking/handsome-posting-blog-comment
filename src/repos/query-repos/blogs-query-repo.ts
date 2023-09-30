@@ -4,10 +4,15 @@ import {Sort} from "mongodb";
 import {BlogDbModel} from "../../models/BLogs/BlogModel";
 import {BlogModelClass} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
-import {postQueryRepo} from "./post-query-repo";
+import {PostQueryRepo} from "./post-query-repo";
 import {FilterQuery} from "mongoose";
 
 export class BlogsQueryRepo {
+    private postQueryRepo: PostQueryRepo;
+
+    constructor() {
+        this.postQueryRepo = new PostQueryRepo
+    }
 
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
 
@@ -44,7 +49,7 @@ export class BlogsQueryRepo {
     }
 
     async findPostsByBlogId(queryFilter: BlogPostFilterModel) {
-        return postQueryRepo.findPosts(queryFilter)
+        return this.postQueryRepo.findPosts(queryFilter)
     }
 }
 

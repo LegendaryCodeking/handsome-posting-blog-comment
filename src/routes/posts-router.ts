@@ -7,13 +7,13 @@ import {postsController} from "../controller/posts-controller";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', postsController.findAllPosts)
+postsRouter.get('/', postsController.findAllPosts.bind(postsController))
 
-postsRouter.get('/:id', postsController.findPostById)
+postsRouter.get('/:id', postsController.findPostById.bind(postsController))
 
 postsRouter.delete('/:id',
     authenticationCheck,
-    postsController.deletePost)
+    postsController.deletePost.bind(postsController))
 
 postsRouter.post('/',
     authenticationCheck,
@@ -22,8 +22,8 @@ postsRouter.post('/',
     content,
     blogId,
     inputValidationMw,
-    postsController.createPost
-    )
+    postsController.createPost.bind(postsController)
+)
 
 postsRouter.put('/:id',
     authenticationCheck,
@@ -32,7 +32,7 @@ postsRouter.put('/:id',
     content,
     blogId,
     inputValidationMw,
-    postsController.updatePost
+    postsController.updatePost.bind(postsController)
 )
 
 ////////////////////////////
@@ -42,7 +42,7 @@ postsRouter.post('/:postId/comments',
     authenticationCheckBearer,
     contentValidation,
     inputValidationMw,
-    postsController.createCommentForPost )
+    postsController.createCommentForPost.bind(postsController))
 
 postsRouter.get('/:postId/comments',
-    postsController.getCommentsForPost)
+    postsController.getCommentsForPost.bind(postsController))

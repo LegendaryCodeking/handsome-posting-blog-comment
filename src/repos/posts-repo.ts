@@ -1,7 +1,7 @@
 import {PostModelClass} from "../db/db";
 import {PostDBModel} from "../models/Posts/PostDBModel";
 
-class PostsRepo {
+export class PostsRepo {
     async deletePost(id: string): Promise<boolean> {
         // Mongo native driver code
         // let result = await PostModelClass.deleteOne({"id": id})
@@ -61,5 +61,3 @@ class PostsRepo {
         return true
     }
 }
-
-export const postsRepo = new PostsRepo()

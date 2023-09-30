@@ -29,8 +29,6 @@ describe('/Testing posts', () => {
 
         const {createdBlog} = await blogsTestManager.createBlog(data, STATUSES_HTTP.CREATED_201, authBasicHeader)
         blog = createdBlog
-
-
     })
 
     it('should return 404 and empty array', async () => {
