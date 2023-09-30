@@ -2,7 +2,7 @@ import {Router} from 'express'
 import {descriptionValidation, nameValidation, urlValidation} from "../middlewares/blog-validation-mw";
 import {authMW} from "../middlewares/auth-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
+import {postValidationMW} from "../middlewares/post-validation-mw";
 import {blogsController} from "../controller/blogs-controller";
 
 export const blogsRouter = Router({})
@@ -27,9 +27,9 @@ blogsRouter.post('/',
 
 blogsRouter.post('/:id/posts',
     authMW.authenticationCheck.bind(authMW),
-    titleValidation,
-    shortDescription,
-    content,
+    postValidationMW.titleValidation.bind(postValidationMW),
+    postValidationMW.shortDescription.bind(postValidationMW),
+    postValidationMW.content.bind(postValidationMW),
     inputValidationMw,
     blogsController.createPostsForBlog.bind(blogsController))
 

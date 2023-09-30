@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {authMW} from "../middlewares/auth-mw";
-import {blogId, content, shortDescription, titleValidation} from "../middlewares/post-validation-mw";
+import {postValidationMW} from "../middlewares/post-validation-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {postsController} from "../controller/posts-controller";
 
@@ -17,20 +17,20 @@ postsRouter.delete('/:id',
 
 postsRouter.post('/',
     authMW.authenticationCheck.bind(authMW),
-    titleValidation,
-    shortDescription,
-    content,
-    blogId,
+    postValidationMW.titleValidation.bind(postValidationMW),
+    postValidationMW.shortDescription.bind(postValidationMW),
+    postValidationMW.content.bind(postValidationMW),
+    postValidationMW.blogId.bind(postValidationMW),
     inputValidationMw,
     postsController.createPost.bind(postsController)
 )
 
 postsRouter.put('/:id',
     authMW.authenticationCheck.bind(authMW),
-    titleValidation,
-    shortDescription,
-    content,
-    blogId,
+    postValidationMW.titleValidation.bind(postValidationMW),
+    postValidationMW.shortDescription.bind(postValidationMW),
+    postValidationMW.content.bind(postValidationMW),
+    postValidationMW.blogId.bind(postValidationMW),
     inputValidationMw,
     postsController.updatePost.bind(postsController)
 )
