@@ -5,13 +5,12 @@ import {UserService} from "../domain/user-service";
 import {UsersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {UsersWithPaginationModel} from "../models/Users/UserModel";
 
-class UsersController {
-    private usersQueryRepo: UsersQueryRepo;
-    private userService: UserService;
+export class UsersController {
 
-    constructor() {
-        this.userService = new UserService
-        this.usersQueryRepo = new UsersQueryRepo()
+    constructor(
+        protected usersQueryRepo: UsersQueryRepo,
+        protected userService: UserService
+    ) {
     }
 
     async findAllUsers(req: Request, res: Response<UsersWithPaginationModel>) {
@@ -42,5 +41,3 @@ class UsersController {
         }
     }
 }
-
-export const usersController = new UsersController()

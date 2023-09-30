@@ -6,14 +6,13 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {AuthService} from "../domain/auth-service";
 import {SessionsService} from "../domain/sessions-service";
 
-class AuthController {
-    private userService: UserService;
+export class AuthController {
+
     private jwtService: JwtService;
     private authService: AuthService;
     private sessionsService: SessionsService;
 
-    constructor() {
-        this.userService = new UserService()
+    constructor( protected userService: UserService) {
         this.jwtService = new JwtService()
         this.authService = new AuthService()
         this.sessionsService = new SessionsService()
@@ -166,4 +165,3 @@ class AuthController {
     }
 }
 
-export const authController = new AuthController()

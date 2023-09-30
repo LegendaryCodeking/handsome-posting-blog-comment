@@ -23,17 +23,13 @@ type Result<T> = {
 }
 
 export class UserService {
-    private usersQueryRepo: UsersQueryRepo;
-    private usersRepo: UsersRepo;
-    private jwtService: JwtService;
-    private emailManager: EmailManager;
 
-    constructor() {
-        this.usersRepo = new UsersRepo()
-        this.usersQueryRepo = new UsersQueryRepo()
-        this.jwtService = new JwtService()
-        this.emailManager = new EmailManager()
-
+    constructor(
+        protected usersQueryRepo: UsersQueryRepo,
+        protected usersRepo: UsersRepo,
+        protected jwtService: JwtService,
+        protected emailManager: EmailManager
+    ) {
     }
 
     async createUser(login: string, password: string, email: string, isAuthorSuper: boolean): Promise<Result<string>> {
