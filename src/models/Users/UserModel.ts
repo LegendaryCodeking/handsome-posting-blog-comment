@@ -1,24 +1,52 @@
 import mongoose from "mongoose";
 import {WithPagination} from "../custom";
 
-export type UserDBModel = {
-    id: string,
-    accountData: {
-        login: string,
-        email: string,
-        password: string,
-        createdAt: string
-    },
-    emailConfirmation: {
-        confirmationCode: string,
-        expirationDate: string,
-        isConfirmed: boolean
-    },
-    passwordRecovery: {
-        passwordRecoveryCode: string,
-        active: boolean
+export class UserDBModel {
+    constructor(
+        public id: string,
+        public accountData: accountDataModel,
+        public emailConfirmation: emailConfirmationModel,
+        public passwordRecovery: passwordRecoveryModel
+    ) {
     }
 }
+
+type accountDataModel = {
+    login: string,
+    email: string,
+    password: string,
+    createdAt: string
+}
+
+type emailConfirmationModel = {
+    confirmationCode: string,
+    expirationDate: string,
+    isConfirmed: boolean
+}
+
+type passwordRecoveryModel = {
+    passwordRecoveryCode: string,
+    active: boolean
+}
+
+// export type UserDBModel = {
+//     id: string,
+//     accountData: {
+//         login: string,
+//         email: string,
+//         password: string,
+//         createdAt: string
+//     },
+//     emailConfirmation: {
+//         confirmationCode: string,
+//         expirationDate: string,
+//         isConfirmed: boolean
+//     },
+//     passwordRecovery: {
+//         passwordRecoveryCode: string,
+//         active: boolean
+//     }
+// }
 
 export type UsersWithPaginationModel = WithPagination<UserViewModel>
 

@@ -27,15 +27,15 @@ export const userService = {
 
         const passwordHash = await bcrypt.hash(password, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
 
-        const createdUser: UserDBModel = {
-            id: (+(new Date())).toString(),
-            accountData: {
+        const createdUser = new UserDBModel(
+            (+(new Date())).toString(),
+            {
                 login: login,
                 email: email,
                 password: passwordHash,
                 createdAt: new Date().toISOString()
             },
-            emailConfirmation: {
+            {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {
                     hours: 1,
@@ -43,12 +43,11 @@ export const userService = {
                 }).toISOString(),
                 isConfirmed: false
             },
-            passwordRecovery: {
+            {
                 passwordRecoveryCode: "",
                 active: isAuthorSuper
             }
-
-        }
+        )
 
 
         let resultUser = await usersRepo.createUser(createdUser)
@@ -60,7 +59,6 @@ export const userService = {
             resultCode: ResultCode.success,
             data: resultUser.id
         }
-
 
 
     },
