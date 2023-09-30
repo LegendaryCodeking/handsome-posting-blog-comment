@@ -17,6 +17,11 @@ import {EmailManager} from "./managers/email-manager";
 import {UserService} from "./domain/user-service";
 import {UsersController} from "./controller/users-controller";
 import {AuthController} from "./controller/auth-controller";
+import {AuthService} from "./domain/auth-service";
+import {SessionsRepo} from "./repos/sessions-repo";
+import {SessionsService} from "./domain/sessions-service";
+import {SecurityController} from "./controller/security-controller";
+import {SessionsQueryRepo} from "./repos/query-repos/sessions-query-repo";
 
 
 const jwtService = new JwtService()
@@ -42,8 +47,15 @@ const usersQueryRepo = new UsersQueryRepo()
 const userService = new UserService(usersQueryRepo, usersRepo, jwtService, emailManager)
 
 
+const sessionsRepo = new SessionsRepo()
+const sessionsQueryRepo = new SessionsQueryRepo()
+const sessionsService = new SessionsService(sessionsRepo)
+
+const authService = new AuthService(usersRepo,emailManager)
+
 export const blogsController = new BlogsController(blogsService, blogsQueryRepo, postQueryRepo, postsService)
 export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService)
 export const commentsController = new CommentsController(commentsQueryRepo, commentService)
 export const usersController = new UsersController(usersQueryRepo, userService)
-export const authController = new AuthController(userService)
+export const authController = new AuthController(userService,jwtService,authService,sessionsService)
+export const securityController = new SecurityController(jwtService,sessionsQueryRepo,sessionsService)

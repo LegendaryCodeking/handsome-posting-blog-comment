@@ -8,14 +8,13 @@ import {SessionsService} from "../domain/sessions-service";
 
 export class AuthController {
 
-    private jwtService: JwtService;
-    private authService: AuthService;
-    private sessionsService: SessionsService;
+    constructor(
+        protected userService: UserService,
+        protected jwtService: JwtService,
+        protected authService: AuthService,
+        protected sessionsService: SessionsService
+    ) {
 
-    constructor( protected userService: UserService) {
-        this.jwtService = new JwtService()
-        this.authService = new AuthService()
-        this.sessionsService = new SessionsService()
     }
 
     async loginUser(req: Request, res: Response) {

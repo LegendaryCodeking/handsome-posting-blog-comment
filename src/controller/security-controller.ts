@@ -6,15 +6,14 @@ import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSession
 import {JwtService} from "../application/jwt-service";
 import {RequestsWithParams} from "../models/requestModels";
 
-class SecurityController {
-    private jwtService: JwtService;
-    private sessionsQueryRepo: SessionsQueryRepo;
-    private sessionsService: SessionsService;
+export class SecurityController {
 
-    constructor() {
-        this.jwtService = new JwtService()
-        this.sessionsQueryRepo = new SessionsQueryRepo()
-        this.sessionsService = new SessionsService()
+    constructor(
+        protected jwtService: JwtService,
+        protected sessionsQueryRepo: SessionsQueryRepo,
+        protected sessionsService: SessionsService
+    ) {
+
     }
 
     async findAllSessions(req: Request, res: Response) {
@@ -76,4 +75,3 @@ class SecurityController {
     }
 }
 
-export const securityController = new SecurityController()

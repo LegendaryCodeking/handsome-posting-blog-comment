@@ -1,6 +1,6 @@
 import {Router} from "express";
-import {securityController} from "../controller/security-controller";
 import {authMW} from "../middlewares/auth-mw";
+import {securityController} from "../composition-root";
 
 
 export const securityRouter = Router({})

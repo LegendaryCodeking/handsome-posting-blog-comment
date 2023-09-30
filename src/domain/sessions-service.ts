@@ -4,10 +4,10 @@ import {ObjectId} from "mongodb";
 import add from "date-fns/add";
 
 export class SessionsService {
-    private sessionsRepo: SessionsRepo;
 
-    constructor() {
-        this.sessionsRepo = new SessionsRepo()
+    constructor(
+        protected sessionsRepo: SessionsRepo
+    ) {
     }
 
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {
@@ -65,5 +65,3 @@ export class SessionsService {
         return await this.sessionsRepo.deleteSession(currentRFTokenIAT, userId)
     }
 }
-
-export const sessionsService = new SessionsService()

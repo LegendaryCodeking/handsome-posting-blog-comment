@@ -4,12 +4,11 @@ import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
 export class AuthService {
-    private usersRepo: UsersRepo;
-    private emailManager: EmailManager;
 
-    constructor() {
-        this.usersRepo = new UsersRepo()
-        this.emailManager = new EmailManager()
+    constructor(
+        protected usersRepo: UsersRepo,
+        protected emailManager: EmailManager
+    ) {
     }
 
     async confirmEmail(code: string | undefined): Promise<boolean> {
