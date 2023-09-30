@@ -6,7 +6,8 @@ import {getUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
-export const usersQueryRepo = {
+class UsersQueryRepo {
+
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
         const findFilter: FilterQuery<UserDBModel> = {
             $or: [{"accountData.login": {$regex: queryFilter.searchLoginTerm ?? '', $options: 'i'}},
@@ -32,7 +33,7 @@ export const usersQueryRepo = {
             "totalCount": totalCount,
             "items": foundUsers
         }
-    },
+    }
 
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
         const user = await UserModelClass.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
@@ -40,7 +41,7 @@ export const usersQueryRepo = {
             return getUserViewModel(user)
         }
         return null
-    },
+    }
 
     async findUserById(id: string) {
 
@@ -52,7 +53,8 @@ export const usersQueryRepo = {
         } else {
             return null
         }
-    },
+    }
+
     async findUserByConfirmationCode(code: string) {
         let user = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
         if (user) {
@@ -62,3 +64,5 @@ export const usersQueryRepo = {
         }
     }
 }
+
+export const usersQueryRepo = new UsersQueryRepo()

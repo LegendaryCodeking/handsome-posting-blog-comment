@@ -5,7 +5,8 @@ import {getCommentViewModel} from "../../helpers/map-CommentViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
-export const commentsQueryRepo = {
+class CommentsQueryRepo {
+
     async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
         const findFilter: FilterQuery<CommentDbModel> = {postId: queryFilter.postId};
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: queryFilter.sortDirection} : {
@@ -32,7 +33,7 @@ export const commentsQueryRepo = {
             "items": foundComments
         }
 
-    },
+    }
 
     async findCommentById(id: string): Promise<any> {
 
@@ -44,7 +45,7 @@ export const commentsQueryRepo = {
         } else {
             return null
         }
-
-
-    },
+    }
 }
+
+export const commentsQueryRepo = new CommentsQueryRepo()

@@ -6,10 +6,11 @@ import {PostType} from "../../models/Posts/PostModel";
 import {PostModelClass} from "../../db/db";
 import {getPostViewModel} from "../../helpers/map-PostViewModel";
 
-export const postQueryRepo = {
+class PostQueryRepo {
+
     async findPosts(queryFilter: BlogPostFilterModel): Promise<PostsWithPaginationModel> {
         const findFilter: FilterQuery<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
-        const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy] : queryFilter.sortDirection} : {[queryFilter.sortBy] : queryFilter.sortDirection, 'createdAt': 1})
+        const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: queryFilter.sortDirection} : {[queryFilter.sortBy]: queryFilter.sortDirection, 'createdAt': 1})
 
         let foundPostsMongoose = await PostModelClass
             .find(findFilter).lean()
@@ -30,7 +31,8 @@ export const postQueryRepo = {
             "totalCount": totalCount,
             "items": foundPosts
         }
-    },
+    }
+
     async findPostsById(id: string): Promise<PostType | null> {
         let foundPost: PostType | null = await PostModelClass.findOne({"id": id})
         if (foundPost) {
@@ -40,3 +42,5 @@ export const postQueryRepo = {
         }
     }
 }
+
+export const postQueryRepo = new PostQueryRepo()

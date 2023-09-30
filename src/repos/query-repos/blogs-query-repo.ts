@@ -7,14 +7,15 @@ import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {postQueryRepo} from "./post-query-repo";
 import {FilterQuery} from "mongoose";
 
-export const blogsQueryRepo = {
+class BlogsQueryRepo {
+
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {
 
         const filter: FilterQuery<BlogDbModel> = {name: {$regex: queryFilter.searchNameTerm ?? '', $options: 'i'}}
 
-        const sortFilter: Sort = {[queryFilter.sortBy] : queryFilter.sortDirection}
+        const sortFilter: Sort = {[queryFilter.sortBy]: queryFilter.sortDirection}
 
-        let foundBlogsMongoose =  await BlogModelClass
+        let foundBlogsMongoose = await BlogModelClass
             .find(filter).lean()
             .sort(sortFilter)
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
@@ -31,7 +32,8 @@ export const blogsQueryRepo = {
             "totalCount": totalCount,
             "items": foundBlogs
         }
-    },
+    }
+
     async findBlogById(id: string): Promise<BlogDbModel | null> {
         let foundBlog: BlogDbModel | null = await BlogModelClass.findOne({"id": id}).lean()
         if (foundBlog) {
@@ -39,8 +41,11 @@ export const blogsQueryRepo = {
         } else {
             return null
         }
-    },
+    }
+
     async findPostsByBlogId(queryFilter: BlogPostFilterModel) {
         return postQueryRepo.findPosts(queryFilter)
     }
 }
+
+export const blogsQueryRepo = new BlogsQueryRepo()
