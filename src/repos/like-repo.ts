@@ -1,6 +1,7 @@
 import {LikeModelClass, UsersLikesConnectionModelClass} from "../db/db";
 import {ownerTypeModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
+import {ObjectId} from "mongodb";
 
 
 export class LikesRepo {
@@ -28,7 +29,14 @@ export class LikesRepo {
                 "likedObjectType": ownerType
             })
 
-        if (!userStatusInstance) return false
+        if (!userStatusInstance) {
+            userStatusInstance = new UsersLikesConnectionModelClass()
+            userStatusInstance._id = new ObjectId()
+            userStatusInstance.userId = userId
+            userStatusInstance.likedObjectId = ownerId
+            userStatusInstance.likedObjectType = ownerType
+        }
+
         userStatusInstance.status = likeStatus.Like
 
         await userStatusInstance.save()
@@ -61,7 +69,13 @@ export class LikesRepo {
                 "likedObjectType": ownerType
             })
 
-        if (!userStatusInstance) return false
+        if (!userStatusInstance) {
+            userStatusInstance = new UsersLikesConnectionModelClass()
+            userStatusInstance._id = new ObjectId()
+            userStatusInstance.userId = userId
+            userStatusInstance.likedObjectId = ownerId
+            userStatusInstance.likedObjectType = ownerType
+        }
         userStatusInstance.status = likeStatus.Dislike
 
         await userStatusInstance.save()
@@ -100,7 +114,13 @@ export class LikesRepo {
                 "likedObjectType": ownerType
             })
 
-        if (!userStatusInstance) return false
+        if (!userStatusInstance) {
+            userStatusInstance = new UsersLikesConnectionModelClass()
+            userStatusInstance._id = new ObjectId()
+            userStatusInstance.userId = userId
+            userStatusInstance.likedObjectId = ownerId
+            userStatusInstance.likedObjectType = ownerType
+        }
         userStatusInstance.status = likeStatus.None
 
         await userStatusInstance.save()

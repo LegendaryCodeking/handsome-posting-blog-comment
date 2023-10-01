@@ -22,6 +22,25 @@ export class AuthMW {
         this.sessionsQueryRepo = new SessionsQueryRepo()
     }
 
+    async addReqUser(req: Request, res: Response, next: NextFunction) {
+        if (!req.headers.authorization) {
+            next()
+            return
+        }
+
+        const token = req.headers.authorization.split(' ')[1]
+
+        const RFTokenInfo = await this.jwtService.getInfoFromRFToken(token)
+        if (RFTokenInfo) {
+            req.user = await this.usersQueryRepo.findUserById(RFTokenInfo.userId)
+            next()
+            return;
+        }
+        next()
+    }
+
+
+
     authenticationCheck(req: Request, res: Response, next: NextFunction) {
         if (req.headers["authorization"] !== "Basic YWRtaW46cXdlcnR5") {
             res.sendStatus(401)
