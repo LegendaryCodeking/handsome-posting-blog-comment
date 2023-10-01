@@ -1,5 +1,5 @@
 export enum likeStatus  {
-    None,
-    Like,
-    Dislike
+    None = "None",
+    Like = "Like",
+    Dislike = "Dislike"
 }

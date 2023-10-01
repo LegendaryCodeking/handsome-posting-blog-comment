@@ -8,16 +8,14 @@ export type likeInputModel = {
     likeStatus: likeStatusModel
 }
 
+export type ownerTypeModel = "Comment" | "Post"
+
 export type likesDBModel = {
     _id: ObjectId
-    ownerType: "Comment" | "Post"
+    ownerType: ownerTypeModel
     ownerId: string
     likesCount: number
     dislikesCount: number
-    usersActions: {
-        userid: string,
-        status: likeStatusModel
-    }
 }
 
 export type likesInfoViewModel = {
@@ -25,7 +23,6 @@ export type likesInfoViewModel = {
     dislikesCount: number
     myStatus: likeStatusModel
 }
-
 
 export const likesMongooseSchema = new mongoose.Schema<likesDBModel>({
     _id: ObjectId,
@@ -35,13 +32,29 @@ export const likesMongooseSchema = new mongoose.Schema<likesDBModel>({
     },
     ownerId: String,
     likesCount: Number,
-    dislikesCount: Number,
-    usersActions: {
-        userid: String,
-        status: {
-            type: String,
-            enum: [likeStatus.None, likeStatus.Like, likeStatus.Dislike]
-        }
-    }
+    dislikesCount: Number
 })
 
+//////////////////////////////////
+// usersLikesConnection collection
+//////////////////////////////////
+
+export type usersLikesConnectionDBModel = {
+    userId: string
+    likedObjectId: string
+    likedObjectType: ownerTypeModel
+    status: likeStatusModel
+}
+
+export const userslikesconnectionMongooseSchema = new mongoose.Schema<usersLikesConnectionDBModel>({
+    userId: String,
+    likedObjectId: String,
+    likedObjectType: {
+        type: String,
+        enum: ['Comment', 'Post']
+    },
+    status: {
+        type: String,
+        enum: [likeStatus.None, likeStatus.Like, likeStatus.Dislike]
+    }
+})
