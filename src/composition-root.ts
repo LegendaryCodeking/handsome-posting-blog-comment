@@ -22,6 +22,8 @@ import {SessionsRepo} from "./repos/sessions-repo";
 import {SessionsService} from "./domain/sessions-service";
 import {SecurityController} from "./controller/security-controller";
 import {SessionsQueryRepo} from "./repos/query-repos/sessions-query-repo";
+import {LikesRepo} from "./repos/like-repo";
+import {LikesQueryRepo} from "./repos/query-repos/likes-query-repo";
 
 
 const jwtService = new JwtService()
@@ -39,7 +41,9 @@ const postsService = new PostsService(postsRepo, blogsQueryRepo)
 
 const commentsRepo = new CommentsRepo()
 const commentsQueryRepo = new CommentsQueryRepo()
-const commentService = new CommentService(commentsRepo)
+const likesRepo = new LikesRepo()
+const likesQueryRepo = new LikesQueryRepo()
+const commentService = new CommentService(commentsRepo,likesRepo)
 
 
 const usersRepo = new UsersRepo()
@@ -55,7 +59,7 @@ const authService = new AuthService(usersRepo,emailManager)
 
 export const blogsController = new BlogsController(blogsService, blogsQueryRepo, postQueryRepo, postsService)
 export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService)
-export const commentsController = new CommentsController(commentsQueryRepo, commentService)
+export const commentsController = new CommentsController(commentsQueryRepo, commentService,likesQueryRepo)
 export const usersController = new UsersController(usersQueryRepo, userService)
 export const authController = new AuthController(userService,jwtService,authService,sessionsService)
 export const securityController = new SecurityController(jwtService,sessionsQueryRepo,sessionsService)

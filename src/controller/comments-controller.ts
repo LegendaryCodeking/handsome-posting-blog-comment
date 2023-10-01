@@ -3,13 +3,14 @@ import {Request, Response} from "express";
 import {CommentService} from "../domain/comment-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
-import {likesQueryRepo} from "../repos/query-repos/likes-query-repo";
+import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
 
 export class CommentsController {
     constructor(
         protected commentsQueryRepo: CommentsQueryRepo,
-        protected commentService: CommentService
+        protected commentService: CommentService,
+        protected likesQueryRepo: LikesQueryRepo
     ) {
     }
 
@@ -65,7 +66,7 @@ export class CommentsController {
         }
 
         const likesInfo: likesInfoViewModel | null =
-            await likesQueryRepo.findLikesByOwnerId('Comment', req.params.id, req.user!.id)
+            await this.likesQueryRepo.findLikesByOwnerId('Comment', req.params.id, req.user!.id)
         if (!likesInfo) {
             res.status(STATUSES_HTTP.SERVER_ERROR_500)
                 .json({errorsMessage: "Unable to get likes info from DB"})

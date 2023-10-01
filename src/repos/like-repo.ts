@@ -129,5 +129,3 @@ export class LikesRepo {
     }
 
 }
-
-export const likesRepo = new LikesRepo()
