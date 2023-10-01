@@ -1,6 +1,7 @@
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
 import {WithPagination} from "../custom";
+import {likesInfoViewModel} from "./LikeModel";
 
 export type CreateCommentModel = {
     content: string
@@ -21,20 +22,12 @@ constructor(
 }
 }
 
-// export type CommentDbModel = {
-//     _id?: ObjectId
-//     id: string,
-//     postId: string
-//     content: string
-//     commentatorInfo: CommentatorInfoType
-//     createdAt: string
-// }
-
 export type CommentViewModel = {
     id: string
     content: string
     commentatorInfo: CommentatorInfoType
-    createdAt: string
+    createdAt: string,
+    likesInfo: likesInfoViewModel
 }
 
 export type CommentsFilterModel = {

@@ -105,7 +105,7 @@ export class PostsController {
 
         const queryFilter = queryCommentsWithPagination(req)
 
-        let foundPosts = await this.commentsQueryRepo.findComments(queryFilter);
+        let foundPosts = await this.commentsQueryRepo.findComments(queryFilter,req.user!.id);
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundPosts);

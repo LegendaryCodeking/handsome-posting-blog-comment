@@ -16,7 +16,7 @@ export class CommentsController {
     }
 
     async findCommentById(req: Request, res: Response) {
-        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id, req.user!.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -26,7 +26,7 @@ export class CommentsController {
     }
 
     async updateComment(req: Request, res: Response) {
-        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id,req.user!.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -43,7 +43,7 @@ export class CommentsController {
 
     async deleteComment(req: Request, res: Response) {
 
-        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id,req.user!.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -60,7 +60,7 @@ export class CommentsController {
 
     async sendLikeStatus(req: Request, res: Response) {
         const newLikeStatus = req.body.likeStatus
-        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id)
+        let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id,req.user!.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;

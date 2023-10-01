@@ -7,7 +7,7 @@ import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
 export class CommentsQueryRepo {
 
-    async findComments(queryFilter: CommentsFilterModel): Promise<CommentsWithPaginationModel> {
+    async findComments(queryFilter: CommentsFilterModel, userId?: string | undefined): Promise<CommentsWithPaginationModel> {
         const findFilter: FilterQuery<CommentDbModel> = {postId: queryFilter.postId};
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: queryFilter.sortDirection} : {
             [queryFilter.sortBy]: queryFilter.sortDirection,
@@ -21,7 +21,17 @@ export class CommentsQueryRepo {
             .skip((queryFilter.pageNumber - 1) * queryFilter.pageSize)
             .limit(queryFilter.pageSize)
 
-        const foundComments = foundCommentsMongoose.map(value => getCommentViewModel(value))
+
+        /// Код нужен чтобы не ругалось в return в Items т.к. там возвращаются Promises
+        const foundCommentsFunction = (commArr: CommentDbModel[]) => {
+            const promises = commArr.map(
+              async (value) =>  await getCommentViewModel(value, userId)
+            );
+            return Promise.all(promises);
+        }
+
+        const foundComments = await foundCommentsFunction(foundCommentsMongoose)
+
 
         let totalCount = await CommentModelClass.countDocuments(findFilter)
 
@@ -35,13 +45,13 @@ export class CommentsQueryRepo {
 
     }
 
-    async findCommentById(id: string): Promise<any> {
+    async findCommentById(id: string, userId?: string | undefined): Promise<any> {
 
         const _id = createObjectIdFromSting(id)
         if (_id === null) return false
         let foundComment = await CommentModelClass.findOne({"_id": _id})
         if (foundComment) {
-            return getCommentViewModel(foundComment)
+            return getCommentViewModel(foundComment, userId)
         } else {
             return null
         }

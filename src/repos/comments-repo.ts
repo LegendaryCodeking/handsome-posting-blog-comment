@@ -1,7 +1,8 @@
-import {CommentModelClass} from "../db/db";
+import {CommentModelClass, LikeModelClass, UsersLikesConnectionModelClass} from "../db/db";
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {getCommentViewModel} from "../helpers/map-CommentViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
+import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
 
 export class CommentsRepo {
     async updateComment(id: string, content: string): Promise<boolean> {
@@ -39,20 +40,39 @@ export class CommentsRepo {
         return true
     }
 
-    async createComment(newComment: CommentDbModel): Promise<CommentViewModel> {
-        // Mongo native driver code
-        // await CommentModelClass.insertMany([newComment])
+    async createComment(
+        newComment: CommentDbModel,
+        userId: string,
+        newLikesInfo: likesDBModel,
+        newUsersLikesConnectionInfo: usersLikesConnectionDBModel): Promise<CommentViewModel> {
+
 
         const commentInstance = new CommentModelClass()
-
         commentInstance._id = newComment._id
         commentInstance.postId = newComment.postId
         commentInstance.content = newComment.content
         commentInstance.commentatorInfo = newComment.commentatorInfo
         commentInstance.createdAt = newComment.createdAt
-
         await commentInstance.save();
 
-        return getCommentViewModel(newComment);
+
+        const likesInfoInstance = new LikeModelClass()
+        likesInfoInstance._id = newLikesInfo._id
+        likesInfoInstance.ownerType = newLikesInfo.ownerType
+        likesInfoInstance.ownerId = newLikesInfo.ownerId
+        likesInfoInstance.likesCount = newLikesInfo.likesCount
+        likesInfoInstance.dislikesCount = newLikesInfo.dislikesCount
+        await likesInfoInstance.save();
+
+        const usersLikesConnectionInfoInstance = new UsersLikesConnectionModelClass()
+        usersLikesConnectionInfoInstance._id = newUsersLikesConnectionInfo._id
+        usersLikesConnectionInfoInstance.userId = newUsersLikesConnectionInfo.userId
+        usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
+        usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
+        usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
+        await usersLikesConnectionInfoInstance.save();
+
+
+        return getCommentViewModel(newComment, userId);
     }
 }

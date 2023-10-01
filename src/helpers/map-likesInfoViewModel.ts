@@ -1,8 +1,13 @@
-import {likesDBModel, likesInfoViewModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
+import {
+    likesDBModel,
+    likesInfoViewModel,
+    likeStatusModel,
+    usersLikesConnectionDBModel
+} from "../models/Comments/LikeModel";
 
 export const getlikesInfoViewModel = (
     likes: likesDBModel,
-    userStatus: usersLikesConnectionDBModel): likesInfoViewModel => {
+    userStatus: usersLikesConnectionDBModel | {status: likeStatusModel}): likesInfoViewModel => {
     return {
         likesCount: likes.likesCount,
         dislikesCount: likes.dislikesCount,

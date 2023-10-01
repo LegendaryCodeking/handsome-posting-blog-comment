@@ -10,12 +10,16 @@ export type likeInputModel = {
 
 export type ownerTypeModel = "Comment" | "Post"
 
-export type likesDBModel = {
-    _id: ObjectId
-    ownerType: ownerTypeModel
-    ownerId: string
-    likesCount: number
-    dislikesCount: number
+export class likesDBModel {
+    constructor(
+        public _id: ObjectId,
+        public ownerType: ownerTypeModel,
+        public ownerId: string,
+        public likesCount: number,
+        public dislikesCount: number,
+    ) {
+    }
+
 }
 
 export type likesInfoViewModel = {
@@ -39,14 +43,20 @@ export const likesMongooseSchema = new mongoose.Schema<likesDBModel>({
 // usersLikesConnection collection
 //////////////////////////////////
 
-export type usersLikesConnectionDBModel = {
-    userId: string
-    likedObjectId: string
-    likedObjectType: ownerTypeModel
-    status: likeStatusModel
+export class usersLikesConnectionDBModel {
+    constructor(
+        public _id: ObjectId,
+        public userId: string,
+        public likedObjectId: string,
+        public likedObjectType: string,
+        public status: likeStatusModel
+    ) {
+    }
+
 }
 
 export const userslikesconnectionMongooseSchema = new mongoose.Schema<usersLikesConnectionDBModel>({
+    _id: ObjectId,
     userId: String,
     likedObjectId: String,
     likedObjectType: {

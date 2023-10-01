@@ -4,6 +4,8 @@ import {
     CommentViewModel
 } from "../models/Comments/CommentModel";
 import {ObjectId} from "mongodb";
+import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
+import {likeStatus} from "../enum/likeStatuses";
 
 export class CommentService {
 
@@ -29,6 +31,22 @@ export class CommentService {
             new Date().toISOString()
         )
 
-        return this.commentsRepo.createComment(newComment);
+        const newLikesInfo = new likesDBModel(
+            new ObjectId(),
+            "Comment",
+            newComment._id.toString(),
+            0,
+            0
+        )
+
+        const newUsersLikesConnection = new usersLikesConnectionDBModel(
+            new ObjectId(),
+            userId,
+            newComment._id.toString(),
+            "Comment",
+            likeStatus.None
+        )
+
+        return this.commentsRepo.createComment(newComment,userId,newLikesInfo,newUsersLikesConnection);
     }
 }
