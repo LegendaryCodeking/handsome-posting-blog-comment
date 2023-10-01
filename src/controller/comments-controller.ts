@@ -113,7 +113,6 @@ export class CommentsController {
             }
         }
 
-
-
+        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 }
