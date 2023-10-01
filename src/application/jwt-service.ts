@@ -6,15 +6,15 @@ dotenv.config()
 
 export class JwtService {
     async createJWT(user: UserViewModel) {
-        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '500s'})
+        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '2000s'})
     }
 
     async createPassRecoveryCode(user: UserViewModel) {
-        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '900s'})
+        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '4000s'})
     }
 
     async createJWTRefresh(user: UserViewModel, deviceId: string): Promise<string> {
-        return jwt.sign({userId: user.id, deviceId: deviceId}, process.env.JWT_SECRET!, {expiresIn: '2000s'})
+        return jwt.sign({userId: user.id, deviceId: deviceId}, process.env.JWT_SECRET!, {expiresIn: '4000s'})
     }
 
     async getInfoFromRFToken(refreshToken: string) {
