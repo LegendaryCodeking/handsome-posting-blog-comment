@@ -47,7 +47,7 @@ export class CommentService {
         const newUsersLikesConnection = new usersLikesConnectionDBModel(
             new ObjectId(),
             userId,
-            "String", // UserLogin NEEEEEEEEEEEEEED TO CORRECT
+            userLogin,
             new Date(),
             newComment._id.toString(),
             "Comment",
