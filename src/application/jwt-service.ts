@@ -6,11 +6,11 @@ dotenv.config()
 
 export class JwtService {
     async createJWT(user: UserViewModel) {
-        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '10s'})
+        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '500s'})
     }
 
     async createPassRecoveryCode(user: UserViewModel) {
-        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '600s'})
+        return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '900s'})
     }
 
     async createJWTRefresh(user: UserViewModel, deviceId: string): Promise<string> {
