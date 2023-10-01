@@ -166,11 +166,7 @@ describe('/Testing comments', () => {
                     content: data.content,
                     commentatorInfo: comment_1.commentatorInfo,
                     createdAt: comment_1.createdAt,
-                    likesInfo: {
-                        likesCount: comment_1.likesInfo.likesCount,
-                        dislikesCount: comment_1.likesInfo.dislikesCount,
-                        myStatus: comment_1.likesInfo.dislikesCount
-                    }
+                    likesInfo: comment_1.likesInfo
 
                 }]
             })
@@ -213,21 +209,13 @@ describe('/Testing comments', () => {
                         content: data.content,
                         commentatorInfo: comment_2.commentatorInfo,
                         createdAt: comment_2.createdAt,
-                        likesInfo: {
-                            likesCount: comment_2.likesInfo.likesCount,
-                            dislikesCount: comment_2.likesInfo.dislikesCount,
-                            myStatus: comment_2.likesInfo.dislikesCount
-                        }
+                        likesInfo: comment_2.likesInfo
                     }, {
                         id: comment_1.id,
                         content: comment_1.content,
                         commentatorInfo: comment_1.commentatorInfo,
                         createdAt: comment_1.createdAt,
-                        likesInfo: {
-                            likesCount: comment_1.likesInfo.likesCount,
-                            dislikesCount: comment_1.likesInfo.dislikesCount,
-                            myStatus: comment_1.likesInfo.dislikesCount
-                        }
+                        likesInfo: comment_1.likesInfo
                     }]
             })
     })
@@ -250,11 +238,7 @@ describe('/Testing comments', () => {
                 content: comment_1.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt,
-                likesInfo: {
-                    likesCount: comment_1.likesInfo.likesCount,
-                    dislikesCount: comment_1.likesInfo.dislikesCount,
-                    myStatus: comment_1.likesInfo.dislikesCount
-                }
+                likesInfo: comment_1.likesInfo
             })
     })
 
@@ -285,11 +269,7 @@ describe('/Testing comments', () => {
                 content: comment_1.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt,
-                likesInfo: {
-                    likesCount: comment_1.likesInfo.likesCount,
-                    dislikesCount: comment_1.likesInfo.dislikesCount,
-                    myStatus: comment_1.likesInfo.dislikesCount
-                }
+                likesInfo: comment_1.likesInfo
             })
     })
 
@@ -312,11 +292,7 @@ describe('/Testing comments', () => {
                 content: comment_1.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt,
-                likesInfo: {
-                    likesCount: comment_1.likesInfo.likesCount,
-                    dislikesCount: comment_1.likesInfo.dislikesCount,
-                    myStatus: comment_1.likesInfo.dislikesCount
-                }
+                likesInfo: comment_1.likesInfo
             })
     })
 
@@ -339,11 +315,7 @@ describe('/Testing comments', () => {
                 content: data.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt,
-                likesInfo: {
-                    likesCount: comment_1.likesInfo.likesCount,
-                    dislikesCount: comment_1.likesInfo.dislikesCount,
-                    myStatus: comment_1.likesInfo.dislikesCount
-                }
+                likesInfo: comment_1.likesInfo
             })
         comment_1.content = data.content
     })
@@ -372,11 +344,7 @@ describe('/Testing comments', () => {
                 content: comment_1.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt,
-                likesInfo: {
-                    likesCount: comment_1.likesInfo.likesCount,
-                    dislikesCount: comment_1.likesInfo.dislikesCount,
-                    myStatus: comment_1.likesInfo.dislikesCount
-                }
+                likesInfo: comment_1.likesInfo
             })
     })
 
@@ -394,11 +362,7 @@ describe('/Testing comments', () => {
                 content: comment_1.content,
                 commentatorInfo: comment_1.commentatorInfo,
                 createdAt: comment_1.createdAt,
-                likesInfo: {
-                    likesCount: comment_1.likesInfo.likesCount,
-                    dislikesCount: comment_1.likesInfo.dislikesCount,
-                    myStatus: comment_1.likesInfo.dislikesCount
-                }
+                likesInfo: comment_1.likesInfo
             })
     })
 
@@ -421,11 +385,7 @@ describe('/Testing comments', () => {
                     content: comment_2.content,
                     commentatorInfo: comment_2.commentatorInfo,
                     createdAt: comment_2.createdAt,
-                    likesInfo: {
-                        likesCount: comment_2.likesInfo.likesCount,
-                        dislikesCount: comment_2.likesInfo.dislikesCount,
-                        myStatus: comment_2.likesInfo.dislikesCount
-                    }
+                    likesInfo: comment_2.likesInfo
                 }]
             })
     })
@@ -434,3 +394,4 @@ describe('/Testing comments', () => {
         await mongoose.disconnect()
     })
 })
+
