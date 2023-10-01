@@ -21,19 +21,19 @@ export class LikesQueryRepo {
                 "ownerId": ownerId
             }).lean()
 
+        if (!foundLikes) return null
 
     // Пустой ID это тот случай, когда user не авторизован
+        let foundStatus: usersLikesConnectionDBModel | null | { status: likeStatus.None } ;
         if (userId === undefined) {
-            const foundStatus = {
+             foundStatus = {
                 status: likeStatus.None
             }
-
-            if (!foundLikes) return null
 
             return getlikesInfoViewModel(foundLikes, foundStatus)
         }
 
-        const foundStatus: usersLikesConnectionDBModel | null =
+        foundStatus =
             await UsersLikesConnectionModelClass.findOne(
                 {
                     "userId": userId,
@@ -41,7 +41,11 @@ export class LikesQueryRepo {
                     "likedObjectType": ownerType
                 }).lean()
 
-        if (!foundLikes || !foundStatus) return null
+        if (!foundStatus) {
+            foundStatus = {
+                status: likeStatus.None
+            }
+        }
 
         return getlikesInfoViewModel(foundLikes, foundStatus)
 
