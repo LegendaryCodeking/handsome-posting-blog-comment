@@ -65,6 +65,8 @@ export class usersLikesConnectionDBModel {
     constructor(
         public _id: ObjectId,
         public userId: string,
+        public userLogin: string,
+        public addedAt: Date,
         public likedObjectId: string,
         public likedObjectType: string,
         public status: likeStatusModel
@@ -77,6 +79,8 @@ export const userslikesconnectionMongooseSchema = new mongoose.Schema<usersLikes
     _id: ObjectId,
     userId: String,
     likedObjectId: String,
+    userLogin: String,
+    addedAt: Date,
     likedObjectType: {
         type: String,
         enum: ['Comment', 'Post']

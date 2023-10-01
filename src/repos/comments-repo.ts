@@ -70,6 +70,8 @@ export class CommentsRepo {
         usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
         usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
         usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
+        usersLikesConnectionInfoInstance.userLogin = newUsersLikesConnectionInfo.userLogin
+        usersLikesConnectionInfoInstance.addedAt = newUsersLikesConnectionInfo.addedAt
         await usersLikesConnectionInfoInstance.save();
 
 
