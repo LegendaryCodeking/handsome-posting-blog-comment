@@ -68,15 +68,15 @@ export class PostsService {
     // Working with likes
     //////////////////////
 
-    async likePost(commentId: string, likesInfo: likesInfoViewModel, newLikeStatus: likeStatusModel, userId: string): Promise<boolean> {
+    async likePost(postId: string, likesInfo: likesInfoViewModel, newLikeStatus: likeStatusModel, userId: string): Promise<boolean> {
         const savedLikeStatus = likesInfo.myStatus
         let result: boolean = true
         if (savedLikeStatus === likeStatus.None) {
             if (newLikeStatus === likeStatus.Like) {
-                result = await this.likesRepo.Like('Comment', commentId, userId)
+                result = await this.likesRepo.Like('Post', postId, userId)
             }
             if (newLikeStatus === likeStatus.Dislike) {
-                result = await this.likesRepo.Dislike('Comment', commentId, userId)
+                result = await this.likesRepo.Dislike('Post', postId, userId)
             }
         }
 
@@ -86,11 +86,11 @@ export class PostsService {
             //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
             // }
             if (newLikeStatus === likeStatus.Dislike) {
-                await this.likesRepo.Reset('Comment', commentId, userId, likeStatus.Like)
-                result = await this.likesRepo.Dislike('Comment', commentId, userId)
+                await this.likesRepo.Reset('Post', postId, userId, likeStatus.Like)
+                result = await this.likesRepo.Dislike('Post', postId, userId)
             }
             if (newLikeStatus === likeStatus.None) {
-                result = await this.likesRepo.Reset('Comment', commentId, userId, likeStatus.Like)
+                result = await this.likesRepo.Reset('Post', postId, userId, likeStatus.Like)
             }
         }
 
@@ -100,11 +100,11 @@ export class PostsService {
             //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
             // }
             if (newLikeStatus === likeStatus.Like) {
-                await this.likesRepo.Reset('Comment', commentId, userId, likeStatus.Dislike)
-                result = await this.likesRepo.Like('Comment', commentId, userId)
+                await this.likesRepo.Reset('Post', postId, userId, likeStatus.Dislike)
+                result = await this.likesRepo.Like('Post', postId, userId)
             }
             if (newLikeStatus === likeStatus.None) {
-                result = await this.likesRepo.Reset('Comment', commentId, userId, likeStatus.Dislike)
+                result = await this.likesRepo.Reset('Post', postId, userId, likeStatus.Dislike)
             }
         }
 
