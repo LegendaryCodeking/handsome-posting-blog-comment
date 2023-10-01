@@ -40,7 +40,7 @@ export class PostsService {
 
         const newLikesInfo = new likesDBModel(
             new ObjectId(),
-            "Comment",
+            "Post",
             createdPost.id,
             0,
             0
@@ -52,7 +52,7 @@ export class PostsService {
             userLogin ?? "NonameUserID",
             new Date(),
             createdPost.id,
-            "Comment",
+            "Post",
             likeStatus.None
         )
 
