@@ -34,10 +34,6 @@ const blogsRepo = new BlogsRepo()
 const blogsQueryRepo = new BlogsQueryRepo()
 const blogsService = new BlogsService(blogsRepo)
 
-const postsRepo = new PostsRepo()
-const postQueryRepo = new PostQueryRepo()
-const postsService = new PostsService(postsRepo, blogsQueryRepo)
-
 
 const commentsRepo = new CommentsRepo()
 const commentsQueryRepo = new CommentsQueryRepo()
@@ -45,6 +41,9 @@ const likesRepo = new LikesRepo()
 const likesQueryRepo = new LikesQueryRepo()
 const commentService = new CommentService(commentsRepo,likesRepo)
 
+const postsRepo = new PostsRepo()
+const postQueryRepo = new PostQueryRepo()
+const postsService = new PostsService(postsRepo, blogsQueryRepo,likesRepo)
 
 const usersRepo = new UsersRepo()
 const usersQueryRepo = new UsersQueryRepo()
@@ -58,7 +57,7 @@ const sessionsService = new SessionsService(sessionsRepo)
 const authService = new AuthService(usersRepo,emailManager)
 
 export const blogsController = new BlogsController(blogsService, blogsQueryRepo, postQueryRepo, postsService)
-export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService)
+export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService,likesQueryRepo)
 export const commentsController = new CommentsController(commentsQueryRepo, commentService,likesQueryRepo)
 export const usersController = new UsersController(usersQueryRepo, userService)
 export const authController = new AuthController(userService,jwtService,authService,sessionsService)

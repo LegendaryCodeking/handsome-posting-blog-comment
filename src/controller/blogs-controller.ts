@@ -12,6 +12,7 @@ import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
+import {getPostViewModel} from "../helpers/map-PostViewModel";
 
 export class BlogsController {
 
@@ -54,7 +55,7 @@ export class BlogsController {
 
         const queryFilter = queryBlogPostPagination(req)
 
-        let foundPosts = await this.postQueryRepo.findPosts(queryFilter);
+        let foundPosts = await this.postQueryRepo.findPosts(queryFilter, req.user?.id);
 
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
@@ -91,9 +92,11 @@ export class BlogsController {
             return;
         }
 
-        let createdPost = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString())
+        let createdPost = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString(),req.user!.id,req.user!.login)
+        let resultPost = await getPostViewModel(createdPost,req.user!.id)
+
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(createdPost)
+            .json(resultPost)
     }
 
     async updateBlog(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response) {

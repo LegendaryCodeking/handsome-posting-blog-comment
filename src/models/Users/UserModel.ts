@@ -30,25 +30,6 @@ type passwordRecoveryModel = {
     active: boolean
 }
 
-// export type UserDBModel = {
-//     id: string,
-//     accountData: {
-//         login: string,
-//         email: string,
-//         password: string,
-//         createdAt: string
-//     },
-//     emailConfirmation: {
-//         confirmationCode: string,
-//         expirationDate: string,
-//         isConfirmed: boolean
-//     },
-//     passwordRecovery: {
-//         passwordRecoveryCode: string,
-//         active: boolean
-//     }
-// }
-
 export type UsersWithPaginationModel = WithPagination<UserViewModel>
 
 export type UserViewModel = {

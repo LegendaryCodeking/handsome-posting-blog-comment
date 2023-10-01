@@ -11,6 +11,8 @@ import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
 import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
 import {getPostViewModel} from "../helpers/map-PostViewModel";
+import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
+import {likesInfoViewModel} from "../models/Comments/LikeModel";
 
 export class PostsController {
 
@@ -19,7 +21,8 @@ export class PostsController {
         protected postQueryRepo: PostQueryRepo,
         protected postsService: PostsService,
         protected commentsQueryRepo: CommentsQueryRepo,
-        protected commentService: CommentService
+        protected commentService: CommentService,
+        protected likesQueryRepo: LikesQueryRepo
     ) {
 
     }
@@ -28,7 +31,7 @@ export class PostsController {
                        res: Response<PostsWithPaginationModel>) {
         const queryFilter = queryBlogPostPagination(req)
 
-        let foundPosts = await this.postQueryRepo.findPosts(queryFilter);
+        let foundPosts = await this.postQueryRepo.findPosts(queryFilter, req.user?.id);
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundPosts);
@@ -63,10 +66,11 @@ export class PostsController {
     async createPost(req: Request,
                      res: Response<PostViewModel>) {
         let createdPost = await this.postsService
-            .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+            .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.user!.id, req.user!.login)
 
+        const resultPost = await getPostViewModel(createdPost)
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(getPostViewModel(createdPost))
+            .json(resultPost)
     }
 
     async updatePost(req: RequestsWithParams<URIParamsPostIdModel>,
@@ -105,7 +109,7 @@ export class PostsController {
 
         const queryFilter = queryCommentsWithPagination(req)
 
-        let foundPosts = await this.commentsQueryRepo.findComments(queryFilter,req.user?.id);
+        let foundPosts = await this.commentsQueryRepo.findComments(queryFilter, req.user?.id);
         if (!foundPosts.items.length) {
             res.status(STATUSES_HTTP.NOT_FOUND_404)
                 .json(foundPosts);
@@ -114,5 +118,35 @@ export class PostsController {
         res.status(STATUSES_HTTP.OK_200)
             .json(foundPosts)
 
+    }
+
+    ////////////////////////////
+    // working with likes
+    ////////////////////////////
+
+    async sendLikeStatus(req: Request, res: Response) {
+
+        let foundPost: PostViewModel | null = await this.postQueryRepo.findPostsById(req.params.id)
+        if (!foundPost) {
+            res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
+            return;
+        }
+
+        const likesInfo: likesInfoViewModel | null =
+            await this.likesQueryRepo.findLikesByOwnerId('Post', req.params.id, req.user!.id)
+        if (!likesInfo) {
+            res.status(STATUSES_HTTP.SERVER_ERROR_500)
+                .json({errorsMessage: "Sorry. Unable to get likes info from DB"})
+            return;
+        }
+
+        let likeOperationStatus: boolean = await this.postsService.likePost(req.params.id, likesInfo, req.body.likeStatus, req.user!.id)
+        if (!likeOperationStatus) {
+            res.status(STATUSES_HTTP.SERVER_ERROR_500)
+                .json({errorsMessage: "Something went wrong during like operation"})
+            return;
+        }
+
+        res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
     }
 }

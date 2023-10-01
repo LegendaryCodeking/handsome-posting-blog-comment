@@ -4,6 +4,7 @@ import {authMW} from "../middlewares/auth-mw";
 import {postValidationMW} from "../middlewares/post-validation-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {postsController} from "../composition-root";
+import {likeStatusValidation} from "../middlewares/likes-mw";
 
 
 export const postsRouter = Router({})
@@ -47,3 +48,14 @@ postsRouter.post('/:postId/comments',
 
 postsRouter.get('/:postId/comments',
     postsController.getCommentsForPost.bind(postsController))
+
+////////////////////////////
+// working with likes
+////////////////////////////
+
+postsRouter.put('/:id/like-status',
+    authMW.authenticationCheckBearer.bind(authMW),
+    likeStatusValidation,
+    inputValidationMw,
+    postsController.sendLikeStatus.bind(postsController)
+)
