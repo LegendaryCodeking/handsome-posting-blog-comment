@@ -3,6 +3,7 @@ import {HttpStatusType, STATUSES_HTTP} from "../../enum/http-statuses";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {CreateCommentModel} from "../../models/Comments/CommentModel";
+import {likeStatus} from "../../enum/likeStatuses";
 
 export const commentTestManager = {
     async createComment(postId: string, data: CreateCommentModel, expectedStatusCode: HttpStatusType = STATUSES_HTTP.CREATED_201, headers = {}) {
@@ -25,7 +26,13 @@ export const commentTestManager = {
                     "userId": expect.any(String),
                     "userLogin": expect.any(String)
                 },
-                "createdAt": expect.any(String)
+                "createdAt": expect.any(String),
+                "likesInfo": {
+                    "likesCount": expect.any(Number),
+                    "dislikesCount": expect.any(Number),
+                    "myStatus": likeStatus.None
+                }
+
             })
 
         }
