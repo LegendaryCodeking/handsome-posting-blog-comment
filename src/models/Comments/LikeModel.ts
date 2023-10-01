@@ -40,6 +40,24 @@ export const likesMongooseSchema = new mongoose.Schema<likesDBModel>({
 })
 
 //////////////////////////////////
+// Comments for posts collection
+//////////////////////////////////
+
+export type extendedLikesInfoViewModel = {
+    likesCount: number
+    dislikesCount: number
+    myStatus: likeStatusModel,
+    newestLikes: likeDetailsViewModel[]
+}
+
+export type likeDetailsViewModel = {
+    addedAt: string,
+    userId: string,
+    login: string
+}
+
+
+//////////////////////////////////
 // usersLikesConnection collection
 //////////////////////////////////
 
