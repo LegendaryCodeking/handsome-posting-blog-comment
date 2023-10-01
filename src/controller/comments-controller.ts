@@ -86,9 +86,10 @@ export class CommentsController {
         }
 
         if(savedLikeStatus === likeStatus.Like) {
-            if(newLikeStatus === likeStatus.Like) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
-            }
+            // По условию домашки, при повторной отправке того-же статуса ничего не меняется
+            // if(newLikeStatus === likeStatus.Like) {
+            //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
+            // }
             if(newLikeStatus === likeStatus.Dislike) {
                 await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
                 await likesRepo.Dislike('Comment', req.params.id, req.user!.id)
@@ -99,9 +100,10 @@ export class CommentsController {
         }
 
         if(savedLikeStatus === likeStatus.Dislike) {
-            if(newLikeStatus === likeStatus.Dislike) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
-            }
+            // По условию домашки, при повторной отправке того-же статуса ничего не меняется
+            // if(newLikeStatus === likeStatus.Dislike) {
+            //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
+            // }
             if(newLikeStatus === likeStatus.Like) {
                 await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
                 await likesRepo.Like('Comment', req.params.id, req.user!.id)
