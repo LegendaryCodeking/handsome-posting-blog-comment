@@ -105,7 +105,7 @@ export class CommentsController {
             //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
             // }
             if(newLikeStatus === likeStatus.Like) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
+                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Dislike)
                 await likesRepo.Like('Comment', req.params.id, req.user!.id)
             }
             if(newLikeStatus === likeStatus.None) {
