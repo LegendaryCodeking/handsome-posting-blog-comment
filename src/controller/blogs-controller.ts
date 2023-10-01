@@ -93,7 +93,7 @@ export class BlogsController {
         }
 
         let createdPost = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString(),req.user?.id,req.user?.login)
-        let resultPost = await getPostViewModel(createdPost,req.user!.id)
+        let resultPost = await getPostViewModel(createdPost,req.user?.id)
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(resultPost)
