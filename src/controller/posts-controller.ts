@@ -66,7 +66,7 @@ export class PostsController {
     async createPost(req: Request,
                      res: Response<PostViewModel>) {
         let createdPost = await this.postsService
-            .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.user!.id, req.user!.login)
+            .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.user?.id, req.user?.login)
 
         const resultPost = await getPostViewModel(createdPost)
         res.status(STATUSES_HTTP.CREATED_201)

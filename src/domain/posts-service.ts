@@ -24,7 +24,7 @@ export class PostsService {
         return this.postsRepo.deletePost(id)
     }
 
-    async createPost(title: string, shortDescription: string, content: string, blogId: string, userId: string, userLogin: string): Promise<PostDBModel> {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string, userId?: string, userLogin?: string): Promise<PostDBModel> {
         const blogName = await this.blogsQueryRepo.findBlogById(blogId)
 
         const createdPost = new PostDBModel(
@@ -48,15 +48,15 @@ export class PostsService {
 
         const newUsersLikesConnectionInfo = new usersLikesConnectionDBModel(
             new ObjectId(),
-            userId,
-            userLogin,
+            userId ?? "NonameUserID",
+            userLogin ?? "NonameUserID",
             new Date(),
             createdPost.id,
             "Comment",
             likeStatus.None
         )
 
-        return await this.postsRepo.createPost(createdPost,newLikesInfo,newUsersLikesConnectionInfo)
+        return await this.postsRepo.createPost(createdPost, newLikesInfo, newUsersLikesConnectionInfo)
     }
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {

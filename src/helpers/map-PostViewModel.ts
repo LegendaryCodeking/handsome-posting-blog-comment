@@ -14,19 +14,16 @@ export const getPostViewModel = async (post: PostType | PostDBModel, userId?: st
             myStatus: likeStatus.None
         }
 
-    const likesLastThreeMongoose = await UsersLikesConnectionModelClass.find({},
-        {
-            projection: {
-                addedAt: 1,
-                userId: 1,
-                userLogin: 1
-            }
-        })
+    const likesLastThreeMongoose = await UsersLikesConnectionModelClass.find({
+        "likedObjectId": post.id,
+        "likedObjectType": "Post"
+    }).lean()
         .sort({addedAt: 'desc'})
         .limit(3)
-        .lean()
+
 
     let likesLastThree = likesLastThreeMongoose.map((value) => {
+        console.log(value)
         let newItem: likeDetailsViewModel = {
             addedAt: value.addedAt.toString(),
             userId: value.userId,
