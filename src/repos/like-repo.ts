@@ -3,7 +3,6 @@ import {ownerTypeModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {ObjectId} from "mongodb";
 
-
 export class LikesRepo {
     async Like(
         ownerType: ownerTypeModel,

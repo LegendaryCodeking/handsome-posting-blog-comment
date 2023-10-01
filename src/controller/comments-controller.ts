@@ -5,8 +5,6 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {likesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
-import {likeStatus} from "../enum/likeStatuses";
-import {likesRepo} from "../repos/like-repo";
 
 export class CommentsController {
     constructor(
@@ -59,7 +57,7 @@ export class CommentsController {
     }
 
     async sendLikeStatus(req: Request, res: Response) {
-        const newLikeStatus = req.body.likeStatus
+
         let foundComment: CommentViewModel | null = await this.commentsQueryRepo.findCommentById(req.params.id,req.user!.id)
         if (!foundComment) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
@@ -74,43 +72,11 @@ export class CommentsController {
             return;
         }
 
-        const savedLikeStatus = likesInfo.myStatus
-
-        if(savedLikeStatus === likeStatus.None) {
-            if(newLikeStatus === likeStatus.Like) {
-                await likesRepo.Like('Comment', req.params.id, req.user!.id)
-            }
-            if(newLikeStatus === likeStatus.Dislike) {
-                await likesRepo.Dislike('Comment', req.params.id, req.user!.id)
-            }
-        }
-
-        if(savedLikeStatus === likeStatus.Like) {
-            // По условию домашки, при повторной отправке того-же статуса ничего не меняется
-            // if(newLikeStatus === likeStatus.Like) {
-            //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
-            // }
-            if(newLikeStatus === likeStatus.Dislike) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
-                await likesRepo.Dislike('Comment', req.params.id, req.user!.id)
-            }
-            if(newLikeStatus === likeStatus.None) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
-            }
-        }
-
-        if(savedLikeStatus === likeStatus.Dislike) {
-            // По условию домашки, при повторной отправке того-же статуса ничего не меняется
-            // if(newLikeStatus === likeStatus.Dislike) {
-            //     await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Like)
-            // }
-            if(newLikeStatus === likeStatus.Like) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Dislike)
-                await likesRepo.Like('Comment', req.params.id, req.user!.id)
-            }
-            if(newLikeStatus === likeStatus.None) {
-                await likesRepo.Reset('Comment', req.params.id, req.user!.id,likeStatus.Dislike)
-            }
+        let likeOperationStatus: boolean = await this.commentService.likeComment(req.params.id,likesInfo,req.body.likeStatus,req.user!.id)
+        if (!likeOperationStatus) {
+            res.status(STATUSES_HTTP.SERVER_ERROR_500)
+                .json({errorsMessage: "Something went wrong during like operation"})
+            return;
         }
 
         res.sendStatus(STATUSES_HTTP.NO_CONTENT_204)
