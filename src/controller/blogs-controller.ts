@@ -12,7 +12,8 @@ import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
-import {getPostViewModel} from "../helpers/map-PostViewModel";
+import {mapPostViewModel} from "../composition-root";
+
 
 export class BlogsController {
 
@@ -93,7 +94,7 @@ export class BlogsController {
         }
 
         let createdPost = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString(),req.user?.id,req.user?.login)
-        let resultPost = await getPostViewModel(createdPost,req.user?.id)
+        let resultPost = await mapPostViewModel.getPostViewModel(createdPost,req.user?.id)
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(resultPost)

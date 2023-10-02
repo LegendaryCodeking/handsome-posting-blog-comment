@@ -10,9 +10,9 @@ import {CommentService} from "../domain/comment-service";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
 import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
-import {getPostViewModel} from "../helpers/map-PostViewModel";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
+import {mapPostViewModel} from "../composition-root";
 
 export class PostsController {
 
@@ -68,7 +68,7 @@ export class PostsController {
         let createdPost = await this.postsService
             .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.user?.id, req.user?.login)
 
-        const resultPost = await getPostViewModel(createdPost)
+        const resultPost = await mapPostViewModel.getPostViewModel(createdPost)
         res.status(STATUSES_HTTP.CREATED_201)
             .json(resultPost)
     }

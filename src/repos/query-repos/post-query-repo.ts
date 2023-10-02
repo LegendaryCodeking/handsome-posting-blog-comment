@@ -4,9 +4,9 @@ import {Sort} from "mongodb";
 import {FilterQuery} from "mongoose";
 import {PostType} from "../../models/Posts/PostModel";
 import {PostModelClass} from "../../db/db";
-import {getPostViewModel} from "../../helpers/map-PostViewModel";
 import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
+import {mapPostViewModel} from "../../composition-root";
 
 export class PostQueryRepo {
 
@@ -24,7 +24,7 @@ export class PostQueryRepo {
         /// Код нужен чтобы не ругалось в return в Items т.к. там возвращаются Promises
         const foundPostsFunction = (postArr: PostDBModel[]) => {
             const promises = postArr.map(
-                async (value) =>  await getPostViewModel(value, userId)
+                async (value) =>  await mapPostViewModel.getPostViewModel(value, userId)
             );
             return Promise.all(promises);
         }
@@ -46,7 +46,7 @@ export class PostQueryRepo {
     async findPostsById(id: string, userId?: string): Promise<PostViewModel | null> {
         let foundPost: PostType | null = await PostModelClass.findOne({"id": id})
         if (foundPost) {
-            return getPostViewModel(foundPost,userId)
+            return mapPostViewModel.getPostViewModel(foundPost,userId)
         } else {
             return null
         }
