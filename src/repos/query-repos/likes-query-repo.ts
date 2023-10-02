@@ -51,5 +51,3 @@ export class LikesQueryRepo {
 
     }
 }
-
-export const likesQueryRepo = new LikesQueryRepo()
