@@ -3,8 +3,20 @@ import {HttpStatusType, STATUSES_HTTP} from "../../enum/http-statuses";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {PostCreateModel} from "../../models/Posts/PostCreateModel";
+import {likeStatusModel} from "../../models/Comments/LikeModel";
+
+class NewestLikesClass {
+    constructor(protected likesCount: number,
+                protected dislikesCount: number,
+                protected myStatus: likeStatusModel
+                ) {
+    }
+}
+
+
 
 export const postsTestManager = {
+
     async createPost(data: PostCreateModel, expectedStatusCode: HttpStatusType = STATUSES_HTTP.CREATED_201, headers = {}) {
         const response = await request(app)
             .post(RouterPaths.posts)
@@ -27,7 +39,12 @@ export const postsTestManager = {
                 "blogId": data.blogId,
                 "blogName": expect.any(String),
                 "createdAt": expect.any(String),
-                "extendedLikesInfo": expect.any(Array)
+                "extendedLikesInfo": {
+                     "dislikesCount": expect.any(Number),
+                        "likesCount": expect.any(Number),
+                         "myStatus": expect.any(String),
+                        "newestLikes": expect.any(Array<NewestLikesClass>)
+                       }
 
             })
 

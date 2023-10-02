@@ -5,13 +5,14 @@ import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {postsTestManager} from "../utils/postsTestManager";
 import {PostCreateModel} from "../../models/Posts/PostCreateModel";
-import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostUpdateModel} from "../../models/Posts/PostUpdateModel";
 import {BlogCreateModel} from "../../models/BLogs/BlogModel";
 import {blogsTestManager} from "../utils/blogsTestManager";
 import {authBasicHeader, connection_string} from "../utils/export_data_functions";
 import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 import mongoose from "mongoose";
+import {PostViewModel} from "../../models/Posts/PostViewModel";
+import {likeStatus} from "../../enum/likeStatuses";
 
 describe('/Testing posts', () => {
     let blog: BlogViewModel;
@@ -63,7 +64,7 @@ describe('/Testing posts', () => {
     * Created variable outside the next test to have option use
     * id of created post in the further put test
     * */
-    let createdPost1: PostDBModel = {
+    let createdPost1: PostViewModel = {
         "id": "",
         "title": "",
         "shortDescription": "shortDescription",
@@ -71,7 +72,12 @@ describe('/Testing posts', () => {
         "blogId": "",
         "blogName": "",
         "createdAt": "",
-        "comments": []
+        "extendedLikesInfo": {
+            "likesCount": 0,
+            "dislikesCount": 0,
+            "myStatus": likeStatus.None,
+            "newestLikes": []
+        }
     };
 
     it('should not create post with AUTH and correct input data but non existed blogID', async () => {
@@ -80,7 +86,7 @@ describe('/Testing posts', () => {
             "title": "amazing Math_1",
             "shortDescription": "Short description about new amazing Math_1 course",
             "content": "Math_1 Math_1 Math_1 Math_1 Math_1 Math_1",
-            "blogId": "-222222",
+            "blogId": "-2222222222",
         }
 
         await postsTestManager.createPost(data, STATUSES_HTTP.BAD_REQUEST_400, authBasicHeader)
@@ -116,12 +122,13 @@ describe('/Testing posts', () => {
                     "content": createdPost1.content,
                     "blogId": createdPost1.blogId,
                     "blogName": createdPost1.blogName,
-                    "createdAt": createdPost1.createdAt
+                    "createdAt": createdPost1.createdAt,
+                    "extendedLikesInfo": createdPost1.extendedLikesInfo
                 }]
             })
     })
 
-    let createdPost2: PostDBModel = {
+    let createdPost2: PostViewModel = {
         "id": "",
         "title": "",
         "shortDescription": "shortDescription",
@@ -129,7 +136,12 @@ describe('/Testing posts', () => {
         "blogId": "",
         "blogName": "",
         "createdAt": "",
-        "comments": []
+        "extendedLikesInfo": {
+            "likesCount": 0,
+            "dislikesCount": 0,
+            "myStatus": likeStatus.None,
+            "newestLikes": []
+        }
     };
 
     it('should create one more post with AUTH and correct input data', async () => {
@@ -155,7 +167,8 @@ describe('/Testing posts', () => {
                     "content": createdPost2.content,
                     "blogId": createdPost2.blogId,
                     "blogName": createdPost2.blogName,
-                    "createdAt": createdPost2.createdAt
+                    "createdAt": createdPost2.createdAt,
+                    "extendedLikesInfo": createdPost1.extendedLikesInfo
                 }, {
                     "id": createdPost1.id,
                     "title": createdPost1.title,
@@ -163,7 +176,8 @@ describe('/Testing posts', () => {
                     "content": createdPost1.content,
                     "blogId": createdPost1.blogId,
                     "blogName": createdPost1.blogName,
-                    "createdAt": createdPost1.createdAt
+                    "createdAt": createdPost1.createdAt,
+                    "extendedLikesInfo": createdPost2.extendedLikesInfo
                 }]
             })
     })
@@ -224,7 +238,8 @@ describe('/Testing posts', () => {
                 "content": createdPost2.content,
                 "blogId": createdPost2.blogId,
                 "blogName": createdPost2.blogName,
-                "createdAt": createdPost2.createdAt
+                "createdAt": createdPost2.createdAt,
+                "extendedLikesInfo": createdPost2.extendedLikesInfo
             })
     })
 
@@ -341,12 +356,71 @@ describe('/Testing posts', () => {
                     "content": createdPost1.content,
                     "blogId": createdPost1.blogId,
                     "blogName": createdPost1.blogName,
-                    "createdAt": createdPost1.createdAt
+                    "createdAt": createdPost1.createdAt,
+                    "extendedLikesInfo": createdPost1.extendedLikesInfo
                 }]
             })
 
     })
 
+    let createdPost3: PostViewModel = {
+        "id": "",
+        "title": "",
+        "shortDescription": "shortDescription",
+        "content": "",
+        "blogId": "",
+        "blogName": "",
+        "createdAt": "",
+        "extendedLikesInfo": {
+            "likesCount": 0,
+            "dislikesCount": 0,
+            "myStatus": likeStatus.None,
+            "newestLikes": []
+        }
+    };
+
+    it('Should create post for specific Blog', async () => {
+
+        const data: PostCreateModel = {
+            "title": "Post_Spec 1",
+            "shortDescription": " post for specific Blog  post for specific Blog",
+            "content": " post for specific Blog 111111111",
+            "blogId": blog.id,
+        }
+
+        const response = await request(app)
+            .post(`${RouterPaths.blogs}/${blog.id}/posts`)
+            .set(authBasicHeader)
+            .send(data)
+            .expect(STATUSES_HTTP.CREATED_201)
+
+        createdPost3 = response!.body
+
+        await request(app)
+            .get(RouterPaths.posts)
+            .expect(STATUSES_HTTP.OK_200, {
+                pagesCount: 1, page: 1, pageSize: 10, totalCount: 2, items: [{
+                    "id": createdPost3.id,
+                    "title": createdPost3.title,
+                    "shortDescription": createdPost3.shortDescription,
+                    "content": createdPost3.content,
+                    "blogId": createdPost3.blogId,
+                    "blogName": createdPost3.blogName,
+                    "createdAt": createdPost3.createdAt,
+                    "extendedLikesInfo": createdPost3.extendedLikesInfo
+
+                }, {
+                    "id": createdPost1.id,
+                    "title": createdPost1.title,
+                    "shortDescription": createdPost1.shortDescription,
+                    "content": createdPost1.content,
+                    "blogId": createdPost1.blogId,
+                    "blogName": createdPost1.blogName,
+                    "createdAt": createdPost1.createdAt,
+                    "extendedLikesInfo": createdPost1.extendedLikesInfo
+                }]
+            })
+    })
 
     afterAll(async () => {
         await mongoose.disconnect()
