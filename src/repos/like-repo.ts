@@ -7,7 +7,8 @@ export class LikesRepo {
     async Like(
         ownerType: ownerTypeModel,
         ownerId: string,
-        userId: string
+        userId: string,
+        userLogin: string
     ): Promise<boolean> {
 
         let likesIfoInstance = await LikeModelClass.findOne(
@@ -34,6 +35,8 @@ export class LikesRepo {
             userStatusInstance.userId = userId
             userStatusInstance.likedObjectId = ownerId
             userStatusInstance.likedObjectType = ownerType
+            userStatusInstance.userLogin = userLogin
+            userStatusInstance.addedAt = new Date()
         }
 
         userStatusInstance.status = likeStatus.Like
@@ -47,7 +50,8 @@ export class LikesRepo {
     async Dislike(
         ownerType: ownerTypeModel,
         ownerId: string,
-        userId: string
+        userId: string,
+        userLogin: string
     ): Promise<boolean> {
 
         let likesIfoInstance = await LikeModelClass.findOne(
@@ -74,6 +78,8 @@ export class LikesRepo {
             userStatusInstance.userId = userId
             userStatusInstance.likedObjectId = ownerId
             userStatusInstance.likedObjectType = ownerType
+            userStatusInstance.userLogin = userLogin
+            userStatusInstance.addedAt = new Date()
         }
         userStatusInstance.status = likeStatus.Dislike
 
@@ -87,7 +93,8 @@ export class LikesRepo {
         ownerType: ownerTypeModel,
         ownerId: string,
         userId: string,
-        savedStatus: string
+        userLogin: string,
+        savedStatus: string,
     ): Promise<boolean> {
 
         let likesIfoInstance = await LikeModelClass.findOne(
@@ -119,6 +126,8 @@ export class LikesRepo {
             userStatusInstance.userId = userId
             userStatusInstance.likedObjectId = ownerId
             userStatusInstance.likedObjectType = ownerType
+            userStatusInstance.userLogin = userLogin
+            userStatusInstance.addedAt = new Date()
         }
         userStatusInstance.status = likeStatus.None
 

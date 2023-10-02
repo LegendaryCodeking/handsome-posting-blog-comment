@@ -140,7 +140,7 @@ export class PostsController {
             return;
         }
 
-        let likeOperationStatus: boolean = await this.postsService.likePost(req.params.id, likesInfo, req.body.likeStatus, req.user!.id)
+        let likeOperationStatus: boolean = await this.postsService.likePost(req.params.id, likesInfo, req.body.likeStatus, req.user!.id, req.user!.login)
         if (!likeOperationStatus) {
             res.status(STATUSES_HTTP.SERVER_ERROR_500)
                 .json({errorsMessage: "Something went wrong during like operation"})
