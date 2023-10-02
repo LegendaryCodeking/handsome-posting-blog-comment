@@ -43,7 +43,7 @@ export class PostsController {
 
     async findPostById(req: RequestsWithParams<URIParamsPostIdModel>,
                        res: Response) {
-        const foundPost = await this.postQueryRepo.findPostsById(req.params.id);
+        const foundPost = await this.postQueryRepo.findPostsById(req.params.id, req.user?.id);
 
         if (!foundPost) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)

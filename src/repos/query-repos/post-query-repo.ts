@@ -43,10 +43,10 @@ export class PostQueryRepo {
         }
     }
 
-    async findPostsById(id: string): Promise<PostViewModel | null> {
+    async findPostsById(id: string, userId?: string): Promise<PostViewModel | null> {
         let foundPost: PostType | null = await PostModelClass.findOne({"id": id})
         if (foundPost) {
-            return getPostViewModel(foundPost)
+            return getPostViewModel(foundPost,userId)
         } else {
             return null
         }
