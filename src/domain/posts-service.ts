@@ -46,17 +46,17 @@ export class PostsService {
             0
         )
 
-        const newUsersLikesConnectionInfo = new usersLikesConnectionDBModel(
-            new ObjectId(),
-            userId ?? "NonameUserID",
-            userLogin ?? "NonameUserID",
-            new Date(),
-            createdPost.id,
-            "Post",
-            likeStatus.None
-        )
+        // const newUsersLikesConnectionInfo = new usersLikesConnectionDBModel(
+        //     new ObjectId(),
+        //     userId ?? "NonameUserID",
+        //     userLogin ?? "NonameUserID",
+        //     new Date(),
+        //     createdPost.id,
+        //     "Post",
+        //     likeStatus.None
+        // )
 
-        return await this.postsRepo.createPost(createdPost, newLikesInfo, newUsersLikesConnectionInfo)
+        return await this.postsRepo.createPost(createdPost, newLikesInfo)
     }
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {

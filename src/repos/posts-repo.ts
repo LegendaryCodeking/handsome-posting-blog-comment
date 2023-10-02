@@ -19,7 +19,7 @@ export class PostsRepo {
     async createPost(
         createdPost: PostDBModel,
         newLikesInfo: likesDBModel,
-        newUsersLikesConnectionInfo: usersLikesConnectionDBModel): Promise<PostDBModel> {
+        newUsersLikesConnectionInfo?: usersLikesConnectionDBModel): Promise<PostDBModel> {
 
         const postInstance = new PostModelClass()
         postInstance.id = createdPost.id
@@ -40,15 +40,15 @@ export class PostsRepo {
         likesInfoInstance.dislikesCount = newLikesInfo.dislikesCount
         await likesInfoInstance.save();
 
-        const usersLikesConnectionInfoInstance = new UsersLikesConnectionModelClass()
-        usersLikesConnectionInfoInstance._id = newUsersLikesConnectionInfo._id
-        usersLikesConnectionInfoInstance.userId = newUsersLikesConnectionInfo.userId
-        usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
-        usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
-        usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
-        usersLikesConnectionInfoInstance.userLogin = newUsersLikesConnectionInfo.userLogin
-        usersLikesConnectionInfoInstance.addedAt = newUsersLikesConnectionInfo.addedAt
-        await usersLikesConnectionInfoInstance.save();
+        // const usersLikesConnectionInfoInstance = new UsersLikesConnectionModelClass()
+        // usersLikesConnectionInfoInstance._id = newUsersLikesConnectionInfo._id
+        // usersLikesConnectionInfoInstance.userId = newUsersLikesConnectionInfo.userId
+        // usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
+        // usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
+        // usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
+        // usersLikesConnectionInfoInstance.userLogin = newUsersLikesConnectionInfo.userLogin
+        // usersLikesConnectionInfoInstance.addedAt = newUsersLikesConnectionInfo.addedAt
+        // await usersLikesConnectionInfoInstance.save();
 
         return createdPost
     }
