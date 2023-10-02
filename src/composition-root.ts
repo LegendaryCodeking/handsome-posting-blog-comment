@@ -24,6 +24,7 @@ import {SecurityController} from "./controller/security-controller";
 import {SessionsQueryRepo} from "./repos/query-repos/sessions-query-repo";
 import {LikesRepo} from "./repos/like-repo";
 import {LikesQueryRepo} from "./repos/query-repos/likes-query-repo";
+import {MapCommentViewModel} from "./helpers/map-CommentViewModel";
 
 
 const jwtService = new JwtService()
@@ -55,6 +56,8 @@ const sessionsQueryRepo = new SessionsQueryRepo()
 const sessionsService = new SessionsService(sessionsRepo)
 
 const authService = new AuthService(usersRepo,emailManager)
+
+export const mapCommentViewModel = new MapCommentViewModel(likesQueryRepo)
 
 export const blogsController = new BlogsController(blogsService, blogsQueryRepo, postQueryRepo, postsService)
 export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService,likesQueryRepo)

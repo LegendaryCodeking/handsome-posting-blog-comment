@@ -1,8 +1,8 @@
 import {CommentModelClass, LikeModelClass, UsersLikesConnectionModelClass} from "../db/db";
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
-import {getCommentViewModel} from "../helpers/map-CommentViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
+import {mapCommentViewModel} from "../composition-root";
 
 export class CommentsRepo {
     async updateComment(id: string, content: string): Promise<boolean> {
@@ -75,6 +75,6 @@ export class CommentsRepo {
         await usersLikesConnectionInfoInstance.save();
 
 
-        return getCommentViewModel(newComment, userId);
+        return mapCommentViewModel.getCommentViewModel(newComment, userId);
     }
 }

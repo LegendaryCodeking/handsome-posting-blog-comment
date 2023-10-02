@@ -1,9 +1,9 @@
 import {CommentDbModel, CommentsFilterModel, CommentsWithPaginationModel} from "../../models/Comments/CommentModel";
 import {Sort} from "mongodb";
 import {CommentModelClass} from "../../db/db";
-import {getCommentViewModel} from "../../helpers/map-CommentViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
+import {mapCommentViewModel} from "../../composition-root";
 
 export class CommentsQueryRepo {
 
@@ -25,7 +25,7 @@ export class CommentsQueryRepo {
         /// Код нужен чтобы не ругалось в return в Items т.к. там возвращаются Promises
         const foundCommentsFunction = (commArr: CommentDbModel[]) => {
             const promises = commArr.map(
-              async (value) =>  await getCommentViewModel(value, userId)
+              async (value) =>  await mapCommentViewModel.getCommentViewModel(value, userId)
             );
             return Promise.all(promises);
         }
@@ -51,7 +51,7 @@ export class CommentsQueryRepo {
         if (_id === null) return false
         let foundComment = await CommentModelClass.findOne({"_id": _id})
         if (foundComment) {
-            return getCommentViewModel(foundComment, userId)
+            return mapCommentViewModel.getCommentViewModel(foundComment, userId)
         } else {
             return null
         }
