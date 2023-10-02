@@ -16,7 +16,9 @@ export const getPostViewModel = async (post: PostType | PostDBModel, userId?: st
 
     const likesLastThreeMongoose = await UsersLikesConnectionModelClass.find({
         "likedObjectId": post.id,
-        "likedObjectType": "Post"
+        "likedObjectType": "Post",
+        "status": likeStatus.Like
+
     }).lean()
         .sort({addedAt: 'desc'})
         .limit(3)
