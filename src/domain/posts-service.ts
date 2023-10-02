@@ -5,7 +5,6 @@ import {
     likesDBModel,
     likesInfoViewModel,
     likeStatusModel,
-    usersLikesConnectionDBModel
 } from "../models/Comments/LikeModel";
 import {ObjectId} from "mongodb";
 import {likeStatus} from "../enum/likeStatuses";
@@ -34,8 +33,7 @@ export class PostsService {
             content,
             blogId,
             blogName!.name,
-            new Date().toISOString(),
-            []
+            new Date().toISOString()
         )
 
         const newLikesInfo = new likesDBModel(
@@ -45,16 +43,6 @@ export class PostsService {
             0,
             0
         )
-
-        // const newUsersLikesConnectionInfo = new usersLikesConnectionDBModel(
-        //     new ObjectId(),
-        //     userId ?? "NonameUserID",
-        //     userLogin ?? "NonameUserID",
-        //     new Date(),
-        //     createdPost.id,
-        //     "Post",
-        //     likeStatus.None
-        // )
 
         return await this.postsRepo.createPost(createdPost, newLikesInfo)
     }

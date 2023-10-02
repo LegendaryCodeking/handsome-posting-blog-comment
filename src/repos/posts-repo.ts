@@ -1,6 +1,6 @@
-import {LikeModelClass, PostModelClass, UsersLikesConnectionModelClass} from "../db/db";
+import {LikeModelClass, PostModelClass} from "../db/db";
 import {PostDBModel} from "../models/Posts/PostDBModel";
-import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
+import {likesDBModel} from "../models/Comments/LikeModel";
 
 export class PostsRepo {
     async deletePost(id: string): Promise<boolean> {
@@ -18,8 +18,8 @@ export class PostsRepo {
 
     async createPost(
         createdPost: PostDBModel,
-        newLikesInfo: likesDBModel,
-        newUsersLikesConnectionInfo?: usersLikesConnectionDBModel): Promise<PostDBModel> {
+        newLikesInfo: likesDBModel
+    ): Promise<PostDBModel> {
 
         const postInstance = new PostModelClass()
         postInstance.id = createdPost.id
@@ -29,7 +29,6 @@ export class PostsRepo {
         postInstance.blogId = createdPost.blogId
         postInstance.blogName = createdPost.blogName
         postInstance.createdAt = createdPost.createdAt
-        postInstance.comments = createdPost.comments
         await postInstance.save()
 
         const likesInfoInstance = new LikeModelClass()
@@ -39,16 +38,6 @@ export class PostsRepo {
         likesInfoInstance.likesCount = newLikesInfo.likesCount
         likesInfoInstance.dislikesCount = newLikesInfo.dislikesCount
         await likesInfoInstance.save();
-
-        // const usersLikesConnectionInfoInstance = new UsersLikesConnectionModelClass()
-        // usersLikesConnectionInfoInstance._id = newUsersLikesConnectionInfo._id
-        // usersLikesConnectionInfoInstance.userId = newUsersLikesConnectionInfo.userId
-        // usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
-        // usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
-        // usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
-        // usersLikesConnectionInfoInstance.userLogin = newUsersLikesConnectionInfo.userLogin
-        // usersLikesConnectionInfoInstance.addedAt = newUsersLikesConnectionInfo.addedAt
-        // await usersLikesConnectionInfoInstance.save();
 
         return createdPost
     }

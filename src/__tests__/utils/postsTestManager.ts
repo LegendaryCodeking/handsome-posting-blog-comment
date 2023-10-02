@@ -26,7 +26,8 @@ export const postsTestManager = {
                 "content": data.content,
                 "blogId": data.blogId,
                 "blogName": expect.any(String),
-                "createdAt": expect.any(String)
+                "createdAt": expect.any(String),
+                "extendedLikesInfo": expect.any(Array)
 
             })
 
