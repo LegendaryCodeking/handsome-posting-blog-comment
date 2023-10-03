@@ -29,6 +29,8 @@ import {MapCommentViewModel} from "./helpers/map-CommentViewModel";
 import {MapPostViewModel} from "./helpers/map-PostViewModel";
 import {PostValidationMW} from "./middlewares/post-validation-mw";
 import {Container} from "inversify";
+import {MapUserViewModel} from "./helpers/map-UserViewModel";
+import {AuthMW} from "./middlewares/auth-mw";
 
 
 // const jwtService = new JwtService()
@@ -104,9 +106,12 @@ container.bind(SessionsService).to(SessionsService)
 container.bind(AuthService).to(AuthService)
 
 container.bind(PostValidationMW).to(PostValidationMW)
+container.bind(AuthMW).to(AuthMW)
+
 
 container.bind(MapCommentViewModel).to(MapCommentViewModel)
 container.bind(MapPostViewModel).to(MapPostViewModel)
+container.bind(MapUserViewModel).to(MapUserViewModel)
 
 container.bind(BlogsController).to(BlogsController)
 container.bind(PostsController).to(PostsController)

@@ -8,7 +8,9 @@ import express from "express";
 import cookieParser from 'cookie-parser'
 import {securityRouter} from "./routes/security-router";
 import {RouterPaths} from "./helpers/RouterPaths";
-import {authMW} from "./middlewares/auth-mw";
+import {container} from "./composition-root";
+import {AuthMW} from "./middlewares/auth-mw";
+
 
 
 export const app = express()
@@ -18,6 +20,7 @@ app.use(jsonBodyMW)
 app.use(cookieParser())
 
 // Добавляет всем запросам где нет требуется авторизация, req.user, если все таки юзер с активным accessToken
+const authMW = container.resolve(AuthMW)
 app.use(authMW.addReqUser.bind(authMW))
 
 app.use(RouterPaths.blogs, blogsRouter)

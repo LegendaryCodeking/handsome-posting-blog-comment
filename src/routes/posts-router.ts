@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {authMW} from "../middlewares/auth-mw";
+import {AuthMW} from "../middlewares/auth-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {container} from "../composition-root";
 import {likeStatusValidation} from "../middlewares/likes-mw";
@@ -9,6 +9,7 @@ import {PostValidationMW} from "../middlewares/post-validation-mw";
 
 const postsController = container.resolve(PostsController)
 const postValidationMW = container.resolve(PostValidationMW)
+const authMW = container.resolve(AuthMW)
 
 export const postsRouter = Router({})
 

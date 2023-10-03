@@ -5,22 +5,22 @@ import jwt, {TokenExpiredError} from "jsonwebtoken";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {SessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {UserDBModel} from "../models/Users/UserModel";
-import {getUserViewModel} from "../helpers/map-UserViewModel";
+import {MapUserViewModel} from "../helpers/map-UserViewModel";
 import {UsersRepo} from "../repos/users-repo";
 import {inject, injectable} from "inversify";
 
 @injectable()
 export class AuthMW {
-    @inject(JwtService) private jwtService: JwtService;
-    @inject(UsersQueryRepo) private usersQueryRepo: UsersQueryRepo;
-    @inject(UsersRepo) private usersRepo: UsersRepo;
-    @inject(SessionsQueryRepo) private sessionsQueryRepo: SessionsQueryRepo;
 
-    constructor() {
-        this.jwtService = new JwtService()
-        this.usersQueryRepo = new UsersQueryRepo()
-        this.usersRepo = new UsersRepo()
-        this.sessionsQueryRepo = new SessionsQueryRepo()
+
+    constructor(
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(UsersQueryRepo) protected usersQueryRepo: UsersQueryRepo,
+        @inject(UsersRepo) protected usersRepo: UsersRepo,
+        @inject(SessionsQueryRepo) protected sessionsQueryRepo: SessionsQueryRepo,
+        @inject(MapUserViewModel) protected mapUserViewModel: MapUserViewModel
+
+    ) {
     }
 
     async addReqUser(req: Request, res: Response, next: NextFunction) {
@@ -130,7 +130,7 @@ export class AuthMW {
 
             return res.status(STATUSES_HTTP.BAD_REQUEST_400).send({message: "Code is incorrect! Try repeat a bit later", field: "newPassword"});
         }
-        req.user = getUserViewModel(user)
+        req.user = this.mapUserViewModel.getUserViewModel(user)
         next()
     }
 
@@ -219,8 +219,6 @@ export class AuthMW {
 
     }
 }
-
-export const authMW = new AuthMW()
 
 
 
