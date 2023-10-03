@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import {STATUSES_HTTP} from "../../enum/http-statuses";
-import {BlogCreateModel} from "../../models/BLogs/BlogModel";
+import {BlogCreateModel, BlogViewModel} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
@@ -11,7 +11,6 @@ import {PostCreateModel} from "../../models/Posts/PostCreateModel";
 import {postsTestManager} from "../utils/postsTestManager";
 import {UserCreateModel, UserViewModel} from "../../models/Users/UserModel";
 import {usersTestManager} from "../utils/usersTestManager";
-import {BlogViewModel} from "../../models/BLogs/BlogViewModel";
 import {CommentViewModel, CreateCommentModel, UpdateCommentModel} from "../../models/Comments/CommentModel";
 import {commentTestManager} from "../utils/commentTestManager";
 import {jwtService} from "../../application/jwt-service";

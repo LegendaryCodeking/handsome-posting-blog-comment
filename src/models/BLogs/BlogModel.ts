@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {WithPagination} from "../custom";
 
 export class BlogDbModel {
     constructor(
@@ -11,15 +12,6 @@ export class BlogDbModel {
     ) { }
 }
 
-// export type BlogDbModel = {
-//     "id": string,
-//     "name": string,
-//     "description": string,
-//     "websiteUrl": string,
-//     "createdAt": string,
-//     "isMembership": boolean
-// }
-
 export type BlogCreateModel = {
     "name": string,
     "description": string,
@@ -31,6 +23,25 @@ export type BlogUpdateModel = {
     "description": string,
     "websiteUrl": string,
 }
+
+export type BlogViewModel = {
+    "id": string,
+    "name": string,
+    "description": string,
+    "websiteUrl": string,
+    "createdAt": string,
+    "isMembership": boolean
+}
+
+export type BlogsWithPaginationModel = WithPagination<BlogViewModel>
+
+export type URIParamsBlogIdModel = {
+    /*
+    * id of existing post :)
+    */
+    id: string
+}
+
 
 export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
     "id": String,

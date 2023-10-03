@@ -1,11 +1,8 @@
-import {BlogCreateModel, BlogDbModel} from "../models/BLogs/BlogModel";
+import {BlogCreateModel, BlogDbModel,BlogsWithPaginationModel,URIParamsBlogIdModel,BlogViewModel} from "../models/BLogs/BlogModel";
 import {queryBlogPostPagination} from "../models/FilterModel";
-import {BlogsWithPaginationModel} from "../models/BLogs/BlogsWithPaginationModel";
 import {Request, Response} from "express";
 import {BlogsService} from "../domain/blogs-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {URIParamsBlogIdModel} from "../models/BLogs/URIParamsBlogIdModel";
-import {BlogViewModel} from "../models/BLogs/BlogViewModel";
 import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel";
 import {PostViewModel} from "../models/Posts/PostViewModel";
 import {PostsService} from "../domain/posts-service";
