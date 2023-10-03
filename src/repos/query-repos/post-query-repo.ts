@@ -6,8 +6,12 @@ import {PostType} from "../../models/Posts/PostModel";
 import {PostModelClass} from "../../db/db";
 import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
-import {mapPostViewModel} from "../../composition-root";
+import {container} from "../../composition-root";
 import {injectable} from "inversify";
+import {MapPostViewModel} from "../../helpers/map-PostViewModel";
+
+const mapPostViewModel = container.resolve(MapPostViewModel)
+
 
 @injectable()
 export class PostQueryRepo {

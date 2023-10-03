@@ -12,8 +12,11 @@ import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
-import {mapPostViewModel} from "../composition-root";
+import {container} from "../composition-root";
 import {inject, injectable} from "inversify";
+import {MapPostViewModel} from "../helpers/map-PostViewModel";
+
+const mapPostViewModel = container.resolve(MapPostViewModel)
 
 @injectable()
 export class BlogsController {

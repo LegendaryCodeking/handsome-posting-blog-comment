@@ -3,9 +3,11 @@ import {Sort} from "mongodb";
 import {CommentModelClass} from "../../db/db";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
-import {mapCommentViewModel} from "../../composition-root";
+import {container} from "../../composition-root";
 import {injectable} from "inversify";
+import {MapCommentViewModel} from "../../helpers/map-CommentViewModel";
 
+const mapCommentViewModel = container.resolve(MapCommentViewModel)
 
 @injectable()
 export class CommentsQueryRepo {

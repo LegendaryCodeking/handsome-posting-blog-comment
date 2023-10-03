@@ -2,9 +2,11 @@ import {Router} from "express";
 import {authMW} from "../middlewares/auth-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {commentsController} from "../composition-root";
+import {container} from "../composition-root";
 import {likeStatusValidation} from "../middlewares/likes-mw";
+import {CommentsController} from "../controller/comments-controller";
 
+const commentsController = container.resolve(CommentsController)
 
 export const commentsRouter = Router({})
 

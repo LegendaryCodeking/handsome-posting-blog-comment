@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {BlogsRepo} from "./repos/blogs-repo";
 import {BlogsService} from "./domain/blogs-service";
 import {BlogsQueryRepo} from "./repos/query-repos/blogs-query-repo";
@@ -27,46 +28,89 @@ import {LikesQueryRepo} from "./repos/query-repos/likes-query-repo";
 import {MapCommentViewModel} from "./helpers/map-CommentViewModel";
 import {MapPostViewModel} from "./helpers/map-PostViewModel";
 import {PostValidationMW} from "./middlewares/post-validation-mw";
+import {Container} from "inversify";
 
 
-const jwtService = new JwtService()
+// const jwtService = new JwtService()
+//
+// const emailManager = new EmailManager()
+//
+// const blogsRepo = new BlogsRepo()
+// const blogsQueryRepo = new BlogsQueryRepo()
+// const blogsService = new BlogsService(blogsRepo)
+//
+//
+// const commentsRepo = new CommentsRepo()
+// const commentsQueryRepo = new CommentsQueryRepo()
+// const likesRepo = new LikesRepo()
+// const likesQueryRepo = new LikesQueryRepo()
+// const commentService = new CommentService(commentsRepo,likesRepo)
+//
+// const postsRepo = new PostsRepo()
+// const postQueryRepo = new PostQueryRepo()
+// const postsService = new PostsService(postsRepo, blogsQueryRepo,likesRepo)
+//
+// const usersRepo = new UsersRepo()
+// const usersQueryRepo = new UsersQueryRepo()
+// const userService = new UserService(usersQueryRepo, usersRepo, jwtService, emailManager)
+//
+//
+// const sessionsRepo = new SessionsRepo()
+// const sessionsQueryRepo = new SessionsQueryRepo()
+// const sessionsService = new SessionsService(sessionsRepo)
+//
+// const authService = new AuthService(usersRepo,emailManager)
+//
+// export const postValidationMW = new PostValidationMW(blogsQueryRepo)
+//
+// export const mapCommentViewModel = new MapCommentViewModel(likesQueryRepo)
+// export const mapPostViewModel = new MapPostViewModel(likesQueryRepo)
+//
+// export const blogsController = new BlogsController(blogsService, blogsQueryRepo, postQueryRepo, postsService)
+// export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService,likesQueryRepo)
+// export const commentsController = new CommentsController(commentsQueryRepo, commentService,likesQueryRepo)
+// export const usersController = new UsersController(usersQueryRepo, userService)
+// export const authController = new AuthController(userService,jwtService,authService,sessionsService)
+// export const securityController = new SecurityController(jwtService,sessionsQueryRepo,sessionsService)
 
-const emailManager = new EmailManager()
+export const container = new Container()
 
-const blogsRepo = new BlogsRepo()
-const blogsQueryRepo = new BlogsQueryRepo()
-const blogsService = new BlogsService(blogsRepo)
+container.bind(JwtService).to(JwtService)
 
+container.bind(EmailManager).to(EmailManager)
 
-const commentsRepo = new CommentsRepo()
-const commentsQueryRepo = new CommentsQueryRepo()
-const likesRepo = new LikesRepo()
-const likesQueryRepo = new LikesQueryRepo()
-const commentService = new CommentService(commentsRepo,likesRepo)
+container.bind(BlogsRepo).to(BlogsRepo)
+container.bind(BlogsQueryRepo).to(BlogsQueryRepo)
+container.bind(BlogsService).to(BlogsService)
 
-const postsRepo = new PostsRepo()
-const postQueryRepo = new PostQueryRepo()
-const postsService = new PostsService(postsRepo, blogsQueryRepo,likesRepo)
+container.bind(CommentsRepo).to(CommentsRepo)
+container.bind(CommentsQueryRepo).to(CommentsQueryRepo)
+container.bind(LikesRepo).to(LikesRepo)
+container.bind(LikesQueryRepo).to(LikesQueryRepo)
+container.bind(CommentService).to(CommentService)
 
-const usersRepo = new UsersRepo()
-const usersQueryRepo = new UsersQueryRepo()
-const userService = new UserService(usersQueryRepo, usersRepo, jwtService, emailManager)
+container.bind(PostsRepo).to(PostsRepo)
+container.bind(PostQueryRepo).to(PostQueryRepo)
+container.bind(PostsService).to(PostsService)
 
+container.bind(UsersRepo).to(UsersRepo)
+container.bind(UsersQueryRepo).to(UsersQueryRepo)
+container.bind(UserService).to(UserService)
 
-const sessionsRepo = new SessionsRepo()
-const sessionsQueryRepo = new SessionsQueryRepo()
-const sessionsService = new SessionsService(sessionsRepo)
+container.bind(SessionsRepo).to(SessionsRepo)
+container.bind(SessionsQueryRepo).to(SessionsQueryRepo)
+container.bind(SessionsService).to(SessionsService)
 
-const authService = new AuthService(usersRepo,emailManager)
+container.bind(AuthService).to(AuthService)
 
-export const postValidationMW = new PostValidationMW(blogsQueryRepo)
+container.bind(PostValidationMW).to(PostValidationMW)
 
-export const mapCommentViewModel = new MapCommentViewModel(likesQueryRepo)
-export const mapPostViewModel = new MapPostViewModel(likesQueryRepo)
+container.bind(MapCommentViewModel).to(MapCommentViewModel)
+container.bind(MapPostViewModel).to(MapPostViewModel)
 
-export const blogsController = new BlogsController(blogsService, blogsQueryRepo, postQueryRepo, postsService)
-export const postsController = new PostsController(postQueryRepo, postsService, commentsQueryRepo, commentService,likesQueryRepo)
-export const commentsController = new CommentsController(commentsQueryRepo, commentService,likesQueryRepo)
-export const usersController = new UsersController(usersQueryRepo, userService)
-export const authController = new AuthController(userService,jwtService,authService,sessionsService)
-export const securityController = new SecurityController(jwtService,sessionsQueryRepo,sessionsService)
+container.bind(BlogsController).to(BlogsController)
+container.bind(PostsController).to(PostsController)
+container.bind(CommentsController).to(CommentsController)
+container.bind(UsersController).to(UsersController)
+container.bind(AuthController).to(AuthController)
+container.bind(SecurityController).to(SecurityController)

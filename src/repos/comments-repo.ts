@@ -2,8 +2,11 @@ import {CommentModelClass, LikeModelClass, UsersLikesConnectionModelClass} from 
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
-import {mapCommentViewModel} from "../composition-root";
+import {container} from "../composition-root";
 import {injectable} from "inversify";
+import {MapCommentViewModel} from "../helpers/map-CommentViewModel";
+
+const mapCommentViewModel = container.resolve(MapCommentViewModel)
 
 @injectable()
 export class CommentsRepo {

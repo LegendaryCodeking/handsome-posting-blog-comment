@@ -2,8 +2,13 @@ import {Router} from 'express'
 import {descriptionValidation, nameValidation, urlValidation} from "../middlewares/blog-validation-mw";
 import {authMW} from "../middlewares/auth-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
-import {blogsController, postValidationMW} from "../composition-root";
+import {container} from "../composition-root";
+import {BlogsController} from "../controller/blogs-controller";
+import {PostValidationMW} from "../middlewares/post-validation-mw";
 
+
+const blogsController = container.resolve(BlogsController)
+const postValidationMW = container.resolve(PostValidationMW)
 
 export const blogsRouter = Router({})
 

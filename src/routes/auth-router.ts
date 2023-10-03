@@ -1,7 +1,5 @@
 import {Router} from "express";
-import {
-    authMW
-} from "../middlewares/auth-mw";
+import {authMW} from "../middlewares/auth-mw";
 import {
     emailValidation,
     loginValidation,
@@ -10,7 +8,10 @@ import {
 } from "../middlewares/uservalidation-mw";
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {IpRateLimitMW} from "../middlewares/security-mw";
-import {authController} from "../composition-root";
+import {container} from "../composition-root";
+import {AuthController} from "../controller/auth-controller";
+
+const authController = container.resolve(AuthController)
 
 export const authRouter = Router({})
 

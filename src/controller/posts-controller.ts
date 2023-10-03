@@ -12,8 +12,11 @@ import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
-import {mapPostViewModel} from "../composition-root";
+import {container} from "../composition-root";
 import {inject, injectable} from "inversify";
+import {MapPostViewModel} from "../helpers/map-PostViewModel";
+
+const mapPostViewModel = container.resolve(MapPostViewModel)
 
 @injectable()
 export class PostsController {
