@@ -5,13 +5,15 @@ import {SessionsService} from "../domain/sessions-service";
 import {URIParamsSessionDeviceIdModel} from "../models/Sessions/URIParamsSessionDeviceIdModel";
 import {JwtService} from "../application/jwt-service";
 import {RequestsWithParams} from "../models/requestModels";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class SecurityController {
 
     constructor(
-        protected jwtService: JwtService,
-        protected sessionsQueryRepo: SessionsQueryRepo,
-        protected sessionsService: SessionsService
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(SessionsQueryRepo) protected sessionsQueryRepo: SessionsQueryRepo,
+        @inject(SessionsService) protected sessionsService: SessionsService
     ) {
 
     }

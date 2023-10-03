@@ -5,14 +5,16 @@ import {JwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {AuthService} from "../domain/auth-service";
 import {SessionsService} from "../domain/sessions-service";
+import {injectable,inject} from "inversify";
 
+@injectable()
 export class AuthController {
 
     constructor(
-        protected userService: UserService,
-        protected jwtService: JwtService,
-        protected authService: AuthService,
-        protected sessionsService: SessionsService
+        @inject(UserService) protected userService: UserService,
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(AuthService) protected authService: AuthService,
+        @inject(SessionsService) protected sessionsService: SessionsService
     ) {
 
     }

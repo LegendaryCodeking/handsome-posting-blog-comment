@@ -4,12 +4,14 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {UserService} from "../domain/user-service";
 import {UsersQueryRepo} from "../repos/query-repos/users-query-repo";
 import {UsersWithPaginationModel} from "../models/Users/UserModel";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class UsersController {
 
     constructor(
-        protected usersQueryRepo: UsersQueryRepo,
-        protected userService: UserService
+        @inject(UsersQueryRepo) protected usersQueryRepo: UsersQueryRepo,
+        @inject(UserService) protected userService: UserService
     ) {
     }
 

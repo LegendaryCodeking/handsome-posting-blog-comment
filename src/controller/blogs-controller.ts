@@ -13,14 +13,15 @@ import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
 import {mapPostViewModel} from "../composition-root";
+import {inject, injectable} from "inversify";
 
-
+@injectable()
 export class BlogsController {
 
-    constructor(protected blogsService: BlogsService,
-                protected blogsQueryRepo: BlogsQueryRepo,
-                protected postQueryRepo: PostQueryRepo,
-                protected postsService: PostsService) {
+    constructor(@inject(BlogsService) protected blogsService: BlogsService,
+                @inject(BlogsQueryRepo) protected blogsQueryRepo: BlogsQueryRepo,
+                @inject(PostQueryRepo) protected postQueryRepo: PostQueryRepo,
+                @inject(PostsService) protected postsService: PostsService) {
 
     }
 

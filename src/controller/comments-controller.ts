@@ -5,12 +5,14 @@ import {STATUSES_HTTP} from "../enum/http-statuses";
 import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class CommentsController {
     constructor(
-        protected commentsQueryRepo: CommentsQueryRepo,
-        protected commentService: CommentService,
-        protected likesQueryRepo: LikesQueryRepo
+        @inject(CommentsQueryRepo) protected commentsQueryRepo: CommentsQueryRepo,
+        @inject(CommentService) protected commentService: CommentService,
+        @inject(LikesQueryRepo) protected likesQueryRepo: LikesQueryRepo
     ) {
     }
 

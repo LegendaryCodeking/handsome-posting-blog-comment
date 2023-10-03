@@ -13,16 +13,17 @@ import {RequestsWithParams} from "../models/requestModels";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
 import {mapPostViewModel} from "../composition-root";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsController {
 
-
     constructor(
-        protected postQueryRepo: PostQueryRepo,
-        protected postsService: PostsService,
-        protected commentsQueryRepo: CommentsQueryRepo,
-        protected commentService: CommentService,
-        protected likesQueryRepo: LikesQueryRepo
+        @inject(PostQueryRepo) protected postQueryRepo: PostQueryRepo,
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(CommentsQueryRepo) protected commentsQueryRepo: CommentsQueryRepo,
+        @inject(CommentService) protected commentService: CommentService,
+        @inject(LikesQueryRepo) protected likesQueryRepo: LikesQueryRepo
     ) {
 
     }
