@@ -7,13 +7,14 @@ import {SessionsQueryRepo} from "../repos/query-repos/sessions-query-repo";
 import {UserDBModel} from "../models/Users/UserModel";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {UsersRepo} from "../repos/users-repo";
+import {inject, injectable} from "inversify";
 
-
+@injectable()
 export class AuthMW {
-    private jwtService: JwtService;
-    private usersQueryRepo: UsersQueryRepo;
-    private usersRepo: UsersRepo;
-    private sessionsQueryRepo: SessionsQueryRepo;
+    @inject(JwtService) private jwtService: JwtService;
+    @inject(UsersQueryRepo) private usersQueryRepo: UsersQueryRepo;
+    @inject(UsersRepo) private usersRepo: UsersRepo;
+    @inject(SessionsQueryRepo) private sessionsQueryRepo: SessionsQueryRepo;
 
     constructor() {
         this.jwtService = new JwtService()

@@ -1,9 +1,8 @@
 import {Router} from 'express'
 import {inputValidationMw} from "../middlewares/inputErrorsCheck-mw";
 import {authMW} from "../middlewares/auth-mw";
-import {postValidationMW} from "../middlewares/post-validation-mw";
 import {contentValidation} from "../middlewares/comments-validation-mw";
-import {postsController} from "../composition-root";
+import {postsController, postValidationMW} from "../composition-root";
 import {likeStatusValidation} from "../middlewares/likes-mw";
 
 

@@ -26,6 +26,7 @@ import {LikesRepo} from "./repos/like-repo";
 import {LikesQueryRepo} from "./repos/query-repos/likes-query-repo";
 import {MapCommentViewModel} from "./helpers/map-CommentViewModel";
 import {MapPostViewModel} from "./helpers/map-PostViewModel";
+import {PostValidationMW} from "./middlewares/post-validation-mw";
 
 
 const jwtService = new JwtService()
@@ -57,6 +58,8 @@ const sessionsQueryRepo = new SessionsQueryRepo()
 const sessionsService = new SessionsService(sessionsRepo)
 
 const authService = new AuthService(usersRepo,emailManager)
+
+export const postValidationMW = new PostValidationMW(blogsQueryRepo)
 
 export const mapCommentViewModel = new MapCommentViewModel(likesQueryRepo)
 export const mapPostViewModel = new MapPostViewModel(likesQueryRepo)

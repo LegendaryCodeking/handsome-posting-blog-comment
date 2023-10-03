@@ -1,11 +1,12 @@
 import {body} from "express-validator";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
+import {inject, injectable} from "inversify";
 
-class PostValidationMW {
-    private blogsQueryRepo: BlogsQueryRepo;
+@injectable()
+export class PostValidationMW {
 
-    constructor() {
-        this.blogsQueryRepo = new BlogsQueryRepo()
+    constructor(@inject(BlogsQueryRepo) protected blogsQueryRepo: BlogsQueryRepo) {
+
     }
 
     titleValidation = body("title")
@@ -34,6 +35,4 @@ class PostValidationMW {
             }
         })
 }
-
-export const postValidationMW = new PostValidationMW()
 
