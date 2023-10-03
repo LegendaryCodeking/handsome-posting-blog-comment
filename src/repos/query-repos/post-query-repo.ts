@@ -7,14 +7,18 @@ import {PostModelClass} from "../../db/db";
 import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
 import {container} from "../../composition-root";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {MapPostViewModel} from "../../helpers/map-PostViewModel";
+import "reflect-metadata";
 
 const mapPostViewModel = container.resolve(MapPostViewModel)
 
 
 @injectable()
 export class PostQueryRepo {
+
+    constructor(@inject(MapPostViewModel) protected mapPostViewModel: MapPostViewModel) {
+    }
 
     async findPosts(queryFilter: BlogPostFilterModel, userId?: string): Promise<PostsWithPaginationModel> {
         const findFilter: FilterQuery<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
