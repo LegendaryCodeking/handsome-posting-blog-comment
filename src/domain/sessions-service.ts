@@ -2,11 +2,13 @@ import {SessionsRepo} from "../repos/sessions-repo";
 import {SessionDBModel, SessionUpdateFilterModel, SessionViewModel} from "../models/Sessions/SessionModel";
 import {ObjectId} from "mongodb";
 import add from "date-fns/add";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class SessionsService {
 
     constructor(
-        protected sessionsRepo: SessionsRepo
+        @inject(SessionsRepo) protected sessionsRepo: SessionsRepo
     ) {
     }
 

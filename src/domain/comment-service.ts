@@ -9,11 +9,13 @@ import {
 } from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {LikesRepo} from "../repos/like-repo";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class CommentService {
 
-    constructor(protected commentsRepo: CommentsRepo,
-                protected likesRepo: LikesRepo) {
+    constructor(@inject(CommentsRepo) protected commentsRepo: CommentsRepo,
+                @inject(LikesRepo) protected likesRepo: LikesRepo) {
     }
 
     async updateComment(id: string, content: string): Promise<boolean> {

@@ -8,6 +8,7 @@ import add from 'date-fns/add'
 import {EmailManager} from "../managers/email-manager";
 import {JwtService} from "../application/jwt-service";
 import {ObjectId} from "mongodb"
+import {inject, injectable} from "inversify";
 
 enum ResultCode {
     success,
@@ -22,13 +23,14 @@ type Result<T> = {
     errorMessage?: string
 }
 
+@injectable()
 export class UserService {
 
     constructor(
-        protected usersQueryRepo: UsersQueryRepo,
-        protected usersRepo: UsersRepo,
-        protected jwtService: JwtService,
-        protected emailManager: EmailManager
+        @inject(UsersQueryRepo) protected usersQueryRepo: UsersQueryRepo,
+        @inject(UsersRepo) protected usersRepo: UsersRepo,
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(EmailManager) protected emailManager: EmailManager
     ) {
     }
 

@@ -9,13 +9,15 @@ import {
 import {ObjectId} from "mongodb";
 import {likeStatus} from "../enum/likeStatuses";
 import {LikesRepo} from "../repos/like-repo";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsService {
 
     constructor(
-        protected postsRepo: PostsRepo,
-        protected blogsQueryRepo: BlogsQueryRepo,
-        protected likesRepo: LikesRepo
+        @inject(PostsRepo) protected postsRepo: PostsRepo,
+        @inject(BlogsQueryRepo) protected blogsQueryRepo: BlogsQueryRepo,
+        @inject(LikesRepo) protected likesRepo: LikesRepo
     ) {
     }
 
