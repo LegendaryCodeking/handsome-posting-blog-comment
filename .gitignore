@@ -6,4 +6,7 @@
 /.idea
 
 /.env
+/Test_temp_file.ts
+
+
 /dest/
