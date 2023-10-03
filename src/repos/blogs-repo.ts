@@ -1,7 +1,9 @@
 import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {BlogModelClass} from "../db/db";
 import {getBlogViewModel} from "../helpers/map-BlogViewModel";
+import {injectable} from "inversify";
 
+@injectable()
 export class BlogsRepo {
     async deleteBlog(id: string): Promise<boolean> {
         // Mongo native driver code

@@ -7,7 +7,10 @@ import {
 } from "../../models/Comments/LikeModel";
 import {getlikesInfoViewModel} from "../../helpers/map-likesInfoViewModel";
 import {likeStatus} from "../../enum/likeStatuses";
+import {injectable} from "inversify";
 
+
+@injectable()
 export class LikesQueryRepo {
 
     async findLikesByOwnerId(

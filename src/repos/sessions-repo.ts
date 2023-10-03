@@ -5,7 +5,9 @@ import {
     SessionViewModel
 } from "../models/Sessions/SessionModel";
 import {getSessionViewModel} from "../helpers/map-SessionViewModel";
+import {injectable} from "inversify";
 
+@injectable()
 export class SessionsRepo {
 
     async deleteAllSessions(currentRFTokenIAT: number, deviceId: string): Promise<boolean> {

@@ -7,7 +7,9 @@ import {PostModelClass} from "../../db/db";
 import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
 import {mapPostViewModel} from "../../composition-root";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostQueryRepo {
 
     async findPosts(queryFilter: BlogPostFilterModel, userId?: string): Promise<PostsWithPaginationModel> {

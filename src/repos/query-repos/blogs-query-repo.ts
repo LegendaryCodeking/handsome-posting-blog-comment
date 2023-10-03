@@ -5,7 +5,9 @@ import {BlogDbModel} from "../../models/BLogs/BlogModel";
 import {BlogModelClass} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {FilterQuery} from "mongoose";
+import {injectable} from "inversify";
 
+@injectable()
 export class BlogsQueryRepo {
 
     async FindAllBlog(queryFilter: BlogPostFilterModel): Promise<BlogsWithPaginationModel> {

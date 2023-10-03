@@ -1,7 +1,9 @@
 import {SessionModelClass} from "../../db/db";
 import {getSessionViewModel} from "../../helpers/map-SessionViewModel";
 import {SessionViewModel} from "../../models/Sessions/SessionModel";
+import {injectable} from "inversify";
 
+@injectable()
 export class SessionsQueryRepo {
     async FindAllSessions(userId: string): Promise<Array<SessionViewModel>> {
         const foundSessions = await SessionModelClass.find({"userId": userId}).lean()

@@ -1,7 +1,9 @@
 import {LikeModelClass, PostModelClass} from "../db/db";
 import {PostDBModel} from "../models/Posts/PostDBModel";
 import {likesDBModel} from "../models/Comments/LikeModel";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostsRepo {
     async deletePost(id: string): Promise<boolean> {
         // Mongo native driver code

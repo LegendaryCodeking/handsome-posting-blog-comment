@@ -2,7 +2,9 @@ import {LikeModelClass, UsersLikesConnectionModelClass} from "../db/db";
 import {ownerTypeModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {ObjectId} from "mongodb";
+import {injectable} from "inversify";
 
+@injectable()
 export class LikesRepo {
     async Like(
         ownerType: ownerTypeModel,

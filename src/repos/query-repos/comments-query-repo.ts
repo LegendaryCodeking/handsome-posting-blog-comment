@@ -4,7 +4,10 @@ import {CommentModelClass} from "../../db/db";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 import {mapCommentViewModel} from "../../composition-root";
+import {injectable} from "inversify";
 
+
+@injectable()
 export class CommentsQueryRepo {
 
     async findComments(queryFilter: CommentsFilterModel, userId?: string | undefined): Promise<CommentsWithPaginationModel> {

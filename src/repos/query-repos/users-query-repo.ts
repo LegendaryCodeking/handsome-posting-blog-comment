@@ -5,7 +5,9 @@ import {UserModelClass} from "../../db/db";
 import {getUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersQueryRepo {
 
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {

@@ -3,7 +3,9 @@ import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel"
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
 import {mapCommentViewModel} from "../composition-root";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepo {
     async updateComment(id: string, content: string): Promise<boolean> {
         // Mongo native driver code

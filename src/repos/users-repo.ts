@@ -4,7 +4,9 @@ import {UserModelClass} from "../db/db";
 import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {ObjectId} from "mongodb";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepo {
     async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
         // Mongo native driver code
