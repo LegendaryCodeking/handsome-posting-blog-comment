@@ -6,12 +6,9 @@ import {PostType} from "../../models/Posts/PostModel";
 import {PostModelClass} from "../../db/db";
 import {PostDBModel} from "../../models/Posts/PostDBModel";
 import {PostViewModel} from "../../models/Posts/PostViewModel";
-import {container} from "../../composition-root";
 import {inject, injectable} from "inversify";
 import {MapPostViewModel} from "../../helpers/map-PostViewModel";
 import "reflect-metadata";
-
-const mapPostViewModel = container.resolve(MapPostViewModel)
 
 
 @injectable()
@@ -34,7 +31,7 @@ export class PostQueryRepo {
         /// Код нужен чтобы не ругалось в return в Items т.к. там возвращаются Promises
         const foundPostsFunction = (postArr: PostDBModel[]) => {
             const promises = postArr.map(
-                async (value) =>  await mapPostViewModel.getPostViewModel(value, userId)
+                async (value) =>  await this.mapPostViewModel.getPostViewModel(value, userId)
             );
             return Promise.all(promises);
         }
@@ -56,7 +53,7 @@ export class PostQueryRepo {
     async findPostsById(id: string, userId?: string): Promise<PostViewModel | null> {
         let foundPost: PostType | null = await PostModelClass.findOne({"id": id})
         if (foundPost) {
-            return mapPostViewModel.getPostViewModel(foundPost,userId)
+            return this.mapPostViewModel.getPostViewModel(foundPost,userId)
         } else {
             return null
         }

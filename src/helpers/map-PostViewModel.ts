@@ -6,7 +6,9 @@ import {likeStatus} from "../enum/likeStatuses";
 
 import {UsersLikesConnectionModelClass} from "../db/db";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
+import {injectable} from "inversify";
 
+@injectable()
 export class MapPostViewModel {
 
     constructor(protected likesQueryRepo: LikesQueryRepo) {

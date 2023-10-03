@@ -2,13 +2,16 @@ import {BlogPostFilterModel} from "../../models/FilterModel";
 import {Sort} from "mongodb";
 import {UserDBModel, UsersWithPaginationModel, UserViewModel} from "../../models/Users/UserModel";
 import {UserModelClass} from "../../db/db";
-import {getUserViewModel} from "../../helpers/map-UserViewModel";
+import {MapUserViewModel} from "../../helpers/map-UserViewModel";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 
 @injectable()
 export class UsersQueryRepo {
+
+    constructor(@inject(MapUserViewModel) protected mapUserViewModel: MapUserViewModel) {
+    }
 
     async findUsers(queryFilter: BlogPostFilterModel): Promise<UsersWithPaginationModel> {
         const findFilter: FilterQuery<UserDBModel> = {
@@ -24,7 +27,7 @@ export class UsersQueryRepo {
             .limit(queryFilter.pageSize)
 
 
-        const foundUsers = foundUsersMongoose.map(user => getUserViewModel(user))
+        const foundUsers = foundUsersMongoose.map(user => this.mapUserViewModel.getUserViewModel(user))
 
         let totalCount = await UserModelClass.countDocuments(findFilter)
 
@@ -40,7 +43,7 @@ export class UsersQueryRepo {
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserViewModel | null> {
         const user = await UserModelClass.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
-            return getUserViewModel(user)
+            return this.mapUserViewModel.getUserViewModel(user)
         }
         return null
     }
@@ -51,7 +54,7 @@ export class UsersQueryRepo {
         if (_id === null) return null
         let user = await UserModelClass.findOne({_id: _id})
         if (user) {
-            return getUserViewModel(user)
+            return this.mapUserViewModel.getUserViewModel(user)
         } else {
             return null
         }
@@ -60,7 +63,7 @@ export class UsersQueryRepo {
     async findUserByConfirmationCode(code: string) {
         let user = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
         if (user) {
-            return getUserViewModel(user)
+            return this.mapUserViewModel.getUserViewModel(user)
         } else {
             return null
         }

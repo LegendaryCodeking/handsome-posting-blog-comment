@@ -2,13 +2,13 @@ import {UsersRepo} from "../repos/users-repo";
 import {UserDBModel, UserViewModel} from "../models/Users/UserModel";
 import bcrypt from 'bcrypt';
 import {UsersQueryRepo} from "../repos/query-repos/users-query-repo";
-import {getUserViewModel} from "../helpers/map-UserViewModel";
 import {v4 as uuidv4} from 'uuid';
 import add from 'date-fns/add'
 import {EmailManager} from "../managers/email-manager";
 import {JwtService} from "../application/jwt-service";
 import {ObjectId} from "mongodb"
 import {inject, injectable} from "inversify";
+import {MapUserViewModel} from "../helpers/map-UserViewModel";
 
 enum ResultCode {
     success,
@@ -30,7 +30,8 @@ export class UserService {
         @inject(UsersQueryRepo) protected usersQueryRepo: UsersQueryRepo,
         @inject(UsersRepo) protected usersRepo: UsersRepo,
         @inject(JwtService) protected jwtService: JwtService,
-        @inject(EmailManager) protected emailManager: EmailManager
+        @inject(EmailManager) protected emailManager: EmailManager,
+        @inject(MapUserViewModel) protected mapUserViewModel: MapUserViewModel
     ) {
     }
 
@@ -90,7 +91,7 @@ export class UserService {
         });
 
         if (result) {
-            return getUserViewModel(user);
+            return this.mapUserViewModel.getUserViewModel(user);
         }
         return null
 

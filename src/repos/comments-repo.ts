@@ -2,14 +2,16 @@ import {CommentModelClass, LikeModelClass, UsersLikesConnectionModelClass} from 
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
-import {container} from "../composition-root";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {MapCommentViewModel} from "../helpers/map-CommentViewModel";
-
-const mapCommentViewModel = container.resolve(MapCommentViewModel)
 
 @injectable()
 export class CommentsRepo {
+    constructor(
+        @inject(MapCommentViewModel) protected mapCommentViewModel: MapCommentViewModel
+    ) {
+    }
+
     async updateComment(id: string, content: string): Promise<boolean> {
         // Mongo native driver code
         // let result = await CommentModelClass.updateOne({"id": id}, {
@@ -80,6 +82,6 @@ export class CommentsRepo {
         await usersLikesConnectionInfoInstance.save();
 
 
-        return mapCommentViewModel.getCommentViewModel(newComment, userId);
+        return this.mapCommentViewModel.getCommentViewModel(newComment, userId);
     }
 }

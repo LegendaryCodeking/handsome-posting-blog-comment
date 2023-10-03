@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import {UserViewModel} from "../models/Users/UserModel";
+import {injectable} from "inversify";
 
 dotenv.config()
 
+@injectable()
 export class JwtService {
     async createJWT(user: UserViewModel) {
         return jwt.sign({userId: user.id}, process.env.JWT_SECRET!, {expiresIn: '2000s'})

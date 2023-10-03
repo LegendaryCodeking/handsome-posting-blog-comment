@@ -1,7 +1,8 @@
 import {EmailAdapter} from "../adapters/email-adapter";
 import {UserDBModel} from "../models/Users/UserModel";
+import {injectable} from "inversify";
 
-
+@injectable()
 export class EmailManager {
     private emailAdapter: EmailAdapter;
 

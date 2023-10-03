@@ -1,13 +1,17 @@
 import {UserDBModel} from "../models/Users/UserModel";
 import {UserViewModel} from "../models/Users/UserModel";
 import {UserModelClass} from "../db/db";
-import {getUserViewModel} from "../helpers/map-UserViewModel";
+import {MapUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {ObjectId} from "mongodb";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 
 @injectable()
 export class UsersRepo {
+
+    constructor(@inject(MapUserViewModel) protected mapUserViewModel: MapUserViewModel) {
+    }
+
     async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
         // Mongo native driver code
         // await UserModelClass.insertMany([createdUser])
@@ -21,7 +25,7 @@ export class UsersRepo {
 
         await userInstance.save()
 
-        return getUserViewModel(createdUser)
+        return this.mapUserViewModel.getUserViewModel(createdUser)
     }
     async deleteUser(id: string): Promise<boolean> {
         // Mongo native driver code

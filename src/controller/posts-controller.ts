@@ -12,11 +12,8 @@ import {CommentsQueryRepo} from "../repos/query-repos/comments-query-repo";
 import {RequestsWithParams} from "../models/requestModels";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
-import {container} from "../composition-root";
 import {inject, injectable} from "inversify";
 import {MapPostViewModel} from "../helpers/map-PostViewModel";
-
-const mapPostViewModel = container.resolve(MapPostViewModel)
 
 @injectable()
 export class PostsController {
@@ -26,7 +23,8 @@ export class PostsController {
         @inject(PostsService) protected postsService: PostsService,
         @inject(CommentsQueryRepo) protected commentsQueryRepo: CommentsQueryRepo,
         @inject(CommentService) protected commentService: CommentService,
-        @inject(LikesQueryRepo) protected likesQueryRepo: LikesQueryRepo
+        @inject(LikesQueryRepo) protected likesQueryRepo: LikesQueryRepo,
+        @inject(MapPostViewModel) protected mapPostViewModel: MapPostViewModel
     ) {
 
     }
@@ -72,7 +70,7 @@ export class PostsController {
         let createdPost = await this.postsService
             .createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.user?.id, req.user?.login)
 
-        const resultPost = await mapPostViewModel.getPostViewModel(createdPost)
+        const resultPost = await this.mapPostViewModel.getPostViewModel(createdPost)
         res.status(STATUSES_HTTP.CREATED_201)
             .json(resultPost)
     }

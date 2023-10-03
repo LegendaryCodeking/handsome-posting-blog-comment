@@ -1,8 +1,9 @@
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
+import {injectable} from "inversify";
 
-
+@injectable()
 export class MapCommentViewModel {
 
     constructor(protected likesQueryRepo: LikesQueryRepo ){

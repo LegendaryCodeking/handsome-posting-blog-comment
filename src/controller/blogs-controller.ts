@@ -12,11 +12,8 @@ import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";
-import {container} from "../composition-root";
 import {inject, injectable} from "inversify";
 import {MapPostViewModel} from "../helpers/map-PostViewModel";
-
-const mapPostViewModel = container.resolve(MapPostViewModel)
 
 @injectable()
 export class BlogsController {
@@ -24,7 +21,9 @@ export class BlogsController {
     constructor(@inject(BlogsService) protected blogsService: BlogsService,
                 @inject(BlogsQueryRepo) protected blogsQueryRepo: BlogsQueryRepo,
                 @inject(PostQueryRepo) protected postQueryRepo: PostQueryRepo,
-                @inject(PostsService) protected postsService: PostsService) {
+                @inject(PostsService) protected postsService: PostsService,
+                @inject(MapPostViewModel) protected mapPostViewModel: MapPostViewModel,
+                ) {
 
     }
 
@@ -98,7 +97,7 @@ export class BlogsController {
         }
 
         let createdPost = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.id.toString(),req.user?.id,req.user?.login)
-        let resultPost = await mapPostViewModel.getPostViewModel(createdPost,req.user?.id)
+        let resultPost = await this.mapPostViewModel.getPostViewModel(createdPost,req.user?.id)
 
         res.status(STATUSES_HTTP.CREATED_201)
             .json(resultPost)

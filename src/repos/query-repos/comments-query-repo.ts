@@ -3,14 +3,17 @@ import {Sort} from "mongodb";
 import {CommentModelClass} from "../../db/db";
 import {FilterQuery} from "mongoose";
 import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
-import {container} from "../../composition-root";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {MapCommentViewModel} from "../../helpers/map-CommentViewModel";
 
-const mapCommentViewModel = container.resolve(MapCommentViewModel)
 
 @injectable()
 export class CommentsQueryRepo {
+
+    constructor(
+        @inject(MapCommentViewModel) protected mapCommentViewModel: MapCommentViewModel
+    ) {
+    }
 
     async findComments(queryFilter: CommentsFilterModel, userId?: string | undefined): Promise<CommentsWithPaginationModel> {
         const findFilter: FilterQuery<CommentDbModel> = {postId: queryFilter.postId};
@@ -30,7 +33,7 @@ export class CommentsQueryRepo {
         /// Код нужен чтобы не ругалось в return в Items т.к. там возвращаются Promises
         const foundCommentsFunction = (commArr: CommentDbModel[]) => {
             const promises = commArr.map(
-              async (value) =>  await mapCommentViewModel.getCommentViewModel(value, userId)
+              async (value) =>  await this.mapCommentViewModel.getCommentViewModel(value, userId)
             );
             return Promise.all(promises);
         }
@@ -56,7 +59,7 @@ export class CommentsQueryRepo {
         if (_id === null) return false
         let foundComment = await CommentModelClass.findOne({"_id": _id})
         if (foundComment) {
-            return mapCommentViewModel.getCommentViewModel(foundComment, userId)
+            return this.mapCommentViewModel.getCommentViewModel(foundComment, userId)
         } else {
             return null
         }
