@@ -1,10 +1,8 @@
-import {PostsWithPaginationModel} from "../models/Posts/PostsWithPaginationModel";
+import {PostsWithPaginationModel,URIParamsPostIdModel,PostViewModel} from "../models/Posts/PostModel";
 import {queryBlogPostPagination, queryCommentsWithPagination} from "../models/FilterModel";
 import {Request, Response} from "express";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {PostsService} from "../domain/posts-service";
-import {URIParamsPostIdModel} from "../models/Posts/URIParamsPostIdModel";
-import {PostViewModel} from "../models/Posts/PostViewModel";
 import {CommentsWithPaginationModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {CommentService} from "../domain/comment-service";
 import {PostQueryRepo} from "../repos/query-repos/post-query-repo";

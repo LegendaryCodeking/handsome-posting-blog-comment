@@ -4,13 +4,11 @@ import {STATUSES_HTTP} from "../../enum/http-statuses";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {postsTestManager} from "../utils/postsTestManager";
-import {PostCreateModel} from "../../models/Posts/PostCreateModel";
-import {PostUpdateModel} from "../../models/Posts/PostUpdateModel";
+import {PostCreateModel,PostUpdateModel,PostViewModel} from "../../models/Posts/PostModel";
 import {BlogCreateModel,BlogViewModel} from "../../models/BLogs/BlogModel";
 import {blogsTestManager} from "../utils/blogsTestManager";
 import {authBasicHeader, connection_string} from "../utils/export_data_functions";
 import mongoose from "mongoose";
-import {PostViewModel} from "../../models/Posts/PostViewModel";
 import {likeStatus} from "../../enum/likeStatuses";
 
 describe('/Testing posts', () => {

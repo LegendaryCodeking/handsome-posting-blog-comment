@@ -1,5 +1,5 @@
 import {PostsRepo} from "../repos/posts-repo";
-import {PostDBModel} from "../models/Posts/PostDBModel";
+import {PostDBModel} from "../models/Posts/PostModel";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {
     likesDBModel,

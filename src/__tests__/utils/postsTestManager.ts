@@ -2,7 +2,7 @@ import request from "supertest";
 import {HttpStatusType, STATUSES_HTTP} from "../../enum/http-statuses";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
-import {PostCreateModel} from "../../models/Posts/PostCreateModel";
+import {PostCreateModel} from "../../models/Posts/PostModel";
 import {likeStatusModel} from "../../models/Comments/LikeModel";
 
 class NewestLikesClass {

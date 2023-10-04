@@ -1,5 +1,5 @@
 import {LikeModelClass, PostModelClass} from "../db/db";
-import {PostDBModel} from "../models/Posts/PostDBModel";
+import {PostDBModel} from "../models/Posts/PostModel";
 import {likesDBModel} from "../models/Comments/LikeModel";
 import {injectable} from "inversify";
 

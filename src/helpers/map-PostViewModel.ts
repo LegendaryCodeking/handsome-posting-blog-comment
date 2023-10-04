@@ -1,6 +1,4 @@
-import {PostType} from "../models/Posts/PostModel";
-import {PostViewModel} from "../models/Posts/PostViewModel";
-import {PostDBModel} from "../models/Posts/PostDBModel";
+import {PostType,PostViewModel,PostDBModel} from "../models/Posts/PostModel";
 import {likeDetailsViewModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 
