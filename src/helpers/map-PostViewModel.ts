@@ -1,4 +1,4 @@
-import {PostType,PostViewModel,PostDBModel} from "../models/Posts/PostModel";
+import {PostDBModel, PostViewModel} from "../models/Posts/PostModel";
 import {likeDetailsViewModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 
@@ -12,8 +12,11 @@ export class MapPostViewModel {
     constructor(protected likesQueryRepo: LikesQueryRepo) {
     }
 
-    async getPostViewModel(post: PostType | PostDBModel, userId?: string | undefined): Promise<PostViewModel> {
-        const likesInfo = await this.likesQueryRepo.findLikesByOwnerId("Post", post.id, userId)
+    async getPostViewModel(post:PostDBModel, userId?: string | undefined): Promise<PostViewModel> {
+
+        const postId = post._id.toString()
+
+        const likesInfo = await this.likesQueryRepo.findLikesByOwnerId("Post", postId, userId)
             ?? {
                 likesCount: 0,
                 dislikesCount: 0,
@@ -21,7 +24,7 @@ export class MapPostViewModel {
             }
 
         const likesLastThreeMongoose = await UsersLikesConnectionModelClass.find({
-            "likedObjectId": post.id,
+            "likedObjectId": postId,
             "likedObjectType": "Post",
             "status": likeStatus.Like
 
@@ -42,7 +45,7 @@ export class MapPostViewModel {
 
 
         return {
-            id: post.id,
+            id: postId,
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,

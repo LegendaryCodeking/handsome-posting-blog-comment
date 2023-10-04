@@ -29,7 +29,7 @@ export class PostsService {
         const blogName = await this.blogsQueryRepo.findBlogById(blogId)
 
         const createdPost = new PostDBModel(
-            (+(new Date())).toString(),
+            new ObjectId(),
             title,
             shortDescription,
             content,
@@ -41,7 +41,7 @@ export class PostsService {
         const newLikesInfo = new likesDBModel(
             new ObjectId(),
             "Post",
-            createdPost.id,
+            createdPost._id.toString(),
             0,
             0
         )

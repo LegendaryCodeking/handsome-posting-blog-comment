@@ -1,11 +1,12 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
-import {PostDBModel, PostType, PostViewModel, PostsWithPaginationModel} from "../../models/Posts/PostModel";
+import {PostDBModel,PostViewModel, PostsWithPaginationModel} from "../../models/Posts/PostModel";
 import {Sort} from "mongodb";
 import {FilterQuery} from "mongoose";
 import {PostModelClass} from "../../db/db";
 import {inject, injectable} from "inversify";
 import {MapPostViewModel} from "../../helpers/map-PostViewModel";
 import "reflect-metadata";
+import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
 
 @injectable()
@@ -15,7 +16,7 @@ export class PostQueryRepo {
     }
 
     async findPosts(queryFilter: BlogPostFilterModel, userId?: string): Promise<PostsWithPaginationModel> {
-        const findFilter: FilterQuery<PostType> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
+        const findFilter: FilterQuery<PostDBModel> = queryFilter.blogId === '' ? {} : {blogId: queryFilter.blogId}
         const sortFilter: Sort = (queryFilter.sortBy === 'createdAt' ? {[queryFilter.sortBy]: queryFilter.sortDirection} : {
             [queryFilter.sortBy]: queryFilter.sortDirection,
             'createdAt': 1
@@ -51,7 +52,10 @@ export class PostQueryRepo {
     }
 
     async findPostsById(id: string, userId?: string): Promise<PostViewModel | null> {
-        let foundPost: PostType | null = await PostModelClass.findOne({"id": id})
+
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return null
+        let foundPost: PostDBModel | null = await PostModelClass.findOne({"_id": _id})
         if (foundPost) {
             return this.mapPostViewModel.getPostViewModel(foundPost, userId)
         } else {

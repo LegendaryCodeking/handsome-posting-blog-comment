@@ -18,21 +18,9 @@ export type PostUpdateModel = {
     "blogId": string,
 }
 
-export type PostType = {
-    _id?: ObjectId,
-    "id": string
-    "title": string,
-    "shortDescription": string,
-    "content": string,
-    "blogId": string,
-    "blogName": string,
-    "createdAt": string,
-}
-
-
 export class PostDBModel {
     constructor(
-        public id: string,
+        public _id: ObjectId,
         public title: string,
         public shortDescription: string,
         public content: string,
@@ -64,7 +52,7 @@ export type URIParamsPostIdModel = {
 export type PostsWithPaginationModel = WithPagination<PostViewModel>
 
 export const postMongoSchema = new mongoose.Schema<PostDBModel>({
-    "id": String,
+    "_id": ObjectId,
     "title": String,
     "shortDescription": String,
     "content": String,
