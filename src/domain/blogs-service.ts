@@ -1,6 +1,7 @@
-import {BlogDbModel} from "../models/BLogs/BlogModel";
+import {BlogDbModel, BlogViewModel} from "../models/BLogs/BlogModel";
 import {BlogsRepo} from "../repos/blogs-repo";
 import {inject, injectable} from "inversify";
+import {ObjectId} from "mongodb";
 
 @injectable()
 export class BlogsService {
@@ -13,10 +14,10 @@ export class BlogsService {
         return this.blogsRepo.deleteBlog(id)
     }
 
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogDbModel> {
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogViewModel> {
 
         const createdBlog = new BlogDbModel(
-            (+(new Date())).toString(),
+            new ObjectId(),
             name,
             description,
             websiteUrl,

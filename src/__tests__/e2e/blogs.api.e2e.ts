@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import {STATUSES_HTTP} from "../../enum/http-statuses";
-import {BlogCreateModel, BlogDbModel, BlogUpdateModel} from "../../models/BLogs/BlogModel";
+import {BlogCreateModel, BlogUpdateModel, BlogViewModel} from "../../models/BLogs/BlogModel";
 import {app} from "../../app_settings";
 import {RouterPaths} from "../../helpers/RouterPaths";
 import {blogsTestManager} from "../utils/blogsTestManager";
@@ -50,7 +50,7 @@ describe('/Testing blogs', () => {
     * Created variable outside the next test to have option use
     * id of created blog in the further put test
     * */
-    let createdBlog1: BlogDbModel = {
+    let createdBlog1: BlogViewModel = {
         "id": "",
         "name": "",
         "description": "",
@@ -85,7 +85,7 @@ describe('/Testing blogs', () => {
             })
     })
 
-    let createdBlog2: BlogDbModel = {
+    let createdBlog2: BlogViewModel = {
         "id": "",
         "name": "",
         "description": "",

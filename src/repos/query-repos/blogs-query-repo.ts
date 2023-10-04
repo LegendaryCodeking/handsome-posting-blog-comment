@@ -1,10 +1,11 @@
 import {BlogPostFilterModel} from "../../models/FilterModel";
 import {Sort} from "mongodb";
-import {BlogDbModel,BlogsWithPaginationModel} from "../../models/BLogs/BlogModel";
+import {BlogDbModel, BlogsWithPaginationModel, BlogViewModel} from "../../models/BLogs/BlogModel";
 import {BlogModelClass} from "../../db/db";
 import {getBlogViewModel} from "../../helpers/map-BlogViewModel";
 import {FilterQuery} from "mongoose";
 import {injectable} from "inversify";
+import {createObjectIdFromSting} from "../../helpers/map-ObjectId";
 
 @injectable()
 export class BlogsQueryRepo {
@@ -34,8 +35,11 @@ export class BlogsQueryRepo {
         }
     }
 
-    async findBlogById(id: string): Promise<BlogDbModel | null> {
-        let foundBlog: BlogDbModel | null = await BlogModelClass.findOne({"id": id}).lean()
+    async findBlogById(id: string): Promise<BlogViewModel | null> {
+
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return null
+        let foundBlog: BlogDbModel | null = await BlogModelClass.findOne({"_id": _id}).lean()
         if (foundBlog) {
             return getBlogViewModel(foundBlog)
         } else {

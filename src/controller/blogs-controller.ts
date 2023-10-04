@@ -1,9 +1,14 @@
-import {BlogCreateModel, BlogDbModel,BlogsWithPaginationModel,URIParamsBlogIdModel,BlogViewModel} from "../models/BLogs/BlogModel";
+import {
+    BlogCreateModel,
+    BlogsWithPaginationModel,
+    BlogViewModel,
+    URIParamsBlogIdModel
+} from "../models/BLogs/BlogModel";
 import {queryBlogPostPagination} from "../models/FilterModel";
 import {Request, Response} from "express";
 import {BlogsService} from "../domain/blogs-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
-import {PostsWithPaginationModel,PostViewModel} from "../models/Posts/PostModel";
+import {PostsWithPaginationModel, PostViewModel} from "../models/Posts/PostModel";
 import {PostsService} from "../domain/posts-service";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
 import {RequestsWithBody, RequestsWithParams} from "../models/requestModels";
@@ -37,7 +42,7 @@ export class BlogsController {
     }
 
     async findBlogById(req: RequestsWithParams<URIParamsBlogIdModel>, res: Response<BlogViewModel>) {
-        const foundBlog: BlogDbModel | null = await this.blogsQueryRepo.findBlogById(req.params.id)
+        const foundBlog: BlogViewModel | null = await this.blogsQueryRepo.findBlogById(req.params.id)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -47,7 +52,7 @@ export class BlogsController {
 
     async findPostsForBlog(req: Request, res: Response<PostsWithPaginationModel>) {
         const blogId = req.params.id
-        const foundBlog: BlogDbModel | null = await this.blogsQueryRepo.findBlogById(blogId)
+        const foundBlog: BlogViewModel | null = await this.blogsQueryRepo.findBlogById(blogId)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;
@@ -77,7 +82,7 @@ export class BlogsController {
     }
 
     async createBlog(req: RequestsWithBody<BlogCreateModel>, res: Response<BlogViewModel>) {
-        let createdBlog: BlogDbModel = await this.blogsService
+        let createdBlog: BlogViewModel = await this.blogsService
             .createBlog(req.body.name, req.body.description, req.body.websiteUrl)
 
         res.status(STATUSES_HTTP.CREATED_201)
@@ -86,7 +91,7 @@ export class BlogsController {
 
     async createPostsForBlog(req: Request, res: Response<PostViewModel>) {
 
-        const foundBlog: BlogDbModel | null = await this.blogsQueryRepo.findBlogById(req.params.id)
+        const foundBlog: BlogViewModel | null = await this.blogsQueryRepo.findBlogById(req.params.id)
         if (!foundBlog) {
             res.sendStatus(STATUSES_HTTP.NOT_FOUND_404)
             return;

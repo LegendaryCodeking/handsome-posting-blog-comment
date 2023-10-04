@@ -1,16 +1,16 @@
-import {BlogDbModel} from "../models/BLogs/BlogModel";
+import {BlogDbModel, BlogViewModel} from "../models/BLogs/BlogModel";
 import {BlogModelClass} from "../db/db";
 import {getBlogViewModel} from "../helpers/map-BlogViewModel";
 import {injectable} from "inversify";
+import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 
 @injectable()
 export class BlogsRepo {
     async deleteBlog(id: string): Promise<boolean> {
-        // Mongo native driver code
-        // const result = await BlogModelClass.deleteOne({"id": id});
-        // return result.deletedCount === 1
 
-        const blogInstance = await BlogModelClass.findOne({"id": id})
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return false
+        const blogInstance = await BlogModelClass.findOne({"_id": _id})
         if (!blogInstance) return false
 
         await blogInstance.deleteOne()
@@ -19,12 +19,10 @@ export class BlogsRepo {
 
     }
 
-    async createBlog(createdBlog: BlogDbModel): Promise<BlogDbModel> {
-        // Mongo native driver code
-        // await BlogModel.insertMany([createdBlog])
+    async createBlog(createdBlog: BlogDbModel): Promise<BlogViewModel> {
         const blogInstance = new BlogModelClass()
 
-        blogInstance.id = createdBlog.id
+        blogInstance._id = createdBlog._id
         blogInstance.name = createdBlog.name
         blogInstance.description = createdBlog.description
         blogInstance.websiteUrl = createdBlog.websiteUrl
@@ -37,16 +35,10 @@ export class BlogsRepo {
     }
 
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        // Mongo native driver code
-        // const result = await BlogModelClass.updateOne({"id": id}, {
-        //     $set: {
-        //         "name": name,
-        //         "description": description,
-        //         "websiteUrl": websiteUrl
-        //     }
-        // })
 
-        const blogInstance = await BlogModelClass.findOne({"id": id})
+        const _id = createObjectIdFromSting(id)
+        if (_id === null) return false
+        const blogInstance = await BlogModelClass.findOne({"_id": _id})
         if (!blogInstance) return false
 
         blogInstance.name = name
@@ -55,8 +47,5 @@ export class BlogsRepo {
 
         await blogInstance.save()
         return true
-
-        // Mongo native driver code
-        // return result.matchedCount === 1
     }
 }

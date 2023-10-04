@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import {WithPagination} from "../custom";
+import {ObjectId} from "mongodb";
 
 export class BlogDbModel {
     constructor(
-           public id: string,
+           public _id: ObjectId,
            public name: string,
            public description: string,
            public websiteUrl: string,
@@ -44,7 +45,7 @@ export type URIParamsBlogIdModel = {
 
 
 export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
-    "id": String,
+    "_id": ObjectId,
     "name": String,
     "description": String,
     "websiteUrl": String,
