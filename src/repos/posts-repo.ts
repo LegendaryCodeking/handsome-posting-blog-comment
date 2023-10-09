@@ -23,23 +23,6 @@ export class PostsRepo {
         return true
     }
 
-    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-
-        const _id = createObjectIdFromSting(id)
-        if (_id === null) return false
-        const postInstance = await PostModelClass.findOne({"_id": _id})
-        if (!postInstance) return false
-
-        postInstance.title = title
-        postInstance.shortDescription = shortDescription
-        postInstance.content = content
-        postInstance.blogId = blogId
-
-        await postInstance.save()
-
-        return true
-    }
-
     async findPostsById(id: string): Promise<HydratedDocument<PostDBModel,postDBMethodsType> | null> {
 
         const _id = createObjectIdFromSting(id)
