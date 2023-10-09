@@ -19,7 +19,10 @@ export class PostsService {
     }
 
     async deletePost(id: string): Promise<boolean> {
-        return this.postsRepo.deletePost(id)
+        const foundPost = await this.postsRepo.findPostsById(id)
+        if (!foundPost) return false
+
+        return this.postsRepo.deletePost(foundPost)
     }
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostDBModel> {

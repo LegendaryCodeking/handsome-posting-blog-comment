@@ -4,6 +4,9 @@ import {injectable} from "inversify";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {HydratedDocument} from "mongoose";
 
+class PostDbModel {
+}
+
 @injectable()
 export class PostsRepo {
 
@@ -11,18 +14,12 @@ export class PostsRepo {
         await instance.save()
     }
 
-    async deletePost(id: string): Promise<boolean> {
+    async deletePost(instance: HydratedDocument<PostDbModel>): Promise<boolean> {
 
-        const _id = createObjectIdFromSting(id)
-        if (_id === null) return false
-        const postInstance = await PostModelClass.findOne({"_id": _id})
-        if (!postInstance) return false
-
-        await postInstance.deleteOne()
-
+        await instance.deleteOne()
         return true
-    }
 
+    }
     async findPostsById(id: string): Promise<HydratedDocument<PostDBModel,postDBMethodsType> | null> {
 
         const _id = createObjectIdFromSting(id)
