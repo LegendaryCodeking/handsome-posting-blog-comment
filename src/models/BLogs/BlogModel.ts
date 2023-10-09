@@ -20,17 +20,11 @@ export class BlogDbModel {
         blogInstance.name = name
         blogInstance.description = description
         blogInstance.websiteUrl = websiteUrl
-        blogInstance._id  =  new ObjectId()
+        blogInstance._id = new ObjectId()
         blogInstance.createdAt = new Date().toISOString()
         blogInstance.isMembership = false
 
         return blogInstance
-    }
-
-    updateBlog(name: string, description: string, websiteUrl: string) {
-        this.name = name;
-        this.description = description;
-        this.websiteUrl = websiteUrl;
     }
 }
 
@@ -64,11 +58,11 @@ export type URIParamsBlogIdModel = {
     id: string
 }
 
-type userDBMethodsType = {
-    updateBlog: () => boolean
+export type blogDBMethodsType = {
+    updateBlog: (name: string, description: string, websiteUrl: string) => void
 }
 
-export type userModelType = Model<BlogDbModel,{},userDBMethodsType>
+export type blogModelType = Model<BlogDbModel, {}, blogDBMethodsType>
 
 export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
     "_id": ObjectId,
@@ -79,7 +73,7 @@ export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
     "isMembership": Boolean
 })
 
-blogMongoSchema.method('updateBlog', function updateBlog(name,description,websiteUrl): void {
+blogMongoSchema.method('updateBlog', function updateBlog(name, description, websiteUrl): void {
     this.name = name
     this.description = description
     this.websiteUrl = websiteUrl

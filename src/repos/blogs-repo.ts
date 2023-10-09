@@ -1,4 +1,4 @@
-import {BlogDbModel} from "../models/BLogs/BlogModel";
+import {blogDBMethodsType, BlogDbModel} from "../models/BLogs/BlogModel";
 import {BlogModelClass} from "../db/db";
 import {injectable} from "inversify";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
@@ -18,10 +18,10 @@ export class BlogsRepo {
 
     }
 
-    async findBlogById(id: string): Promise<HydratedDocument<BlogDbModel> | null> {
+    async findBlogById(id: string): Promise<HydratedDocument<BlogDbModel,blogDBMethodsType> | null> {
         const _id = createObjectIdFromSting(id)
         if (_id === null) return null
-        let foundBlog: HydratedDocument<BlogDbModel> | null = await BlogModelClass.findOne({"_id": _id})
+        let foundBlog: HydratedDocument<BlogDbModel,blogDBMethodsType> | null = await BlogModelClass.findOne({"_id": _id})
         if (foundBlog) {
             return foundBlog
         } else {
