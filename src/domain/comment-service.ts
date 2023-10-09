@@ -28,7 +28,7 @@ export class CommentService {
             userLogin
         )
 
-        const newLikesInfo = likesDBModel.createLikesInfo(newComment._id.toString())
+        const newLikesInfo = likesDBModel.createLikesInfo(newComment._id.toString(), "Post")
 
         await this.commentsRepo.save(newComment)
         await this.likesRepo.save(newLikesInfo)
@@ -37,6 +37,7 @@ export class CommentService {
     }
 
     async likeComment(commentId: string, likesInfo: likesInfoViewModel, newLikeStatus: likeStatusModel, userId: string, userLogin: string): Promise<boolean> {
+
         const savedLikeStatus = likesInfo.myStatus
         let result: boolean = true
         if (savedLikeStatus === likeStatus.None) {

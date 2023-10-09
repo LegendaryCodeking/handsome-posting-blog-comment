@@ -21,10 +21,10 @@ export class likesDBModel {
     ) {
     }
 
-    static createLikesInfo(ownerId: string): HydratedDocument<likesDBModel> {
+    static createLikesInfo(ownerId: string, ownerType: "Post" | "Comment"): HydratedDocument<likesDBModel> {
         const likesInfoInstance = new LikeModelClass()
         likesInfoInstance._id = new ObjectId()
-        likesInfoInstance.ownerType = "Post"
+        likesInfoInstance.ownerType = ownerType
         likesInfoInstance.ownerId = ownerId
         likesInfoInstance.likesCount = 0
         likesInfoInstance.dislikesCount = 0
