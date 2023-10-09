@@ -29,9 +29,11 @@ export class BlogsService {
     }
 
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        //findById
-        //blog.updateBlog(name,//)
-        //blog.save()
-        return this.blogsRepo.updateBlog(id, name, description, websiteUrl)
+        const foundBlog = await this.blogsRepo.findBlogById(id)
+        if (!foundBlog) return false
+
+        foundBlog.updateBlog(name,description,websiteUrl)
+        await this.blogsRepo.save(foundBlog)
+        return true
     }
 }

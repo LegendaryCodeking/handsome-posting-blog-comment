@@ -1,4 +1,4 @@
-import mongoose, {HydratedDocument} from "mongoose";
+import mongoose, {HydratedDocument, Model} from "mongoose";
 import {WithPagination} from "../custom";
 import {ObjectId} from "mongodb";
 import {BlogModelClass} from "../../db/db";
@@ -64,6 +64,11 @@ export type URIParamsBlogIdModel = {
     id: string
 }
 
+type userDBMethodsType = {
+    updateBlog: () => boolean
+}
+
+export type userModelType = Model<BlogDbModel,{},userDBMethodsType>
 
 export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
     "_id": ObjectId,
@@ -73,3 +78,9 @@ export const blogMongoSchema = new mongoose.Schema<BlogDbModel>({
     "createdAt": String,
     "isMembership": Boolean
 })
+
+blogMongoSchema.method('updateBlog', function updateBlog(name,description,websiteUrl): void {
+    this.name = name
+    this.description = description
+    this.websiteUrl = websiteUrl
+});
