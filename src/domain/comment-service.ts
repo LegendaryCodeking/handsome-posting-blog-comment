@@ -28,7 +28,7 @@ export class CommentService {
             userLogin
         )
 
-        const newLikesInfo = likesDBModel.createLikesInfo(newComment._id.toString(), "Post")
+        const newLikesInfo = likesDBModel.createLikesInfo(newComment._id.toString(), "Comment")
 
         await this.commentsRepo.save(newComment)
         await this.likesRepo.save(newLikesInfo)

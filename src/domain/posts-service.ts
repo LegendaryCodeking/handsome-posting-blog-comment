@@ -36,7 +36,7 @@ export class PostsService {
             blog!.name
         )
 
-        const newLikesInfo = likesDBModel.createLikesInfo(createdPost._id.toString())
+        const newLikesInfo = likesDBModel.createLikesInfo(createdPost._id.toString(),"Post")
 
         await this.likesRepo.save(newLikesInfo)
         await this.postsRepo.save(createdPost)
