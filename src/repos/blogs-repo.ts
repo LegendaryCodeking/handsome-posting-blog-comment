@@ -11,15 +11,9 @@ export class BlogsRepo {
         await instance.save()
     }
 
-    async deleteBlog(id: string): Promise<boolean> {
+    async deleteBlog(instance: HydratedDocument<BlogDbModel>): Promise<boolean> {
 
-        const _id = createObjectIdFromSting(id)
-        if (_id === null) return false
-        const blogInstance = await BlogModelClass.findOne({"_id": _id})
-        if (!blogInstance) return false
-
-        await blogInstance.deleteOne()
-
+        await instance.deleteOne()
         return true
 
     }

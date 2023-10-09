@@ -11,7 +11,9 @@ export class BlogsService {
     }
 
     async deleteBlog(id: string): Promise<boolean> {
-        return this.blogsRepo.deleteBlog(id)
+        const foundBlog = await this.blogsRepo.findBlogById(id)
+        if (!foundBlog) return false
+        return this.blogsRepo.deleteBlog(foundBlog)
     }
 
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogViewModel> {
@@ -23,7 +25,6 @@ export class BlogsService {
         )
 
         await this.blogsRepo.save(createdBlog)
-
         return getBlogViewModel(createdBlog)
 
     }
