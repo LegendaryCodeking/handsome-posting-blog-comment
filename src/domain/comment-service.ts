@@ -1,12 +1,7 @@
 import {CommentsRepo} from "../repos/comments-repo";
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {ObjectId} from "mongodb";
-import {
-    likesDBModel,
-    likesInfoViewModel,
-    likeStatusModel,
-    usersLikesConnectionDBModel
-} from "../models/Comments/LikeModel";
+import {likesDBModel, likesInfoViewModel, likeStatusModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {LikesRepo} from "../repos/like-repo";
 import {inject, injectable} from "inversify";
@@ -46,17 +41,7 @@ export class CommentService {
             0
         )
 
-        const newUsersLikesConnection = new usersLikesConnectionDBModel(
-            new ObjectId(),
-            userId,
-            userLogin,
-            new Date(),
-            newComment._id.toString(),
-            "Comment",
-            likeStatus.None
-        )
-
-        return this.commentsRepo.createComment(newComment, userId, newLikesInfo, newUsersLikesConnection);
+        return this.commentsRepo.createComment(newComment, userId, newLikesInfo);
     }
 
     async likeComment(commentId: string, likesInfo: likesInfoViewModel, newLikeStatus: likeStatusModel, userId: string, userLogin: string): Promise<boolean> {

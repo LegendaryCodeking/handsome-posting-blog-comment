@@ -1,7 +1,7 @@
-import {CommentModelClass, LikeModelClass, UsersLikesConnectionModelClass} from "../db/db";
+import {CommentModelClass, LikeModelClass} from "../db/db";
 import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
-import {likesDBModel, usersLikesConnectionDBModel} from "../models/Comments/LikeModel";
+import {likesDBModel} from "../models/Comments/LikeModel";
 import {inject, injectable} from "inversify";
 import {MapCommentViewModel} from "../helpers/map-CommentViewModel";
 
@@ -50,8 +50,7 @@ export class CommentsRepo {
     async createComment(
         newComment: CommentDbModel,
         userId: string,
-        newLikesInfo: likesDBModel,
-        newUsersLikesConnectionInfo: usersLikesConnectionDBModel): Promise<CommentViewModel> {
+        newLikesInfo: likesDBModel): Promise<CommentViewModel> {
 
 
         const commentInstance = new CommentModelClass()
@@ -71,15 +70,15 @@ export class CommentsRepo {
         likesInfoInstance.dislikesCount = newLikesInfo.dislikesCount
         await likesInfoInstance.save();
 
-        const usersLikesConnectionInfoInstance = new UsersLikesConnectionModelClass()
-        usersLikesConnectionInfoInstance._id = newUsersLikesConnectionInfo._id
-        usersLikesConnectionInfoInstance.userId = newUsersLikesConnectionInfo.userId
-        usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
-        usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
-        usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
-        usersLikesConnectionInfoInstance.userLogin = newUsersLikesConnectionInfo.userLogin
-        usersLikesConnectionInfoInstance.addedAt = newUsersLikesConnectionInfo.addedAt
-        await usersLikesConnectionInfoInstance.save();
+        // const usersLikesConnectionInfoInstance = new UsersLikesConnectionModelClass()
+        // usersLikesConnectionInfoInstance._id = newUsersLikesConnectionInfo._id
+        // usersLikesConnectionInfoInstance.userId = newUsersLikesConnectionInfo.userId
+        // usersLikesConnectionInfoInstance.likedObjectId = newUsersLikesConnectionInfo.likedObjectId
+        // usersLikesConnectionInfoInstance.likedObjectType = newUsersLikesConnectionInfo.likedObjectType
+        // usersLikesConnectionInfoInstance.status = newUsersLikesConnectionInfo.status
+        // usersLikesConnectionInfoInstance.userLogin = newUsersLikesConnectionInfo.userLogin
+        // usersLikesConnectionInfoInstance.addedAt = newUsersLikesConnectionInfo.addedAt
+        // await usersLikesConnectionInfoInstance.save();
 
 
         return this.mapCommentViewModel.getCommentViewModel(newComment, userId);
