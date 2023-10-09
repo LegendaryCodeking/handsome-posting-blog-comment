@@ -52,7 +52,22 @@ export class UserService {
     }
 
     async deleteUser(id: string): Promise<boolean> {
-        return await this.usersRepo.deleteUser(id)
+        const user = await this.usersRepo.findUserById(id)
+        if (!user) return false
+
+        return await this.usersRepo.deleteUser(user)
+
+    }
+
+    async updatePassword(newPassword: string, userId: string): Promise<boolean> {
+        const user = await this.usersRepo.findUserById(userId)
+        if (!user) return false
+
+        const passwordHash = await bcrypt.hash(newPassword, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
+        user.updatePass(passwordHash)
+
+        await this.usersRepo.save(user)
+        return true
     }
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserViewModel | null> {
@@ -90,8 +105,4 @@ export class UserService {
 
     }
 
-    async updatePassword(newPassword: string, userId: string): Promise<boolean> {
-        const passwordHash = await bcrypt.hash(newPassword, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
-        return await this.usersRepo.updatePassword(passwordHash, userId)
-    }
 }

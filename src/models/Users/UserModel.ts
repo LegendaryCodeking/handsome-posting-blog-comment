@@ -39,6 +39,11 @@ export class UserDBModel {
 
         return userInstance
     }
+
+    updatePass(passHash: string): void {
+        this.accountData.password = passHash
+        this.passwordRecovery.active = false
+    }
 }
 
 type accountDataModel = {
@@ -73,6 +78,13 @@ export type UserCreateModel = {
     password: string
     email: string
 }
+
+// export type userDBMethodsType = {
+//     updatePass: (passHash: string) => void
+// }
+
+// export type UserModelType = Model<UserDBModel,{},userDBMethodsType>
+
 
 export const userMongoSchema = new mongoose.Schema<UserDBModel>({
     _id: ObjectId,
