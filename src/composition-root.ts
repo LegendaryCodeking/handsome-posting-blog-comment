@@ -31,6 +31,7 @@ import {PostValidationMW} from "./middlewares/post-validation-mw";
 import {Container} from "inversify";
 import {MapUserViewModel} from "./helpers/map-UserViewModel";
 import {AuthMW} from "./middlewares/auth-mw";
+import {LikeService} from "./domain/like-service";
 
 
 // const jwtService = new JwtService()
@@ -88,6 +89,7 @@ container.bind(BlogsService).to(BlogsService)
 container.bind(CommentsRepo).to(CommentsRepo)
 container.bind(CommentsQueryRepo).to(CommentsQueryRepo)
 container.bind(LikesRepo).to(LikesRepo)
+container.bind(LikeService).to(LikeService)
 container.bind(LikesQueryRepo).to(LikesQueryRepo)
 container.bind(CommentService).to(CommentService)
 
