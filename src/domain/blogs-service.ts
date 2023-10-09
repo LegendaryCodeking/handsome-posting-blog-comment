@@ -1,7 +1,7 @@
 import {BlogDbModel, BlogViewModel} from "../models/BLogs/BlogModel";
 import {BlogsRepo} from "../repos/blogs-repo";
 import {inject, injectable} from "inversify";
-import {ObjectId} from "mongodb";
+import {getBlogViewModel} from "../helpers/map-BlogViewModel";
 
 @injectable()
 export class BlogsService {
@@ -16,20 +16,22 @@ export class BlogsService {
 
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogViewModel> {
 
-        const createdBlog = new BlogDbModel(
-            new ObjectId(),
+        const createdBlog = BlogDbModel.createBlog(
             name,
             description,
             websiteUrl,
-            new Date().toISOString(),
-            false
         )
 
-        return await this.blogsRepo.createBlog(createdBlog)
+        await this.blogsRepo.save(createdBlog)
+
+        return getBlogViewModel(createdBlog)
 
     }
 
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
+        //findById
+        //blog.updateBlog(name,//)
+        //blog.save()
         return this.blogsRepo.updateBlog(id, name, description, websiteUrl)
     }
 }
