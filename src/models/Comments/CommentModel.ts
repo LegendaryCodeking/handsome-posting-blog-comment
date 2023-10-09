@@ -59,7 +59,7 @@ export type CommentatorInfoType = {
 export type CommentsWithPaginationModel = WithPagination<CommentViewModel>
 
 export type commentDBMethodsType = {
-    updateComment: () => void
+    updateComment: (content: string) => void
 }
 
 export type commentModelType = Model<CommentDbModel,{},commentDBMethodsType>
@@ -76,3 +76,7 @@ export const commentMongooseSchema = new mongoose.Schema<CommentDbModel,commentM
     },
     createdAt: String
 })
+
+commentMongooseSchema.method('updateComment', function commentMongooseSchema(content: string): void {
+    this.content = content
+});

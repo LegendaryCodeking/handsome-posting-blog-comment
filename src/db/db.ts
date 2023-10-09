@@ -2,7 +2,7 @@ import {PostDBModel, postModelType, postMongoSchema} from "../models/Posts/PostM
 import {BlogDbModel, blogMongoSchema, blogModelType} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {userMongoSchema} from "../models/Users/UserModel";
-import {commentMongooseSchema} from "../models/Comments/CommentModel";
+import {CommentDbModel, commentModelType, commentMongooseSchema} from "../models/Comments/CommentModel";
 import {sessionMongooseSchema} from "../models/Sessions/SessionModel";
 import {rateLimitMongooseSchema} from "../models/rateLimiting/rateLimitingModel";
 import mongoose from "mongoose";
@@ -18,7 +18,7 @@ const DbName =  process.env.MONGODBNAME || "forum";
 export const PostModelClass = mongoose.model<PostDBModel,postModelType>('posts', postMongoSchema)
 export const BlogModelClass = mongoose.model<BlogDbModel,blogModelType>('blogs', blogMongoSchema)
 export const UserModelClass = mongoose.model('users', userMongoSchema)
-export const CommentModelClass = mongoose.model('comments', commentMongooseSchema)
+export const CommentModelClass = mongoose.model<CommentDbModel,commentModelType>('comments', commentMongooseSchema)
 export const LikeModelClass = mongoose.model('likes', likesMongooseSchema)
 export const UsersLikesConnectionModelClass = mongoose.model('userslikesconnection', userslikesconnectionMongooseSchema)
 export const SessionModelClass = mongoose.model('sessions', sessionMongooseSchema)

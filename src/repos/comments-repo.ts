@@ -4,7 +4,6 @@ import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {inject, injectable} from "inversify";
 import {MapCommentViewModel} from "../helpers/map-CommentViewModel";
 import {HydratedDocument} from "mongoose";
-import {postDBMethodsType, PostDBModel} from "../models/Posts/PostModel";
 
 @injectable()
 export class CommentsRepo {

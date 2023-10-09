@@ -13,7 +13,13 @@ export class CommentService {
     }
 
     async updateComment(id: string, content: string): Promise<boolean> {
-        return this.commentsRepo.updateComment(id, content)
+
+        const foundComment = await this.commentsRepo.findCommentById(id)
+        if (!foundComment) return false
+
+        foundComment.updateComment(content)
+        await this.commentsRepo.save(foundComment)
+        return true
     }
 
     async deleteComment(id: string): Promise<boolean> {
