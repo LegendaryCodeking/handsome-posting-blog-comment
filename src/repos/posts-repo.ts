@@ -1,11 +1,16 @@
-import {LikeModelClass, PostModelClass} from "../db/db";
+import {PostModelClass} from "../db/db";
 import {PostDBModel} from "../models/Posts/PostModel";
-import {likesDBModel} from "../models/Comments/LikeModel";
 import {injectable} from "inversify";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
+import {HydratedDocument} from "mongoose";
 
 @injectable()
 export class PostsRepo {
+
+    async save(instance: HydratedDocument<PostDBModel>): Promise<void> {
+        await instance.save()
+    }
+
     async deletePost(id: string): Promise<boolean> {
 
         const _id = createObjectIdFromSting(id)
@@ -16,32 +21,6 @@ export class PostsRepo {
         await postInstance.deleteOne()
 
         return true
-    }
-
-    async createPost(
-        createdPost: PostDBModel,
-        newLikesInfo: likesDBModel
-    ): Promise<PostDBModel> {
-
-        const postInstance = new PostModelClass()
-        postInstance._id = createdPost._id
-        postInstance.title = createdPost.title
-        postInstance.shortDescription = createdPost.shortDescription
-        postInstance.content = createdPost.content
-        postInstance.blogId = createdPost.blogId
-        postInstance.blogName = createdPost.blogName
-        postInstance.createdAt = createdPost.createdAt
-        await postInstance.save()
-
-        const likesInfoInstance = new LikeModelClass()
-        likesInfoInstance._id = newLikesInfo._id
-        likesInfoInstance.ownerType = newLikesInfo.ownerType
-        likesInfoInstance.ownerId = newLikesInfo.ownerId
-        likesInfoInstance.likesCount = newLikesInfo.likesCount
-        likesInfoInstance.dislikesCount = newLikesInfo.dislikesCount
-        await likesInfoInstance.save();
-
-        return createdPost
     }
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {

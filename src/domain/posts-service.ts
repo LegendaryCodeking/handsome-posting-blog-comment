@@ -1,15 +1,11 @@
 import {PostsRepo} from "../repos/posts-repo";
 import {PostDBModel} from "../models/Posts/PostModel";
 import {BlogsQueryRepo} from "../repos/query-repos/blogs-query-repo";
-import {
-    likesDBModel,
-    likesInfoViewModel,
-    likeStatusModel,
-} from "../models/Comments/LikeModel";
-import {ObjectId} from "mongodb";
+import {likesDBModel, likesInfoViewModel, likeStatusModel,} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {LikesRepo} from "../repos/like-repo";
 import {inject, injectable} from "inversify";
+import {MapPostViewModel} from "../helpers/map-PostViewModel";
 
 @injectable()
 export class PostsService {
@@ -17,7 +13,8 @@ export class PostsService {
     constructor(
         @inject(PostsRepo) protected postsRepo: PostsRepo,
         @inject(BlogsQueryRepo) protected blogsQueryRepo: BlogsQueryRepo,
-        @inject(LikesRepo) protected likesRepo: LikesRepo
+        @inject(LikesRepo) protected likesRepo: LikesRepo,
+        @inject(MapPostViewModel) protected mapPostViewModel: MapPostViewModel
     ) {
     }
 
@@ -25,28 +22,24 @@ export class PostsService {
         return this.postsRepo.deletePost(id)
     }
 
-    async createPost(title: string, shortDescription: string, content: string, blogId: string, userId?: string, userLogin?: string): Promise<PostDBModel> {
-        const blogName = await this.blogsQueryRepo.findBlogById(blogId)
+    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostDBModel> {
+        const blog = await this.blogsQueryRepo.findBlogById(blogId)
 
-        const createdPost = new PostDBModel(
-            new ObjectId(),
+        const createdPost = PostDBModel.createPost(
             title,
             shortDescription,
             content,
             blogId,
-            blogName!.name,
-            new Date().toISOString()
+            blog!.name
         )
 
-        const newLikesInfo = new likesDBModel(
-            new ObjectId(),
-            "Post",
-            createdPost._id.toString(),
-            0,
-            0
-        )
+        const newLikesInfo = likesDBModel.createLikesInfo(createdPost._id.toString())
 
-        return await this.postsRepo.createPost(createdPost, newLikesInfo)
+        await this.likesRepo.save(newLikesInfo)
+        await this.postsRepo.save(createdPost)
+
+        return createdPost
+
     }
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {

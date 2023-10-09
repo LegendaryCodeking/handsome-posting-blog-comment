@@ -1,7 +1,41 @@
 import {ObjectId} from "mongodb";
-import mongoose from "mongoose";
+import mongoose, {HydratedDocument} from "mongoose";
 import {WithPagination} from "../custom";
 import {extendedLikesInfoViewModel} from "../Comments/LikeModel";
+import {PostModelClass} from "../../db/db";
+
+
+export class PostDBModel {
+    constructor(
+        public _id: ObjectId,
+        public title: string,
+        public shortDescription: string,
+        public content: string,
+        public blogId: string,
+        public blogName: string,
+        public createdAt: string,
+    ) {
+    }
+
+    static createPost(title: string,
+                      shortDescription: string,
+                      content: string,
+                      blogId: string,
+                      blogName: string): HydratedDocument<PostDBModel> {
+
+        const postInstance = new PostModelClass()
+        postInstance._id = new ObjectId()
+        postInstance.title = title
+        postInstance.shortDescription = shortDescription
+        postInstance.content = content
+        postInstance.blogId = blogId
+        postInstance.blogName = blogName
+        postInstance.createdAt = new Date().toISOString()
+
+        return postInstance
+    }
+}
+
 
 export type PostCreateModel = {
     "title": string,
@@ -16,19 +50,6 @@ export type PostUpdateModel = {
     "shortDescription": string,
     "content": string,
     "blogId": string,
-}
-
-export class PostDBModel {
-    constructor(
-        public _id: ObjectId,
-        public title: string,
-        public shortDescription: string,
-        public content: string,
-        public blogId: string,
-        public blogName: string,
-        public createdAt: string,
-    ) {
-    }
 }
 
 export type PostViewModel = {

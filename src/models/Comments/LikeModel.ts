@@ -1,6 +1,7 @@
 import {likeStatus} from "../../enum/likeStatuses";
 import {ObjectId} from "mongodb";
-import mongoose from "mongoose";
+import mongoose, {HydratedDocument} from "mongoose";
+import {LikeModelClass} from "../../db/db";
 
 export type likeStatusModel = likeStatus.None | likeStatus.Like | likeStatus.Dislike
 
@@ -18,6 +19,17 @@ export class likesDBModel {
         public likesCount: number,
         public dislikesCount: number,
     ) {
+    }
+
+    static createLikesInfo(ownerId: string): HydratedDocument<likesDBModel> {
+        const likesInfoInstance = new LikeModelClass()
+        likesInfoInstance._id = new ObjectId()
+        likesInfoInstance.ownerType = "Post"
+        likesInfoInstance.ownerId = ownerId
+        likesInfoInstance.likesCount = 0
+        likesInfoInstance.dislikesCount = 0
+
+        return likesInfoInstance
     }
 
 }

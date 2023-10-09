@@ -1,8 +1,9 @@
 import {LikeModelClass, UsersLikesConnectionModelClass} from "../db/db";
-import {ownerTypeModel} from "../models/Comments/LikeModel";
+import {likesDBModel, ownerTypeModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {ObjectId} from "mongodb";
 import {injectable} from "inversify";
+import {HydratedDocument} from "mongoose";
 
 @injectable()
 export class LikesRepo {
@@ -139,4 +140,7 @@ export class LikesRepo {
 
     }
 
+    async save(instance: HydratedDocument<likesDBModel>): Promise<void> {
+        await instance.save()
+    }
 }
