@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import mongoose, {HydratedDocument} from "mongoose";
+import mongoose, {HydratedDocument, Model} from "mongoose";
 import {WithPagination} from "../custom";
 import {likesInfoViewModel} from "./LikeModel";
 import {CommentModelClass} from "../../db/db";
@@ -58,7 +58,15 @@ export type CommentatorInfoType = {
 
 export type CommentsWithPaginationModel = WithPagination<CommentViewModel>
 
-export const commentMongooseSchema = new mongoose.Schema<CommentDbModel>({
+export type commentDBMethodsType = {
+    updateComment: () => void
+}
+
+export type commentModelType = Model<CommentDbModel,{},commentDBMethodsType>
+
+
+
+export const commentMongooseSchema = new mongoose.Schema<CommentDbModel,commentModelType,commentDBMethodsType>({
     _id: ObjectId,
     postId: String,
     content: String,
