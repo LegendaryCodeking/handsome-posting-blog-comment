@@ -1,6 +1,5 @@
 import {CommentsRepo} from "../repos/comments-repo";
-import {CommentDbModel, CommentViewModel} from "../models/Comments/CommentModel";
-import {ObjectId} from "mongodb";
+import {CommentDbModel} from "../models/Comments/CommentModel";
 import {likesDBModel, likesInfoViewModel, likeStatusModel} from "../models/Comments/LikeModel";
 import {likeStatus} from "../enum/likeStatuses";
 import {LikesRepo} from "../repos/like-repo";
@@ -21,27 +20,20 @@ export class CommentService {
         return this.commentsRepo.deleteComment(id);
     }
 
-    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewModel> {
-        const newComment = new CommentDbModel(
-            new ObjectId(),
+    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentDbModel> {
+        const newComment = CommentDbModel.createComment(
             postId,
             content,
-            {
-                "userId": userId,
-                "userLogin": userLogin
-            },
-            new Date().toISOString()
+            userId,
+            userLogin
         )
 
-        const newLikesInfo = new likesDBModel(
-            new ObjectId(),
-            "Comment",
-            newComment._id.toString(),
-            0,
-            0
-        )
+        const newLikesInfo = likesDBModel.createLikesInfo(newComment._id.toString())
 
-        return this.commentsRepo.createComment(newComment, userId, newLikesInfo);
+        await this.commentsRepo.save(newComment)
+        await this.likesRepo.save(newLikesInfo)
+
+        return newComment
     }
 
     async likeComment(commentId: string, likesInfo: likesInfoViewModel, newLikeStatus: likeStatusModel, userId: string, userLogin: string): Promise<boolean> {

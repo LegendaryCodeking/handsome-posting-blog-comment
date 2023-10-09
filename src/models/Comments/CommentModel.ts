@@ -1,7 +1,8 @@
 import {ObjectId} from "mongodb";
-import mongoose from "mongoose";
+import mongoose, {HydratedDocument} from "mongoose";
 import {WithPagination} from "../custom";
 import {likesInfoViewModel} from "./LikeModel";
+import {CommentModelClass} from "../../db/db";
 
 export type CreateCommentModel = {
     content: string
@@ -20,6 +21,17 @@ constructor(
     public createdAt: string
 ) {
 }
+
+    static createComment(postId: string, content: string, userId: string, userLogin: string): HydratedDocument<CommentDbModel> {
+        const commentInstance = new CommentModelClass()
+        commentInstance._id = new ObjectId()
+        commentInstance.postId = postId
+        commentInstance.content = content
+        commentInstance.commentatorInfo.userId = userId
+        commentInstance.commentatorInfo.userLogin = userLogin
+        commentInstance.createdAt = new Date().toISOString()
+        return commentInstance
+    }
 }
 
 export type CommentViewModel = {

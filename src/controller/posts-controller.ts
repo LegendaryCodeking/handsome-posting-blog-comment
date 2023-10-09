@@ -12,6 +12,7 @@ import {LikesQueryRepo} from "../repos/query-repos/likes-query-repo";
 import {likesInfoViewModel} from "../models/Comments/LikeModel";
 import {inject, injectable} from "inversify";
 import {MapPostViewModel} from "../helpers/map-PostViewModel";
+import {MapCommentViewModel} from "../helpers/map-CommentViewModel";
 
 @injectable()
 export class PostsController {
@@ -22,7 +23,8 @@ export class PostsController {
         @inject(CommentsQueryRepo) protected commentsQueryRepo: CommentsQueryRepo,
         @inject(CommentService) protected commentService: CommentService,
         @inject(LikesQueryRepo) protected likesQueryRepo: LikesQueryRepo,
-        @inject(MapPostViewModel) protected mapPostViewModel: MapPostViewModel
+        @inject(MapPostViewModel) protected mapPostViewModel: MapPostViewModel,
+        @inject(MapCommentViewModel) protected mapCommentViewModel: MapCommentViewModel
     ) {
 
     }
@@ -98,9 +100,10 @@ export class PostsController {
             return;
         }
 
-        let createComment = await this.commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
+        let createCommentPOJO = await this.commentService.createComment(req.params.postId, req.body.content, req.user!.id, req.user!.login)
+        let createCommentViewModel = await this.mapCommentViewModel.getCommentViewModel(createCommentPOJO,req.user!.id)
         res.status(STATUSES_HTTP.CREATED_201)
-            .json(createComment)
+            .json(createCommentViewModel)
 
     }
 
