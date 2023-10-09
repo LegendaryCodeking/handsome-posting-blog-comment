@@ -23,7 +23,10 @@ export class CommentService {
     }
 
     async deleteComment(id: string): Promise<boolean> {
-        return this.commentsRepo.deleteComment(id);
+        const foundComment = await this.commentsRepo.findCommentById(id)
+        if (!foundComment) return false
+
+        return this.commentsRepo.deleteComment(foundComment)
     }
 
     async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentDbModel> {

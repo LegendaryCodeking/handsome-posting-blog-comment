@@ -18,7 +18,6 @@ export class PostsRepo {
 
         await instance.deleteOne()
         return true
-
     }
     async findPostsById(id: string): Promise<HydratedDocument<PostDBModel,postDBMethodsType> | null> {
 

@@ -28,29 +28,10 @@ export class CommentsRepo {
     }
 
 
-    async updateComment(id: string, content: string): Promise<boolean> {
 
-        const _id = createObjectIdFromSting(id)
-        if (_id === null) return false
-        const commentInstance = await CommentModelClass.findOne({"_id": _id})
-        if (!commentInstance) return false
+    async deleteComment(instance: HydratedDocument<CommentDbModel>): Promise<boolean> {
 
-        commentInstance.content = content
-
-        await commentInstance.save()
-
-        return true
-    }
-
-    async deleteComment(id: string): Promise<boolean> {
-
-        const _id = createObjectIdFromSting(id)
-        if (_id === null) return false
-        const commentInstance = await CommentModelClass.findOne({"_id": _id})
-        if (!commentInstance) return false
-
-        await commentInstance.deleteOne()
-
+        await instance.deleteOne()
         return true
     }
 }
