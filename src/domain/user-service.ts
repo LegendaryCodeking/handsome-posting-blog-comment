@@ -2,11 +2,8 @@ import {UsersRepo} from "../repos/users-repo";
 import {UserDBModel, UserViewModel} from "../models/Users/UserModel";
 import bcrypt from 'bcrypt';
 import {UsersQueryRepo} from "../repos/query-repos/users-query-repo";
-import {v4 as uuidv4} from 'uuid';
-import add from 'date-fns/add'
 import {EmailManager} from "../managers/email-manager";
 import {JwtService} from "../application/jwt-service";
-import {ObjectId} from "mongodb"
 import {inject, injectable} from "inversify";
 import {MapUserViewModel} from "../helpers/map-UserViewModel";
 
@@ -39,37 +36,16 @@ export class UserService {
 
         const passwordHash = await bcrypt.hash(password, 10) //Соль генерируется автоматически за 10 кругов - второй параметр
 
-        const createdUser = new UserDBModel(
-            new ObjectId(),
-            {
-                login: login,
-                email: email,
-                password: passwordHash,
-                createdAt: new Date().toISOString()
-            },
-            {
-                confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {
-                    hours: 1,
-                    minutes: 3
-                }).toISOString(),
-                isConfirmed: false
-            },
-            {
-                passwordRecoveryCode: "",
-                active: isAuthorSuper
-            }
-        )
+        const createdUser = UserDBModel.createUser(login,email,isAuthorSuper,passwordHash)
+        await this.usersRepo.save(createdUser)
 
-
-        let resultUser = await this.usersRepo.createUser(createdUser)
         if (!isAuthorSuper) {
             this.emailManager.sendEmailConfirmationMessage(createdUser).catch((err) => console.log(err))
         }
 
         return {
             resultCode: ResultCode.success,
-            data: resultUser.id
+            data: createdUser._id.toString()
         }
 
 

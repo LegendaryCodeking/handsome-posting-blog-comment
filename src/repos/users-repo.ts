@@ -1,10 +1,10 @@
 import {UserDBModel} from "../models/Users/UserModel";
-import {UserViewModel} from "../models/Users/UserModel";
 import {UserModelClass} from "../db/db";
 import {MapUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {ObjectId} from "mongodb";
 import {inject, injectable} from "inversify";
+import {HydratedDocument} from "mongoose";
 
 @injectable()
 export class UsersRepo {
@@ -12,21 +12,11 @@ export class UsersRepo {
     constructor(@inject(MapUserViewModel) protected mapUserViewModel: MapUserViewModel) {
     }
 
-    async createUser(createdUser: UserDBModel): Promise<UserViewModel> {
-        // Mongo native driver code
-        // await UserModelClass.insertMany([createdUser])
 
-        const userInstance = new UserModelClass()
-
-        userInstance._id = createdUser._id
-        userInstance.accountData = createdUser.accountData
-        userInstance.emailConfirmation = createdUser.emailConfirmation
-        userInstance.passwordRecovery = createdUser.passwordRecovery
-
-        await userInstance.save()
-
-        return this.mapUserViewModel.getUserViewModel(createdUser)
+    async save(instance: HydratedDocument<UserDBModel>): Promise<void> {
+        await instance.save()
     }
+
     async deleteUser(id: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.deleteOne({"id": id});
