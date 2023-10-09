@@ -42,8 +42,17 @@ export class PostsService {
 
     }
 
-    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        return this.postsRepo.updatePost(id, title, shortDescription, content, blogId)
+    async updatePost(id: string,
+                     title: string,
+                     shortDescription: string,
+                     content: string,
+                     blogId: string): Promise<boolean> {
+        const foundPost = await this.postsRepo.findPostsById(id)
+        if (!foundPost) return false
+
+        foundPost.updatePost(title, shortDescription, content, blogId)
+        await this.postsRepo.save(foundPost)
+        return true
     }
 
 

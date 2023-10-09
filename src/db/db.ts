@@ -1,5 +1,5 @@
-import {postMongoSchema} from "../models/Posts/PostModel";
-import {BlogDbModel, blogMongoSchema, userModelType} from "../models/BLogs/BlogModel";
+import {PostDBModel, postModelType, postMongoSchema} from "../models/Posts/PostModel";
+import {BlogDbModel, blogMongoSchema, blogModelType} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {userMongoSchema} from "../models/Users/UserModel";
 import {commentMongooseSchema} from "../models/Comments/CommentModel";
@@ -15,8 +15,8 @@ const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
 const DbName =  process.env.MONGODBNAME || "forum";
 
 // Mongoose connection section
-export const PostModelClass = mongoose.model('posts', postMongoSchema)
-export const BlogModelClass = mongoose.model<BlogDbModel,userModelType>('blogs', blogMongoSchema)
+export const PostModelClass = mongoose.model<PostDBModel,postModelType>('posts', postMongoSchema)
+export const BlogModelClass = mongoose.model<BlogDbModel,blogModelType>('blogs', blogMongoSchema)
 export const UserModelClass = mongoose.model('users', userMongoSchema)
 export const CommentModelClass = mongoose.model('comments', commentMongooseSchema)
 export const LikeModelClass = mongoose.model('likes', likesMongooseSchema)
