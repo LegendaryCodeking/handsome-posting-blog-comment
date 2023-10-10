@@ -1,9 +1,10 @@
 import {CommentModelClass} from "../db/db";
-import {commentDBMethodsType, CommentDbModel} from "../models/Comments/CommentModel";
+import { CommentDbModel} from "../models/Comments/CommentModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {inject, injectable} from "inversify";
 import {MapCommentViewModel} from "../helpers/map-CommentViewModel";
 import {HydratedDocument} from "mongoose";
+import {commentDBMethodsType} from "../domain/entities/CommentEntity";
 
 @injectable()
 export class CommentsRepo {
