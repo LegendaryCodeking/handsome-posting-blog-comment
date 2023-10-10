@@ -1,4 +1,4 @@
-import {UserDBModel} from "../models/Users/UserModel";
+import {userDBMethodsType, UserDBModel} from "../models/Users/UserModel";
 import {UserModelClass} from "../db/db";
 import {MapUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
@@ -39,6 +39,7 @@ export class UsersRepo {
 
         return true
     }
+
     async updateUserEmailConfirmationInfo(_id: ObjectId, user: UserDBModel): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.replaceOne({"id": id}, user)
@@ -51,6 +52,7 @@ export class UsersRepo {
 
         return true
     }
+
     async addPassRecoveryCode(id: string, passwordRecoveryCode: string): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.updateOne({"id": id}, {
@@ -73,6 +75,7 @@ export class UsersRepo {
 
         return true
     }
+
     async findByLoginOrEmail(loginOrEmail: string): Promise<UserDBModel | null> {
         const user = await UserModelClass.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (user) {
@@ -80,14 +83,16 @@ export class UsersRepo {
         }
         return null
     }
-    async findUserByConfirmationCode(code: string) {
-        let user = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
+
+    async findUserByConfirmationCode(code: string): Promise<HydratedDocument<UserDBModel, userDBMethodsType> | null> {
+        let user: HydratedDocument<UserDBModel, userDBMethodsType> | null = await UserModelClass.findOne({"emailConfirmation.confirmationCode": code})
         if (user) {
             return user
         } else {
             return null
         }
     }
+
     async findUserByPassRecoveryCode(code: string) {
         let user = await UserModelClass.findOne({"passwordRecovery.passwordRecoveryCode": code})
         if (user) {
@@ -96,6 +101,7 @@ export class UsersRepo {
             return null
         }
     }
+
     async findUserById(id: string): Promise<HydratedDocument<UserDBModel> | null> {
         const _id = createObjectIdFromSting(id)
         if (_id === null) return null

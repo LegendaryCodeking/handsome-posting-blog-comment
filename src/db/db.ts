@@ -1,7 +1,7 @@
 import {PostDBModel, postModelType, postMongoSchema} from "../models/Posts/PostModel";
 import {BlogDbModel, blogMongoSchema, blogModelType} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
-import {userMongoSchema} from "../models/Users/UserModel";
+import {UserDBModel, userModelType, userMongoSchema} from "../models/Users/UserModel";
 import {CommentDbModel, commentModelType, commentMongooseSchema} from "../models/Comments/CommentModel";
 import {sessionMongooseSchema} from "../models/Sessions/SessionModel";
 import {rateLimitMongooseSchema} from "../models/rateLimiting/rateLimitingModel";
@@ -17,7 +17,7 @@ const DbName =  process.env.MONGODBNAME || "forum";
 // Mongoose connection section
 export const PostModelClass = mongoose.model<PostDBModel,postModelType>('posts', postMongoSchema)
 export const BlogModelClass = mongoose.model<BlogDbModel,blogModelType>('blogs', blogMongoSchema)
-export const UserModelClass = mongoose.model('users', userMongoSchema)
+export const UserModelClass = mongoose.model<UserDBModel,userModelType>('users', userMongoSchema)
 export const CommentModelClass = mongoose.model<CommentDbModel,commentModelType>('comments', commentMongooseSchema)
 export const LikeModelClass = mongoose.model('likes', likesMongooseSchema)
 export const UsersLikesConnectionModelClass = mongoose.model('userslikesconnection', userslikesconnectionMongooseSchema)

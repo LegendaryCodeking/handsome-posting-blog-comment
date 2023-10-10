@@ -18,11 +18,16 @@ export class AuthService {
 
         let user = await this.usersRepo.findUserByConfirmationCode(code)
         if (!user) return false
-        if (user.emailConfirmation.isConfirmed) return false
-        if (user.emailConfirmation.confirmationCode !== code) return false
-        if (new Date(user.emailConfirmation.expirationDate) < new Date()) return false
+        if(user.canBeConfirmed(code)) {
+            return await this.usersRepo.updateConfirmation(user.id)
+        }
 
-        return await this.usersRepo.updateConfirmation(user.id)
+        return false
+        // if (user.emailConfirmation.isConfirmed) return false
+        // if (user.emailConfirmation.confirmationCode !== code) return false
+        // if (new Date(user.emailConfirmation.expirationDate) < new Date()) return false
+
+
 
     }
 

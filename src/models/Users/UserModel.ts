@@ -1,4 +1,4 @@
-import mongoose, {HydratedDocument} from "mongoose";
+import mongoose, {HydratedDocument, Model} from "mongoose";
 import {WithPagination} from "../custom";
 import {ObjectId} from "mongodb";
 import {UserModelClass} from "../../db/db";
@@ -79,14 +79,14 @@ export type UserCreateModel = {
     email: string
 }
 
-// export type userDBMethodsType = {
-//     updatePass: (passHash: string) => void
-// }
+export type userDBMethodsType = {
+    canBeConfirmed: (code: string) => Boolean
+}
 
-// export type UserModelType = Model<UserDBModel,{},userDBMethodsType>
+export type userModelType = Model<UserDBModel, {}, userDBMethodsType>
 
 
-export const userMongoSchema = new mongoose.Schema<UserDBModel>({
+export const userMongoSchema = new mongoose.Schema<UserDBModel, userModelType, userDBMethodsType>({
     _id: ObjectId,
     accountData: {
         login: String,
@@ -104,3 +104,9 @@ export const userMongoSchema = new mongoose.Schema<UserDBModel>({
         active: Boolean
     }
 })
+
+userMongoSchema.method('canBeConfirmed', function canBeConfirmed(code): Boolean {
+    return !this.emailConfirmation.isConfirmed
+    && this.emailConfirmation.confirmationCode === code
+    && (new Date(this.emailConfirmation.expirationDate) >= new Date())
+});
