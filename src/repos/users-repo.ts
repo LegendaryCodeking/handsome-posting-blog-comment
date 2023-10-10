@@ -24,22 +24,6 @@ export class UsersRepo {
 
     }
 
-    async updateConfirmation(id: string): Promise<boolean> {
-        // Mongo native driver code
-        // const result = await UserModelClass.updateOne({"id": id}, {$set: {"emailConfirmation.isConfirmed": true}});
-        // return result.matchedCount === 1
-        const _id = createObjectIdFromSting(id)
-        if (_id === null) return false
-        const userInstance = await UserModelClass.findOne({"_id": _id})
-        if (!userInstance) return false
-
-        userInstance.emailConfirmation.isConfirmed = true
-
-        await userInstance.save()
-
-        return true
-    }
-
     async updateUserEmailConfirmationInfo(_id: ObjectId, user: UserDBModel): Promise<boolean> {
         // Mongo native driver code
         // const result = await UserModelClass.replaceOne({"id": id}, user)
