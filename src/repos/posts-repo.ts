@@ -1,8 +1,9 @@
 import {PostModelClass} from "../db/db";
-import {postDBMethodsType, PostDBModel} from "../models/Posts/PostModel";
+import {PostDBModel} from "../models/Posts/PostModel";
 import {injectable} from "inversify";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {HydratedDocument} from "mongoose";
+import {postDBMethodsType} from "../domain/entities/PostEntity";
 
 class PostDbModel {
 }

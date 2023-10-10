@@ -1,4 +1,4 @@
-import {PostDBModel, postModelType, postMongoSchema} from "../models/Posts/PostModel";
+import {PostDBModel} from "../models/Posts/PostModel";
 import {BlogDbModel} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {UserDBModel} from "../models/Users/UserModel";
@@ -10,6 +10,7 @@ import {likesMongooseSchema, userslikesconnectionMongooseSchema} from "../models
 import {userModelType, userMongoSchema} from "../domain/entities/UserEntity";
 import {blogModelType,blogMongoSchema} from "../domain/entities/BlogEntity";
 import {commentModelType,commentMongooseSchema} from "../domain/entities/CommentEntity";
+import {postMongoSchema,postModelType} from "../domain/entities/PostEntity";
 
 dotenv.config()
 
