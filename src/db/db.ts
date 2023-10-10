@@ -1,5 +1,5 @@
 import {PostDBModel, postModelType, postMongoSchema} from "../models/Posts/PostModel";
-import {BlogDbModel, blogMongoSchema, blogModelType} from "../models/BLogs/BlogModel";
+import {BlogDbModel} from "../models/BLogs/BlogModel";
 import dotenv from 'dotenv'
 import {UserDBModel} from "../models/Users/UserModel";
 import {CommentDbModel, commentModelType, commentMongooseSchema} from "../models/Comments/CommentModel";
@@ -8,6 +8,7 @@ import {rateLimitMongooseSchema} from "../models/rateLimiting/rateLimitingModel"
 import mongoose from "mongoose";
 import {likesMongooseSchema, userslikesconnectionMongooseSchema} from "../models/Comments/LikeModel";
 import {userModelType, userMongoSchema} from "../domain/entities/UserEntity";
+import {blogModelType,blogMongoSchema} from "../domain/entities/BlogEntity";
 
 dotenv.config()
 

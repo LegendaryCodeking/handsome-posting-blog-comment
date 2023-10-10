@@ -1,8 +1,9 @@
-import {blogDBMethodsType, BlogDbModel} from "../models/BLogs/BlogModel";
+import {BlogDbModel} from "../models/BLogs/BlogModel";
 import {BlogModelClass} from "../db/db";
 import {injectable} from "inversify";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {HydratedDocument} from 'mongoose';
+import {blogDBMethodsType} from "../domain/entities/BlogEntity";
 
 @injectable()
 export class BlogsRepo {
