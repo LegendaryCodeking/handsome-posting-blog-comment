@@ -5,7 +5,7 @@ import {JwtService} from "../application/jwt-service";
 import {STATUSES_HTTP} from "../enum/http-statuses";
 import {AuthService} from "../domain/auth-service";
 import {SessionsService} from "../domain/sessions-service";
-import {injectable,inject} from "inversify";
+import {inject, injectable} from "inversify";
 
 @injectable()
 export class AuthController {

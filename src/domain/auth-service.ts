@@ -25,12 +25,6 @@ export class AuthService {
         }
 
         return false
-        // if (user.emailConfirmation.isConfirmed) return false
-        // if (user.emailConfirmation.confirmationCode !== code) return false
-        // if (new Date(user.emailConfirmation.expirationDate) < new Date()) return false
-
-
-
     }
 
     async resendEmail(email: string): Promise<boolean> {

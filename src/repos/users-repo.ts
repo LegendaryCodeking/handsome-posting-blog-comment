@@ -1,10 +1,11 @@
-import {userDBMethodsType, UserDBModel} from "../models/Users/UserModel";
+import {UserDBModel} from "../models/Users/UserModel";
 import {UserModelClass} from "../db/db";
 import {MapUserViewModel} from "../helpers/map-UserViewModel";
 import {createObjectIdFromSting} from "../helpers/map-ObjectId";
 import {ObjectId} from "mongodb";
 import {inject, injectable} from "inversify";
 import {HydratedDocument} from "mongoose";
+import {userDBMethodsType} from "../domain/entities/UserEntity";
 
 @injectable()
 export class UsersRepo {
